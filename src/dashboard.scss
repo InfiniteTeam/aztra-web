@@ -1,0 +1,156 @@
+.Dashboard-Servers-Card {
+    padding: 8px 0px 8px 0px;
+    border: none;
+    margin-bottom: 8px;
+
+    opacity: 0;
+    animation: fadein 1s;
+    -moz-animation: fadein 1s; /* Firefox */
+    -webkit-animation: fadein 1s; /* Safari and Chrome */
+    -o-animation: fadein 1s; /* Opera */
+    -webkit-animation-fill-mode: forwards;
+    -moz-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+
+    @keyframes fadein {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    @-moz-keyframes fadein {
+        /* Firefox */
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    @-webkit-keyframes fadein {
+        /* Safari and Chrome */
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    @-o-keyframes fadein {
+        /* Opera */
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+}
+
+.Dashboardroute-body {
+    color: white;
+    padding-bottom: 3000px;
+    @include media-breakpoint-up(xs) {
+        padding-top: 50px;
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+    @include media-breakpoint-up(sm) {
+        padding-top: 50px;
+        padding-left: 80px;
+        padding-right: 80px;
+    }
+
+    .card {
+        margin-top: 20px !important;
+        margin-bottom: 20px !important;
+    }
+    .dashboard-section {
+        margin-bottom: 30px !important;
+    }
+}
+
+.Dashboardroute-sidebar {
+    background-color: rgb(61, 67, 73);
+    padding-top: 15px;
+
+    padding-bottom: 15px;
+    color: whitesmoke;
+    a {
+        color: white;
+    }
+    ::-webkit-scrollbar {
+        background: transparent;
+        width: 6px;
+        height: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background-color: rgb(88, 88, 100) !important;
+        border-radius: 15px;
+    }
+}
+.Dashboardroute-sidebar-body {
+    margin-top: 0.5rem;
+    height: 20vh; // 모바일 사이즈가 아닌 경우 사이드바 본문의 높이는 React의 render에서 정합니다.
+    overflow: auto;
+    display: flex;
+    @include media-breakpoint-up(xs) {
+        height: 20vh;
+        .nav-link {
+            padding-bottom: 0.25rem !important;
+            padding-top: 0.25rem !important;
+        }
+    }
+    @include media-breakpoint-up(sm) {
+        .nav-link {
+            padding-top: 0.25rem !important;
+            padding-bottom: 0.25rem !important;
+        }
+    }
+}
+
+#sidebar-header {
+    position: sticky !important;
+    bottom: 100vh;
+    top: 72px !important;
+    overflow: hidden;
+}
+
+.lines {
+    p {
+        margin-bottom: unset;
+    }
+}
+
+.form-control {
+    background-color: rgb(66, 67, 77);
+    border: none;
+    color: whitesmoke;
+}
+
+.form-control:focus {
+    background-color: rgb(66, 67, 77);
+    outline: none;
+    box-shadow: none;
+    color: whitesmoke;
+}
+
+.form-control::placeholder {
+    color: rgb(160, 160, 172);
+    opacity: 1;
+}
+
+.form-control:-ms-input-placeholder {
+    color: rgb(160, 160, 172);
+}
+
+.form-control::-webkit-input-placeholder {
+    color: rgb(160, 160, 172);
+}
+
+textarea {
+    resize: none;
+    overflow: visible !important;
+}
