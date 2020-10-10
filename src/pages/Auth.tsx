@@ -1,18 +1,24 @@
 import React from 'react'
 import api from '../datas/api'
 import axios from 'axios'
+import { Location } from 'history'
 
-export default class Auth extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      done: false
-    }
+export interface AuthProps {
+  readonly location: Location
+}
+
+export interface AuthState {
+  done: boolean;
+}
+
+export default class Auth extends React.Component<AuthProps, AuthState> {
+  state: AuthState = {
+    done: false
   }
 
   ProcessAuth = async () => {
     var code = new URLSearchParams(this.props.location.search).get('code')
-    localStorage.setItem('authcode', code)
+    localStorage.setItem('authcode', code!)
     await axios.get(`${api}/oauth2/token`, {
       params: {
         code: code
@@ -23,7 +29,7 @@ export default class Auth extends React.Component {
         this.setState({ done: true })
       })
       .catch(e => {
-        localStorage.setItem('token', null)
+        localStorage.removeItem('token')
         console.error(e)
       })
   }

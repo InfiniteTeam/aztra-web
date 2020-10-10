@@ -1,30 +1,51 @@
 import React, { Component, createRef } from 'react';
 import { Container, Row, Col, Collapse, Button } from 'react-bootstrap';
 import { Route, Switch } from 'react-router-dom';
-import * as Dashboard from '../pages/dashboard'
-import { Sidebar } from '.'
-import { NotFound } from '../pages'
+import { default as DashboardMain } from '../pages/dashboard/Main'
+import { default as DashboardGreeting } from '../pages/dashboard/Greeting'
+import Sidebar from './Sidebar'
+import NotFound from '../pages/NotFound'
 import axios from 'axios'
 import urljoin from 'url-join'
 import oauth2 from '../datas/oauth'
 import { Permissions } from 'discord.js'
-import swal from '@sweetalert/with-react'
+import { PartialGuild } from '../types/DiscordTypes'
+import { match } from 'react-router-dom'
 
-export default class DashboardRoute extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      guild: null,
-      fetchDone: false,
-      sidebarOpen: false,
-      winWidth: window.innerWidth,
-      winHeight: window.innerHeight
-    }
+const swal = require('@sweetalert/with-react')
 
-    this.sidebarHeaderRef = createRef()
+interface MatchParams {
+  readonly serverid: string
+}
+
+interface Match extends match {
+  readonly params: MatchParams
+}
+
+interface DashboardRouteProps {
+  readonly match: Match
+}
+
+interface DashboardRouteState {
+  guild: PartialGuild | null
+  fetchDone: boolean
+  sidebarOpen: boolean
+  winWidth: number
+  winHeight: number
+}
+
+export default class DashboardRoute extends Component<DashboardRouteProps, DashboardRouteState> {
+  state: DashboardRouteState = {
+    guild: null,
+    fetchDone: false,
+    sidebarOpen: false,
+    winWidth: window.innerWidth,
+    winHeight: window.innerHeight
   }
 
-  getGuild = async token => {
+  sidebarHeaderRef: React.RefObject<HTMLDivElement> = createRef()
+
+  getGuild = async (token: string) => {
     await axios.get(urljoin(oauth2.api_endpoint, '/users/@me/guilds'), {
       headers: {
         Authorization: `Bearer ${token}`
@@ -32,11 +53,11 @@ export default class DashboardRoute extends Component {
     })
       .then(res => {
         let guild = res.data
-          .filter(one => {
+          .filter((one: PartialGuild) => {
             let perms = new Permissions(Number(one.permissions))
             return perms.has(Permissions.FLAGS.ADMINISTRATOR)
           })
-          .find(one => one.id === this.props.match.params.serverid)
+          .find((one: PartialGuild) => one.id === this.props.match.params.serverid)
         this.setState({ guild: guild })
       })
       .catch(e => {
@@ -101,7 +122,7 @@ export default class DashboardRoute extends Component {
         <div>
           <h2>지원하지 않는 브라우저</h2>
           <p className="px-3">
-            죄송합니다. 사용하시는 브라우저는 WebSocket 연결을 지원하지 않는것 같습니다. 대시보드 서비스를 이용하시려면 
+            죄송합니다. 사용하시는 브라우저는 WebSocket 연결을 지원하지 않는것 같습니다. 대시보드 서비스를 이용하시려면
           </p>
         </div>
       )
@@ -180,11 +201,11 @@ export default class DashboardRoute extends Component {
               this.state.fetchDone
                 ? <Switch>
                   <Route exact path={this.props.match.url} render={
-                    () => <Dashboard.Main guild={guild} />
+                    () => <DashboardMain guild={guild} />
                   }
                   />
                   <Route exact path={`${this.props.match.url}/greeting`} render={
-                    () => <Dashboard.Greeting guild={guild} />
+                    () => <DashboardGreeting guild={guild} />
                   }
                   />
                   <Route component={NotFound} />

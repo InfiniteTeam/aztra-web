@@ -3,17 +3,20 @@ import { Nav, Navbar, NavDropdown, Container } from 'react-bootstrap';
 import axios from 'axios'
 import oauth2 from '../datas/oauth'
 import urljoin from 'url-join'
+import { User } from '../types/DiscordTypes'
 
-export default class Navibar extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      user: null,
-      loginDone: false
-    }
+interface NavibarState {
+  user: User | null
+  loginDone: boolean
+}
+
+export default class Navibar extends Component<{}, NavibarState> {
+  state: NavibarState = {
+    user: null,
+    loginDone: false
   }
 
-  getUserInfo = async token => {
+  getUserInfo = async (token: string) => {
     try {
       let res = await axios.get(urljoin(oauth2.api_endpoint, '/users/@me'), {
         headers: {
@@ -39,7 +42,7 @@ export default class Navibar extends Component {
   }
 
   render() {
-    const user = this.state.user || JSON.parse(localStorage.getItem('cached_user'))
+    const user = this.state.user || JSON.parse(localStorage.getItem('cached_user')!)
     return (
       <>
         <div style={{ paddingBottom: 57 }}>

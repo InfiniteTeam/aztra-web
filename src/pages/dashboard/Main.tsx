@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import { Card, Button, Row, Col } from 'react-bootstrap'
+import { PartialGuild } from '../../types/DiscordTypes'
 
-export default class Main extends Component {
+interface MainProps {
+  readonly guild: PartialGuild | null
+}
+
+export default class Main extends Component<MainProps> {
   render() {
     const guild = this.props.guild
 

@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import { Button, Row, Col, Form } from 'react-bootstrap'
 import TextareaAutosize from 'react-textarea-autosize'
+import { PartialGuild } from '../../types/DiscordTypes'
 
-export default class Greeting extends Component {
+interface GreetingProps {
+  readonly guild: PartialGuild | null
+}
+
+export default class Greeting extends Component<GreetingProps> {
   render() {
     return (
       <div style={{
@@ -55,7 +60,6 @@ export default class Greeting extends Component {
               </Button>
             </Form>
           </Col>
-
         </Row>
       </div>
     )

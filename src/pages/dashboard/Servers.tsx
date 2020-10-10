@@ -4,17 +4,20 @@ import axios from 'axios'
 import urljoin from 'url-join'
 import oauth2 from '../../datas/oauth'
 import { Permissions } from 'discord.js'
+import { PartialGuild } from '../../types/DiscordTypes'
 
-export default class Servers extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      guilds: [],
-      fetchDone: false
-    }
+interface ServersState {
+  guilds: PartialGuild[]
+  fetchDone: boolean
+}
+
+export default class Servers extends Component<{}, ServersState> {
+  state: ServersState = {
+    guilds: [],
+    fetchDone: false
   }
 
-  getGuilds = async token => {
+  getGuilds = async (token: string) => {
     try {
       let res = await axios.get(urljoin(oauth2.api_endpoint, '/users/@me/guilds'), {
         headers: {

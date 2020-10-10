@@ -1,9 +1,20 @@
 import React, { Component } from 'react';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
-import { Home, Auth, NotFound, Redirecting, Logout } from './pages'
+
 import oauth from './datas/oauth'
-import { Navibar, Footer, DashboardRoute } from './components'
-import * as Dashboard from './pages/dashboard'
+
+import Home from './pages/Home'
+import Auth from './pages/Auth'
+import NotFound from './pages/NotFound'
+import Redirecting from './pages/Redirecting'
+import Logout from './pages/Logout'
+
+
+import Navibar from './components/Navibar'
+import Footer from './components/Footer'
+import DashboardRoute from './components/DashboardRoute'
+
+import { default as DashboardServers } from './pages/dashboard/Servers'
 
 export default class App extends Component {
   render() {
@@ -17,7 +28,7 @@ export default class App extends Component {
             <Navibar />
             <Switch>
               <Route exact path="/" component={Home} />
-              <Route exact path="/servers" component={Dashboard.Servers} />
+              <Route exact path="/servers" component={DashboardServers} />
               <Route path="/dashboard/:serverid(\d+)" component={DashboardRoute} />
               <Route component={NotFound} />
             </Switch>

@@ -1,8 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Nav } from 'react-bootstrap';
+import { PartialGuild } from '../types/DiscordTypes'
 
-export default class Main extends Component {
+interface SidebarProps {
+  guild: PartialGuild | null
+}
+
+export default class Sidebar extends Component<SidebarProps> {
   render() {
     const guild = this.props.guild
     return (
