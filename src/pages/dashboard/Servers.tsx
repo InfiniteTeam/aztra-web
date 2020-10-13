@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Container, Card, Row, Col, Button } from 'react-bootstrap'
 import axios from 'axios'
 import urljoin from 'url-join'
-import oauth2 from '../../datas/oauth'
+import api from '../../datas/api'
 import { Permissions } from 'discord.js'
 import { PartialGuild } from '../../types/DiscordTypes'
 
@@ -19,9 +19,9 @@ export default class Servers extends Component<{}, ServersState> {
 
   getGuilds = async (token: string) => {
     try {
-      let res = await axios.get(urljoin(oauth2.api_endpoint, '/users/@me/guilds'), {
+      let res = await axios.get(urljoin(api, '/discord/users/@me/guilds'), {
         headers: {
-          Authorization: `Bearer ${token}`
+          token: token
         }
       })
       this.setState({ guilds: res.data })

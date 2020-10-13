@@ -7,7 +7,7 @@ import Sidebar from './Sidebar'
 import NotFound from '../pages/NotFound'
 import axios from 'axios'
 import urljoin from 'url-join'
-import oauth2 from '../datas/oauth'
+import api from '../datas/api'
 import { Permissions } from 'discord.js'
 import { PartialGuild } from '../types/DiscordTypes'
 import { match } from 'react-router-dom'
@@ -46,9 +46,9 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
   sidebarHeaderRef: React.RefObject<HTMLDivElement> = createRef()
 
   getGuild = async (token: string) => {
-    await axios.get(urljoin(oauth2.api_endpoint, '/users/@me/guilds'), {
+    await axios.get(urljoin(api, '/discord/users/@me/guilds'), {
       headers: {
-        Authorization: `Bearer ${token}`
+        token: token
       }
     })
       .then(res => {
@@ -96,7 +96,7 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
     const guild = this.state.guild
     const wsSupport = 'WebSocket' in window || 'MozWebSocket' in window
 
-    const isXXSsize = this.sidebarHeaderRef.current?.clientHeight ? this.state.winWidth < 576 : true
+    const isXXSsize = this.state.winWidth < 576
 
     if (this.state.fetchDone && !guild) {
       swal(
@@ -115,7 +115,8 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
         }
       )
     }
-
+    
+    /*
     if (!wsSupport) {
       swal(
         <div>
@@ -126,6 +127,7 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
         </div>
       )
     }
+    */
 
     return (
       <Container fluid>
