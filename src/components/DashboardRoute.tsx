@@ -97,7 +97,6 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
     const wsSupport = 'WebSocket' in window || 'MozWebSocket' in window
 
     const isXXSsize = this.sidebarHeaderRef.current?.clientHeight ? this.state.winWidth < 576 : true
-    console.log(this.sidebarHeaderRef.current?.clientHeight)
 
     if (this.state.fetchDone && !guild) {
       swal(

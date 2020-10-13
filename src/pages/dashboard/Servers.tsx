@@ -54,7 +54,7 @@ export default class Servers extends Component<{}, ServersState> {
         <Card key={index} bg="dark" text="light" className="Dashboard-Servers-Card" style={{
           animationDelay: `${index * 80}ms`,
         }}>
-          <Card.Body style={{ padding: 'unset', fontSize: '12pt'}}>
+          <Card.Body style={{ padding: 'unset', fontSize: '12pt' }}>
             <Container>
               <Row>
                 <Col>
