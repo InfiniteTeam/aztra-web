@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Card, Row, Col, Button } from 'react-bootstrap'
+import { Container, Card, Row, Col, Button, Spinner } from 'react-bootstrap'
 import axios from 'axios'
 import urljoin from 'url-join'
 import api from '../../datas/api'
@@ -81,7 +81,15 @@ export default class Servers extends Component<{}, ServersState> {
           {
             this.state.fetchDone
               ? guild_cards
-              : <h4 style={{ color: 'whitesmoke', paddingTop: 100, paddingBottom: 300 }} className="text-center">서버 목록을 가져오고 있습니다...</h4>
+              : <div style={{ color: 'whitesmoke', paddingTop: 80, paddingBottom: 300 }} className="text-center">
+                <Spinner animation="border" variant="aztra" style={{
+                  height: 50,
+                  width: 50
+                }} />
+                <h3 className="pt-5">
+                  서버 목록을 가져오고 있습니다...
+                  </h3>
+              </div>
           }
         </Container>
       </>

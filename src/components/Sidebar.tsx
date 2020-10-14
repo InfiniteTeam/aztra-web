@@ -19,10 +19,10 @@ export default class Sidebar extends Component<SidebarProps> {
           }}
         >
           <Nav.Item>
-            <Nav.Link as={Link} to={`/dashboard/${this.props.guild?.id}`}>메인</Nav.Link>
+            <Nav.Link as={Link} to={`/dashboard/${guild?.id}`}>메인</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link as={Link} to={`/dashboard/${this.props.guild?.id}/greeting`}>환영 메시지</Nav.Link>
+            <Nav.Link as={Link} to={`/dashboard/${guild?.id}/greeting`}>환영 메시지</Nav.Link>
           </Nav.Item>
           <Nav.Item>
             <Nav.Link>봇 세부 권한 관리</Nav.Link>

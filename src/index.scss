@@ -1,3 +1,7 @@
+$theme-colors: (
+    "aztra": rgb(127, 70, 202)
+);
+
 @import "bootstrap/scss/bootstrap";
 @import "markdown";
 @import "dashboard";
@@ -60,41 +64,6 @@ body {
 
 
 /* Colors */
-.btn-aztra {
-    color: #ffffff;
-    background-color: #7061c9 !important;
-    border-color: #7061c9 !important;
-    outline: none;
-    box-shadow: none !important;
-}
-
-.btn-aztra:hover,
-.btn-aztra.hover,
-.btn-aztra:focus,
-.btn-aztra.focus,
-.btn-aztra:active,
-.btn-aztra.active {
-    color: #ffffff !important;
-    background-color: #6254af !important;
-    border-color: #6254af !important;
-    outline: none;
-    box-shadow: none !important;
-}
-
-.btn-aztra:active {
-    box-shadow: none !important;
-    outline: none;
-}
-
-.btn-aztra:active:focus {
-    color: #ffffff !important;
-    background-color: #6254af !important;
-    border-color: #6254af !important;
-    outline: none;
-    box-shadow: none !important;
-}
-
-
 
 .dropdown-menu-dark {
     .dropdown-menu {

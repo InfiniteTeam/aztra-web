@@ -22,7 +22,7 @@ export default class Main extends Component<MainProps> {
             <Card className="Dashboard-card flex-md-row" bg="dark">
               <Card.Body className="text-center text-md-left">
                 <Card.Img
-                  src={`https://cdn.discordapp.com/icons/${guild?.id}/${guild?.icon}.png`} style={{
+                  src={`https://cdn.discordapp.com/icons/${guild?.id}/${guild?.icon}.png?size=512`} style={{
                     height: 120,
                     width: 120
                   }}

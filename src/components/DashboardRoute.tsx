@@ -94,7 +94,7 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
 
   render() {
     const guild = this.state.guild
-    const wsSupport = 'WebSocket' in window || 'MozWebSocket' in window
+    // const wsSupport = 'WebSocket' in window || 'MozWebSocket' in window
 
     const isXXSsize = this.state.winWidth < 576
 
@@ -153,7 +153,7 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
                       src={`https://cdn.discordapp.com/icons/${guild?.id}/${guild?.icon}.png`}
                       style={{ maxHeight: 40, marginRight: 15, borderRadius: '70%' }}
                     />
-                    {guild?.name}
+                    {guild ? guild?.name : '서버 정보를 불러오는 중...'}
                   </div>
                 </Col>
                 <Col xs={isXXSsize ? 2 : 0} className="text-center my-auto pl-1 d-sm-none d-md-none d-lg-none d-xl-none">

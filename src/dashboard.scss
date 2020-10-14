@@ -151,6 +151,18 @@
     color: rgb(160, 160, 172);
 }
 
+.form-control:disabled {
+    display: none;
+    background-color: rgb(51, 52, 59);
+    border: none;
+    opacity: 1;
+    color: rgb(121, 117, 134);
+}
+
+.form-control:disabled::placeholder {
+    color: rgb(116, 113, 126);
+}
+
 textarea {
     resize: none;
     overflow: visible !important;
