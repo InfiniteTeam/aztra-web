@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import { Button, Row, Col, Form, Spinner, Container } from 'react-bootstrap'
+import { Button, Row, Col, Form, Spinner, Container, Card } from 'react-bootstrap'
 import TextareaAutosize from 'react-textarea-autosize'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHashtag, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
+
 import { PartialGuild } from '../../types/DiscordTypes'
 
 import axios from 'axios'
@@ -83,7 +86,7 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
 
               <Form.Group controlId="incomingUse">
                 <Form.Check
-                  type="checkbox"
+                  type="switch"
                   label="반기는 메시지 사용"
                   checked={this.state.useJoin}
                   onClick={() => this.setState({ useJoin: !this.state.useJoin })}
@@ -110,7 +113,7 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
 
               <Form.Group controlId="outgoingUse">
                 <Form.Check
-                  type="checkbox"
+                  type="switch"
                   label="보내는 메시지 사용"
                   checked={this.state.useLeave}
                   onClick={() => this.setState({ useLeave: !this.state.useLeave })}
@@ -132,18 +135,45 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
               </div>
 
               <Row className="pt-4 pb-2">
-                <h4>전송 채널</h4>
+                <h4 className="pr-5">전송 채널</h4>
               </Row>
-              <Button style={{
-                width: 120
-              }}>
-                채널 선택
-              </Button>
+              <Form.Group>
+                <Container fluid style={{
+                  maxHeight: 220,
+                  overflow: 'auto',
+
+                  borderRadius: '10px',
+                  paddingTop: 10
+                }}>
+                  {["잡담", "공지", "회의", "아이디어", "자료실", "투표"].map((one, idx) =>
+                    <Card bg="dark" className="mb-1">
+                      <Card.Body className="d-flex justify-content-between py-1 my-0 pr-2">
+                        <div className="d-flex">
+                          <FontAwesomeIcon icon={faHashtag} className="mr-2 my-auto" size="sm" />
+                          <div style={{
+                            fontSize: '13pt'
+                          }}>
+                            {one}
+                          </div>
+                          <div className="ml-2 small" style={{
+                            color: 'lightgray'
+                          }}>
+                            자유
+                          </div>
+                        </div>
+
+                        {idx === 1 && <FontAwesomeIcon icon={faCheckCircle} className="mr-2 my-auto text-success" size="lg" />}
+                      </Card.Body>
+                    </Card>
+                  )}
+                </Container>
+              </Form.Group>
 
             </Form>
           </Col>
         </Row>
-        <Row className="mt-5">
+
+        <Row className="mt-4">
           <Button variant={this.state.saving ? "success" : "outline-success"} disabled={this.state.saving} type="submit" onClick={() => this.setState({ saving: true })}>
             {
               this.state.saving
