@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Button, Row, Col, Form, Spinner, Container, Card } from 'react-bootstrap'
+import { Button, Row, Col, Form, Spinner, Container, Card, Alert } from 'react-bootstrap'
 import TextareaAutosize from 'react-textarea-autosize'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHashtag, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
+import { faHashtag, faCheckCircle, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 
-import { PartialGuild } from '../../types/DiscordTypes'
+import { PartialGuild, Channel, ChannelTypes } from '../../types/DiscordTypes'
 
 import axios from 'axios'
 
@@ -21,6 +21,9 @@ interface GreetingState {
   useJoin: boolean
   useLeave: boolean
   saving: boolean
+  channels: Channel[] | null
+  channelFetchDone: boolean
+  channelSearch: string
 }
 
 export default class Greeting extends Component<GreetingProps, GreetingState> {
@@ -29,12 +32,14 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
     fetchDone: false,
     useJoin: false,
     useLeave: false,
-    saving: false
+    saving: false,
+    channels: null,
+    channelFetchDone: false,
+    channelSearch: ''
   }
 
   getData = async (token: string) => {
     try {
-      console.log('dsds')
       let res = await axios.get(`${api}/servers/${this.props.guild?.id}/greeting`, {
         headers: {
           token: token
@@ -50,10 +55,25 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
     }
   }
 
+  getChannels = async (token: string) => {
+    try {
+      let res = await axios.get(`${api}/discord/guilds/${this.props.guild?.id}/channels`, {
+        headers: {
+          token: token
+        }
+      })
+      this.setState({ channels: res.data })
+    }
+    catch (e) {
+      this.setState({ channels: null })
+    }
+  }
+
   async componentDidMount() {
     const token = localStorage.getItem('token')
     if (token) {
       await this.getData(token)
+      this.getChannels(token)
       console.log(this.state.data)
       const data = this.state.data
       const useJoin = data?.join_title_format || data?.join_desc_format
@@ -69,7 +89,6 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
   }
 
   render() {
-    console.log(this.state.useJoin)
     return this.state.fetchDone ? (
       <div style={{
         fontFamily: 'NanumBarunGothic'
@@ -137,44 +156,85 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
               <Row className="pt-4 pb-2">
                 <h4 className="pr-5">전송 채널</h4>
               </Row>
-              <Form.Group>
-                <Container fluid style={{
-                  maxHeight: 220,
-                  overflow: 'auto',
-
-                  borderRadius: '10px',
-                  paddingTop: 10
-                }}>
-                  {["잡담", "공지", "회의", "아이디어", "자료실", "투표"].map((one, idx) =>
-                    <Card bg="dark" className="mb-1">
-                      <Card.Body className="d-flex justify-content-between py-1 my-0 pr-2">
-                        <div className="d-flex">
-                          <FontAwesomeIcon icon={faHashtag} className="mr-2 my-auto" size="sm" />
-                          <div style={{
-                            fontSize: '13pt'
+              <Row>
+                <Col md={8}>
+                  {
+                    this.state.useJoin || this.state.useLeave
+                      ? <Form.Group>
+                        <Container fluid>
+                          <Row className="pb-2">
+                            <input hidden={true} />
+                            <Form.Control type="text" placeholder="채널 검색" onChange={(e) => this.setState({ channelSearch: e.target.value })} />
+                            <Form.Text className="py-1">
+                              {this.state.channels
+                                ?.filter(one => one.type === ChannelTypes.GUILD_TEXT)
+                                .filter(one => one.name?.includes(this.state.channelSearch))
+                                .sort((a, b) => Number(a.position) - Number(b.position)).length}개 채널 찾음
+                            </Form.Text>
+                          </Row>
+                          <Row style={{
+                            maxHeight: 220,
+                            overflow: 'auto',
+                            borderRadius: '10px',
+                            display: 'block'
                           }}>
-                            {one}
-                          </div>
-                          <div className="ml-2 small" style={{
-                            color: 'lightgray'
-                          }}>
-                            자유
-                          </div>
-                        </div>
+                            {
+                              this.state.channels
+                                ? this.state.channels
+                                  .filter(one => one.type === ChannelTypes.GUILD_TEXT)
+                                  .filter(one => one.name?.includes(this.state.channelSearch))
+                                  .sort((a, b) => Number(a.position) - Number(b.position))
+                                  .map((one, idx) =>
+                                    <Card bg="dark" className="mb-1 mr-2">
+                                      <Card.Body className="d-flex justify-content-between py-1 my-0 pr-2">
+                                        <div className="d-flex">
+                                          <FontAwesomeIcon icon={faHashtag} className="mr-2 my-auto" size="sm" />
+                                          <div style={{
+                                            fontSize: '13pt'
+                                          }}>
+                                            {one.name}
+                                          </div>
+                                          <div className="ml-2 small" style={{
+                                            color: 'gray'
+                                          }}>
+                                            {this.state.channels?.find(c => c.id === one.parent_id)?.name}
+                                          </div>
+                                        </div>
 
-                        {idx === 1 && <FontAwesomeIcon icon={faCheckCircle} className="mr-2 my-auto text-success" size="lg" />}
-                      </Card.Body>
-                    </Card>
-                  )}
-                </Container>
-              </Form.Group>
+                                        {one.id === this.state.data?.channel.toString() && <FontAwesomeIcon icon={faCheckCircle} className="mr-2 my-auto text-success" size="lg" />}
+                                      </Card.Body>
+                                    </Card>
+                                  )
+
+                                : <h4>불러오는 중</h4>
+                            }
+                          </Row>
+
+                        </Container>
+                      </Form.Group>
+                      : <Alert variant="warning" className="d-flex">
+                        <FontAwesomeIcon icon={faExclamationTriangle} color="darkorange" size="lg" className="my-auto mr-2" />
+                      채널을 선택하려면 먼저 반기는 메시지 또는 보내는 메시지를 사용해야 합니다.
+                  </Alert>
+                  }
+                </Col>
+              </Row>
+
 
             </Form>
           </Col>
         </Row>
 
         <Row className="mt-4">
-          <Button variant={this.state.saving ? "success" : "outline-success"} disabled={this.state.saving} type="submit" onClick={() => this.setState({ saving: true })}>
+          <Button
+            variant="aztra"
+            disabled={this.state.saving}
+            type="submit"
+            onClick={() => this.setState({ saving: true })}
+            style={{
+              minWidth: 120
+            }}
+          >
             {
               this.state.saving
                 ? <>

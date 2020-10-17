@@ -59,6 +59,16 @@
     }
     @include media-breakpoint-up(sm) {
         padding-top: 50px;
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+    @include media-breakpoint-up(md) {
+        padding-top: 50px;
+        padding-left: 60px;
+        padding-right: 60px;
+    }
+    @include media-breakpoint-up(lg) {
+        padding-top: 50px;
         padding-left: 80px;
         padding-right: 80px;
     }

@@ -4,10 +4,10 @@ import axios from 'axios'
 import urljoin from 'url-join'
 import api from '../../datas/api'
 import { Permissions } from 'discord.js'
-import { PartialGuild } from '../../types/DiscordTypes'
+import { PartialGuildExtend } from '../../types/DiscordTypes'
 
 interface ServersState {
-  guilds: PartialGuild[]
+  guilds: PartialGuildExtend[]
   fetchDone: boolean
 }
 
@@ -50,6 +50,7 @@ export default class Servers extends Component<{}, ServersState> {
         let perms = new Permissions(Number(one.permissions))
         return perms.has(Permissions.FLAGS.ADMINISTRATOR)
       })
+      .sort((a, b) => Number(!a.bot_joined) - Number(!b.bot_joined))
       .map((one, index) => (
         <Card key={index} bg="dark" text="light" className="Dashboard-Servers-Card" style={{
           animationDelay: `${index * 80}ms`,
@@ -64,7 +65,12 @@ export default class Servers extends Component<{}, ServersState> {
                   </div>
                 </Col>
                 <Col style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                  <Button variant="secondary ml-2" size="sm" href={`/dashboard/${one.id}`}>대시보드</Button>
+                  {
+                    one.bot_joined
+                      ? <Button variant="success" size="sm" href={`/dashboard/${one.id}`}>대시보드</Button>
+                      : <Button variant="secondary" size="sm">초대하기</Button>
+                  }
+
                 </Col>
               </Row>
             </Container>
