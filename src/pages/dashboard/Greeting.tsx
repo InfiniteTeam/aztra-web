@@ -15,6 +15,13 @@ interface GreetingProps {
   readonly guild: PartialGuild | null
 }
 
+interface Validations {
+  incomingTitle: boolean | null
+  incomingDesc: boolean | null
+  outgoingTitle: boolean | null
+  outgoingDesc: boolean | null
+}
+
 interface GreetingState {
   data: Greetings | null
   fetchDone: boolean
@@ -24,6 +31,9 @@ interface GreetingState {
   channels: Channel[] | null
   channelFetchDone: boolean
   channelSearch: string
+  newChannel: Channel | null
+  filteredChannels: Channel[] | null
+  validations: Validations
 }
 
 export default class Greeting extends Component<GreetingProps, GreetingState> {
@@ -35,7 +45,15 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
     saving: false,
     channels: null,
     channelFetchDone: false,
-    channelSearch: ''
+    channelSearch: '',
+    newChannel: null,
+    filteredChannels: null,
+    validations: {
+      incomingTitle: null,
+      incomingDesc: null,
+      outgoingTitle: null,
+      outgoingDesc: null
+    }
   }
 
   getData = async (token: string) => {
@@ -88,7 +106,37 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
     }
   }
 
+  handleFieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, type: 'incomingTitle' | 'incomingDesc' | 'outgoingTitle' | 'outgoingDesc') => {
+    const changeState = (prev: Readonly<GreetingState>, changed: Object) => ({
+      ...prev,
+      validations: {
+        ...prev.validations,
+        ...changed
+      }
+    })
+
+    var changed: Object
+    switch (type) {
+      case 'incomingTitle':
+        changed = { incomingTitle: e.target.value.length > 256 ? false : null }
+        break
+      case 'outgoingTitle':
+        changed = { outgoingTitle: e.target.value.length > 256 ? false : null }
+        break
+      case 'incomingDesc':
+        changed = { incomingDesc: e.target.value.length > 2048 ? false : null }
+        break
+      case 'outgoingDesc':
+        changed = { outgoingDesc: e.target.value.length > 2048 ? false : null }
+        break
+    }
+
+    this.setState(prev => changeState(prev, changed))
+  }
+
   render() {
+    const checkMark = <FontAwesomeIcon icon={faCheckCircle} className="mr-2 my-auto text-success" size="lg" />
+
     return this.state.fetchDone ? (
       <div style={{
         fontFamily: 'NanumBarunGothic'
@@ -98,7 +146,7 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
         </Row>
         <Row>
           <Col>
-            <Form>
+            <Form noValidate>
               <Row className="pb-2">
                 <h4>반기는 메시지</h4>
               </Row>
@@ -117,12 +165,14 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
               <div className={!this.state.useJoin ? "d-none" : undefined}>
                 <Form.Group controlId="incomingTitle">
                   <Form.Label>메시지 제목</Form.Label>
-                  <Form.Control as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕하세요!" defaultValue={this.state.data?.join_title_format || undefined} />
+                  <Form.Control isInvalid={this.state.validations.incomingTitle === false} as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕하세요!" defaultValue={this.state.data?.join_title_format || undefined} onChange={(e) => {this.handleFieldChange(e, 'incomingTitle')}} />
+                  <Form.Control.Feedback type="invalid">최대 256자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group controlId="incomingDesc">
                   <Form.Label>메시지 내용</Form.Label>
-                  <Form.Control as={TextareaAutosize} type="text" placeholder="예) {guild}에 오신 것을 환영합니다." defaultValue={this.state.data?.join_desc_format || undefined} />
+                  <Form.Control isInvalid={this.state.validations.incomingDesc === false} as={TextareaAutosize} type="text" placeholder="예) {guild}에 오신 것을 환영합니다." defaultValue={this.state.data?.join_desc_format || undefined} onChange={(e) => {this.handleFieldChange(e, 'incomingDesc')}} />
+                  <Form.Control.Feedback type="invalid">최대 2048자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
               </div>
 
@@ -144,12 +194,14 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
               <div className={!this.state.useLeave ? "d-none" : undefined}>
                 <Form.Group controlId="outgoingTitle">
                   <Form.Label>메시지 제목</Form.Label>
-                  <Form.Control as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕히가세요" defaultValue={this.state.data?.leave_title_format || undefined} />
+                  <Form.Control isInvalid={this.state.validations.outgoingTitle === false} as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕히가세요" defaultValue={this.state.data?.leave_title_format || undefined} onChange={(e) => {this.handleFieldChange(e, 'outgoingTitle')}} />
+                  <Form.Control.Feedback type="invalid">최대 256자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group controlId="outgoingDesc">
                   <Form.Label>메시지 내용</Form.Label>
-                  <Form.Control onChange={() => console.log('dsds')} as={TextareaAutosize} type="text" placeholder="예) {user}님이 나갔습니다." defaultValue={this.state.data?.leave_desc_format || undefined} />
+                  <Form.Control isInvalid={this.state.validations.outgoingDesc === false} as={TextareaAutosize} type="text" placeholder="예) {user}님이 나갔습니다." defaultValue={this.state.data?.leave_desc_format || undefined} onChange={(e) => {this.handleFieldChange(e, 'outgoingDesc')}} />
+                  <Form.Control.Feedback type="invalid">최대 2048자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
               </div>
 
@@ -162,6 +214,25 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
                     this.state.useJoin || this.state.useLeave
                       ? <Form.Group>
                         <Container fluid>
+                          <Row className="mb-3 flex-column">
+                            {
+                              this.state.newChannel || this.state.channels?.find(one => one.id === this.state.data?.channel)
+                                ? <>
+                                  <h5 className="pr-2">현재 선택됨: </h5>
+                                  <Card bg="secondary">
+                                    <Card.Header className="py-1 px-3" style={{
+                                      fontFamily: 'NanumSquare',
+                                      fontSize: '13pt'
+                                    }}>
+                                      <FontAwesomeIcon icon={faHashtag} className="mr-2 my-auto" size="sm" />
+                                      {this.state.newChannel?.name || this.state.channels?.find(one => one.id === this.state.data?.channel)?.name}
+                                    </Card.Header>
+                                  </Card>
+                                </>
+                                : <Form.Label as="h5">선택된 채널이 없습니다!</Form.Label>
+                            }
+
+                          </Row>
                           <Row className="pb-2">
                             <input hidden={true} />
                             <Form.Control type="text" placeholder="채널 검색" onChange={(e) => this.setState({ channelSearch: e.target.value })} />
@@ -185,7 +256,10 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
                                   .filter(one => one.name?.includes(this.state.channelSearch))
                                   .sort((a, b) => Number(a.position) - Number(b.position))
                                   .map((one, idx) =>
-                                    <Card bg="dark" className="mb-1 mr-2">
+                                    <Card bg="dark" className="mr-2" onClick={() => { this.setState({ newChannel: one }) }} style={{
+                                      cursor: 'pointer',
+                                      marginBottom: 5
+                                    }}>
                                       <Card.Body className="d-flex justify-content-between py-1 my-0 pr-2">
                                         <div className="d-flex">
                                           <FontAwesomeIcon icon={faHashtag} className="mr-2 my-auto" size="sm" />
@@ -201,7 +275,11 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
                                           </div>
                                         </div>
 
-                                        {one.id === this.state.data?.channel.toString() && <FontAwesomeIcon icon={faCheckCircle} className="mr-2 my-auto text-success" size="lg" />}
+                                        {
+                                          this.state.newChannel === one
+                                            ? checkMark
+                                            : (!this.state.newChannel && one.id === this.state.data?.channel) && checkMark
+                                        }
                                       </Card.Body>
                                     </Card>
                                   )
