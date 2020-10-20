@@ -10,6 +10,7 @@ import axios from 'axios'
 
 import { Greetings } from '../../types/dbtypes/greetings'
 import api from '../../datas/api'
+import { GuildChannel } from 'discord.js';
 
 interface GreetingProps {
   readonly guild: PartialGuild | null
@@ -28,11 +29,11 @@ interface GreetingState {
   useJoin: boolean
   useLeave: boolean
   saving: boolean
-  channels: Channel[] | null
+  channels: GuildChannel[] | null
   channelFetchDone: boolean
   channelSearch: string
-  newChannel: Channel | null
-  filteredChannels: Channel[] | null
+  newChannel: GuildChannel | null
+  filteredChannels: GuildChannel[] | null
   validations: Validations
 }
 
@@ -238,7 +239,7 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
                             <Form.Control type="text" placeholder="채널 검색" onChange={(e) => this.setState({ channelSearch: e.target.value })} />
                             <Form.Text className="py-1">
                               {this.state.channels
-                                ?.filter(one => one.type === ChannelTypes.GUILD_TEXT)
+                                ?.filter(one => one.type === "text")
                                 .filter(one => one.name?.includes(this.state.channelSearch))
                                 .sort((a, b) => Number(a.position) - Number(b.position)).length}개 채널 찾음
                             </Form.Text>
@@ -252,7 +253,7 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
                             {
                               this.state.channels
                                 ? this.state.channels
-                                  .filter(one => one.type === ChannelTypes.GUILD_TEXT)
+                                  .filter(one => one.type === "text")
                                   .filter(one => one.name?.includes(this.state.channelSearch))
                                   .sort((a, b) => Number(a.position) - Number(b.position))
                                   .map((one, idx) =>
@@ -271,7 +272,7 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
                                           <div className="ml-2 small" style={{
                                             color: 'gray'
                                           }}>
-                                            {this.state.channels?.find(c => c.id === one.parent_id)?.name}
+                                            {this.state.channels?.find(c => c.id === one.parentID)?.name}
                                           </div>
                                         </div>
 

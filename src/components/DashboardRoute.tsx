@@ -1,8 +1,11 @@
 import React, { Component, createRef } from 'react';
 import { Container, Row, Col, Collapse, Button } from 'react-bootstrap';
 import { Route, Switch } from 'react-router-dom';
-import { default as DashboardMain } from '../pages/dashboard/Main'
-import { default as DashboardGreeting } from '../pages/dashboard/Greeting'
+
+import DashboardMain from '../pages/dashboard/Main'
+import DashboardGreeting from '../pages/dashboard/Greeting'
+import DashboardMembers from '../pages/dashboard/Members'
+
 import Sidebar from './Sidebar'
 import NotFound from '../pages/NotFound'
 import axios from 'axios'
@@ -207,6 +210,10 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
                   />
                   <Route exact path={`${this.props.match.url}/greeting`} render={
                     () => <DashboardGreeting guild={guild} />
+                  }
+                  />
+                  <Route exact path={`${this.props.match.url}/members`} render={
+                    () => <DashboardMembers guild={guild} />
                   }
                   />
                   <Route component={NotFound} />
