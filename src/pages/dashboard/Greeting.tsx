@@ -4,7 +4,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHashtag, faCheckCircle, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 
-import { PartialGuild, Channel, ChannelTypes } from '../../types/DiscordTypes'
+import { PartialGuild } from '../../types/DiscordTypes'
 
 import axios from 'axios'
 
@@ -166,13 +166,13 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
               <div className={!this.state.useJoin ? "d-none" : undefined}>
                 <Form.Group controlId="incomingTitle">
                   <Form.Label>메시지 제목</Form.Label>
-                  <Form.Control isInvalid={this.state.validations.incomingTitle === false} as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕하세요!" defaultValue={this.state.data?.join_title_format || undefined} onChange={(e) => {this.handleFieldChange(e, 'incomingTitle')}} />
+                  <Form.Control isInvalid={this.state.validations.incomingTitle === false} as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕하세요!" defaultValue={this.state.data?.join_title_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'incomingTitle') }} />
                   <Form.Control.Feedback type="invalid">최대 256자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group controlId="incomingDesc">
                   <Form.Label>메시지 내용</Form.Label>
-                  <Form.Control isInvalid={this.state.validations.incomingDesc === false} as={TextareaAutosize} type="text" placeholder="예) {guild}에 오신 것을 환영합니다." defaultValue={this.state.data?.join_desc_format || undefined} onChange={(e) => {this.handleFieldChange(e, 'incomingDesc')}} />
+                  <Form.Control isInvalid={this.state.validations.incomingDesc === false} as={TextareaAutosize} type="text" placeholder="예) {guild}에 오신 것을 환영합니다." defaultValue={this.state.data?.join_desc_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'incomingDesc') }} />
                   <Form.Control.Feedback type="invalid">최대 2048자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
               </div>
@@ -195,13 +195,13 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
               <div className={!this.state.useLeave ? "d-none" : undefined}>
                 <Form.Group controlId="outgoingTitle">
                   <Form.Label>메시지 제목</Form.Label>
-                  <Form.Control isInvalid={this.state.validations.outgoingTitle === false} as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕히가세요" defaultValue={this.state.data?.leave_title_format || undefined} onChange={(e) => {this.handleFieldChange(e, 'outgoingTitle')}} />
+                  <Form.Control isInvalid={this.state.validations.outgoingTitle === false} as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕히가세요" defaultValue={this.state.data?.leave_title_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'outgoingTitle') }} />
                   <Form.Control.Feedback type="invalid">최대 256자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group controlId="outgoingDesc">
                   <Form.Label>메시지 내용</Form.Label>
-                  <Form.Control isInvalid={this.state.validations.outgoingDesc === false} as={TextareaAutosize} type="text" placeholder="예) {user}님이 나갔습니다." defaultValue={this.state.data?.leave_desc_format || undefined} onChange={(e) => {this.handleFieldChange(e, 'outgoingDesc')}} />
+                  <Form.Control isInvalid={this.state.validations.outgoingDesc === false} as={TextareaAutosize} type="text" placeholder="예) {user}님이 나갔습니다." defaultValue={this.state.data?.leave_desc_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'outgoingDesc') }} />
                   <Form.Control.Feedback type="invalid">최대 2048자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
               </div>
