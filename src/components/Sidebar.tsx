@@ -13,6 +13,7 @@ export default class Sidebar extends Component<SidebarProps> {
     return (
       <>
         <Nav 
+          id="dashboard-sidebar"
           className="col-md-12 d-block d-md-block"
           style={{
             paddingRight: 0,

@@ -71,6 +71,7 @@ export default class Members extends Component<MembersProps, MembersState> {
   }
 
   render() {
+    console.log('dsds')
     const members = (
       (this.state.filteredMembers || this.state.members)?.map(one =>
         <Card bg="dark" className="mb-2">

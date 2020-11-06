@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Card, Row, Col, Button, Spinner } from 'react-bootstrap'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import urljoin from 'url-join'
 import api from '../../datas/api'
 import { Permissions } from 'discord.js'

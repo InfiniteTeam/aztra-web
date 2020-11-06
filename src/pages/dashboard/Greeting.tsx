@@ -1,6 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import { Button, Row, Col, Form, Spinner, Container, Card, Alert } from 'react-bootstrap'
 import TextareaAutosize from 'react-textarea-autosize'
+import ChangesNotSaved from '../../components/forms/ChangesNotSaved'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHashtag, faCheckCircle, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 
@@ -16,13 +18,6 @@ interface GreetingProps {
   readonly guild: PartialGuild | null
 }
 
-interface Validations {
-  incomingTitle: boolean | null
-  incomingDesc: boolean | null
-  outgoingTitle: boolean | null
-  outgoingDesc: boolean | null
-}
-
 interface GreetingState {
   data: Greetings | null
   fetchDone: boolean
@@ -34,7 +29,16 @@ interface GreetingState {
   channelSearch: string
   newChannel: GuildChannel | null
   filteredChannels: GuildChannel[] | null
-  validations: Validations
+
+  validation_incomingTitle: boolean | null
+  validation_incomingDesc: boolean | null
+  validation_outgoingTitle: boolean | null
+  validation_outgoingDesc: boolean | null,
+
+  value_incomingTitleControl: string | null
+  value_incomingDescControl: string | null
+  value_outgoingTitleControl: string | null
+  value_outgoingDescControl: string | null
 }
 
 export default class Greeting extends Component<GreetingProps, GreetingState> {
@@ -49,13 +53,19 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
     channelSearch: '',
     newChannel: null,
     filteredChannels: null,
-    validations: {
-      incomingTitle: null,
-      incomingDesc: null,
-      outgoingTitle: null,
-      outgoingDesc: null
-    }
+
+    validation_incomingTitle: null,
+    validation_incomingDesc: null,
+    validation_outgoingTitle: null,
+    validation_outgoingDesc: null,
+
+    value_incomingTitleControl: null,
+    value_incomingDescControl: null,
+    value_outgoingTitleControl: null,
+    value_outgoingDescControl: null
   }
+
+  incomingTitleControlRef: React.RefObject<TextareaAutosize> = createRef()
 
   getData = async (token: string) => {
     try {
@@ -107,32 +117,30 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
     }
   }
 
-  handleFieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, type: 'incomingTitle' | 'incomingDesc' | 'outgoingTitle' | 'outgoingDesc') => {
-    const changeState = (prev: Readonly<GreetingState>, changed: Object) => ({
-      ...prev,
-      validations: {
-        ...prev.validations,
-        ...changed
-      }
-    })
-
-    var changed: Object
+  handleFieldChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, type: 'incomingTitle' | 'incomingDesc' | 'outgoingTitle' | 'outgoingDesc') => {
+    let value = e.target.value
     switch (type) {
       case 'incomingTitle':
-        changed = { incomingTitle: e.target.value.length > 256 ? false : null }
+        await this.setState({ validation_incomingTitle: 0 < value.length && value.length <= 256 ? null : false, value_incomingTitleControl: e.target.value })
         break
       case 'outgoingTitle':
-        changed = { outgoingTitle: e.target.value.length > 256 ? false : null }
+        await this.setState({ validation_outgoingTitle: 0 < value.length && value.length <= 256 ? null : false, value_outgoingTitleControl: e.target.value })
         break
       case 'incomingDesc':
-        changed = { incomingDesc: e.target.value.length > 2048 ? false : null }
+        await this.setState({ validation_incomingDesc: 0 < value.length && value.length <= 2048 ? null : false, value_incomingDescControl: e.target.value })
         break
       case 'outgoingDesc':
-        changed = { outgoingDesc: e.target.value.length > 2048 ? false : null }
+        await this.setState({ validation_outgoingDesc: 0 < value.length && value.length <= 2048 ? null : false, value_outgoingDescControl: e.target.value })
         break
     }
+    console.log(this.isChangesNotSaved())
+  }
 
-    this.setState(prev => changeState(prev, changed))
+  isChangesNotSaved = () => {
+    var data = this.state.data
+    return !(
+      data?.join_title_format === this.state.value_incomingTitleControl
+    )
   }
 
   render() {
@@ -166,14 +174,14 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
               <div className={!this.state.useJoin ? "d-none" : undefined}>
                 <Form.Group controlId="incomingTitle">
                   <Form.Label>메시지 제목</Form.Label>
-                  <Form.Control isInvalid={this.state.validations.incomingTitle === false} as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕하세요!" defaultValue={this.state.data?.join_title_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'incomingTitle') }} />
-                  <Form.Control.Feedback type="invalid">최대 256자를 초과할 수 없습니다!</Form.Control.Feedback>
+                  <Form.Control ref={this.incomingTitleControlRef} isInvalid={this.state.validation_incomingTitle === false} as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕하세요!" defaultValue={this.state.data?.join_title_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'incomingTitle') }} />
+                  <Form.Control.Feedback type="invalid">빈칸일 수 없으며 최대 256자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group controlId="incomingDesc">
                   <Form.Label>메시지 내용</Form.Label>
-                  <Form.Control isInvalid={this.state.validations.incomingDesc === false} as={TextareaAutosize} type="text" placeholder="예) {guild}에 오신 것을 환영합니다." defaultValue={this.state.data?.join_desc_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'incomingDesc') }} />
-                  <Form.Control.Feedback type="invalid">최대 2048자를 초과할 수 없습니다!</Form.Control.Feedback>
+                  <Form.Control isInvalid={this.state.validation_incomingDesc === false} as={TextareaAutosize} type="text" placeholder="예) {guild}에 오신 것을 환영합니다." defaultValue={this.state.data?.join_desc_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'incomingDesc') }} />
+                  <Form.Control.Feedback type="invalid">빈칸일 수 없으며 최대 2048자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
               </div>
 
@@ -195,14 +203,14 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
               <div className={!this.state.useLeave ? "d-none" : undefined}>
                 <Form.Group controlId="outgoingTitle">
                   <Form.Label>메시지 제목</Form.Label>
-                  <Form.Control isInvalid={this.state.validations.outgoingTitle === false} as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕히가세요" defaultValue={this.state.data?.leave_title_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'outgoingTitle') }} />
-                  <Form.Control.Feedback type="invalid">최대 256자를 초과할 수 없습니다!</Form.Control.Feedback>
+                  <Form.Control isInvalid={this.state.validation_outgoingTitle === false} as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕히가세요" defaultValue={this.state.data?.leave_title_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'outgoingTitle') }} />
+                  <Form.Control.Feedback type="invalid">빈칸일 수 없으며 최대 256자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group controlId="outgoingDesc">
                   <Form.Label>메시지 내용</Form.Label>
-                  <Form.Control isInvalid={this.state.validations.outgoingDesc === false} as={TextareaAutosize} type="text" placeholder="예) {user}님이 나갔습니다." defaultValue={this.state.data?.leave_desc_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'outgoingDesc') }} />
-                  <Form.Control.Feedback type="invalid">최대 2048자를 초과할 수 없습니다!</Form.Control.Feedback>
+                  <Form.Control isInvalid={this.state.validation_outgoingDesc === false} as={TextareaAutosize} type="text" placeholder="예) {user}님이 나갔습니다." defaultValue={this.state.data?.leave_desc_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'outgoingDesc') }} />
+                  <Form.Control.Feedback type="invalid">빈칸일 수 없으며 최대 2048자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
               </div>
 
