@@ -3,7 +3,7 @@ import { GuildMember } from 'discord.js'
 
 import axios from 'axios'
 import api from '../../datas/api'
-import { PartialGuild } from '../../types/DiscordTypes';
+import { MemberExtended, PartialGuild } from '../../types/DiscordTypes';
 import Row from 'react-bootstrap/esm/Row';
 import { Badge, Card, Col, Form } from 'react-bootstrap';
 
@@ -12,10 +12,10 @@ interface MembersProps {
 }
 
 interface MembersState {
-  members: GuildMember[] | null
+  members: MemberExtended[] | null
   memberSearch: string
   fetchDone: boolean
-  filteredMembers: GuildMember[] | null
+  filteredMembers: MemberExtended[] | null
 }
 
 export default class Members extends Component<MembersProps, MembersState> {
@@ -58,10 +58,10 @@ export default class Members extends Component<MembersProps, MembersState> {
   filterMembers = (e?: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     this.setState({
       filteredMembers: this.state.members?.filter(one =>
-        !e || one.user.username.toLowerCase().includes(e.target.value.toLowerCase()) || one.nickname?.toLocaleLowerCase().includes(e.target.value.toLocaleLowerCase())
+        !e || one.displayName?.toLowerCase()?.includes(e.target.value.toLowerCase())
       )?.sort((a, b) => {
-        let aDname = a.nickname || a.user.username
-        let bDname = b.nickname || b.user.username
+        let aDname = a.displayName!
+        let bDname = b.displayName!
         if (aDname > bDname) return 1
         else if (aDname < bDname) return -1
         return 0
@@ -76,7 +76,7 @@ export default class Members extends Component<MembersProps, MembersState> {
       (this.state.filteredMembers || this.state.members)?.map(one =>
         <Card bg="dark" className="mb-2">
           <Card.Header className="d-flex py-1">
-            <img className="my-auto" alt={one.user.tag} src={one.user.avatar ? `https://cdn.discordapp.com/avatars/${one.user.id}/${one.user.avatar}.png` : one.user.defaultAvatarURL} style={{ maxHeight: 40, marginRight: 15, borderRadius: '70%' }} />
+            <img className="my-auto" alt={one.user.tag!} src={one.user.avatar ? `https://cdn.discordapp.com/avatars/${one.user.id}/${one.user.avatar}.jpeg?size=64` : one.user.defaultAvatarURL} style={{ maxHeight: 40, marginRight: 15, borderRadius: '70%' }} />
             <div>
               <div className="d-flex">
                 <div>

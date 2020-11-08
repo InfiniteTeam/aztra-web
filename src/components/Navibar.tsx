@@ -64,11 +64,9 @@ export default class Navibar extends Component<{}, NavibarState> {
                   <Nav.Link href="/servers" className="Navlink">
                     대시보드
                   </Nav.Link>
-                  <NavDropdown title={<span className="Navlink">기능들</span>} id="basic-nav-dropdown" className="dropdown-menu-dark">
-                    <NavDropdown.Item className="dropdown-item-dark" href="/bots/Azalea">
-                      환영 메시지
-                    </NavDropdown.Item>
-                  </NavDropdown>
+                  <Nav.Link href="/premium" className="Navlink">
+                    Aztra Premium
+                  </Nav.Link>
                 </Nav>
                 <Nav>
                   {

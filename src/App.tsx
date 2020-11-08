@@ -8,7 +8,7 @@ import Auth from './pages/Auth'
 import NotFound from './pages/NotFound'
 import Redirecting from './pages/Redirecting'
 import Logout from './pages/Logout'
-
+import Premium from './pages/Premium';
 
 import Navibar from './components/Navibar'
 import Footer from './components/Footer'
@@ -29,6 +29,7 @@ export default class App extends Component {
             <Switch>
               <Route exact path="/" component={Home} />
               <Route exact path="/servers" component={DashboardServers} />
+              <Route exact path="/premium" component={Premium} />
               <Route path="/dashboard/:serverid(\d+)" component={DashboardRoute} />
               <Route component={NotFound} />
             </Switch>
