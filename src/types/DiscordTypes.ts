@@ -120,37 +120,49 @@ export interface PresenceExtended {
     readonly status: string
 }
 
-export interface UserExtended {
+export interface UserMinimal {
     readonly avatar: string | null
     readonly bot: boolean
     readonly createdAt: number
     readonly defaultAvatarURL: string
     readonly discriminator: string | null
     readonly id: string
-    readonly lastMessageID: string | null
-    readonly locale: string | null
-    readonly presence: PresenceExtended
+
     readonly system: boolean | null
     readonly tag: string | null
     readonly username: string | null
+    readonly locale: string | null
 }
 
-export interface MemberExtended {
-    readonly bannable: boolean
+export interface UserExtended extends UserMinimal {
+    readonly lastMessageID: string | null
+    readonly presence: PresenceExtended
+}
+
+export interface MemberMinimal {
     readonly displayColor: number
     readonly displayName: string | null
     readonly joinedAt: number | null
+    readonly nickname: string | null
+    readonly permissions: number
+    readonly premiumSince: number | null
+    readonly roles: string[]
+
+    readonly user: UserMinimal
+}
+
+export interface MemberExtended extends MemberMinimal {
+    readonly bannable: boolean
+
     readonly kickable: boolean
     readonly lastMessageChannelId: string | null
     readonly lastMessageId: string | null
     readonly manageable: boolean
-    readonly nickname: string | null
-    readonly permissions: number
-    readonly premiumSince: number | null
+
 
     readonly highestRole: string
     readonly hoistRole: string
-    readonly roles: string[]
+
 
     readonly user: UserExtended
 }

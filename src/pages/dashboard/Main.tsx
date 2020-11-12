@@ -19,7 +19,7 @@ export default class Main extends Component<MainProps> {
         </Row>
         <Row className="dashboard-section">
           <Col className="col-auto">
-            <Card className="flex-md-row my-3" bg="dark">
+            <Card className="flex-md-row my-3 shadow" bg="dark">
               <Card.Body className="text-center text-md-left">
                 <Card.Img
                   src={`https://cdn.discordapp.com/icons/${guild?.id}/${guild?.icon}.png?size=512`} style={{
@@ -58,7 +58,7 @@ export default class Main extends Component<MainProps> {
         </Row>
         <Row className="dashboard-section">
           <Col>
-            <Card className="Dashboard-card my-3" bg="dark">
+            <Card className="Dashboard-card my-3 shadow" bg="dark">
               <Card.Body>
                 <Card.Title>멤버 차단됨</Card.Title>
                 <Card.Text>
@@ -71,7 +71,7 @@ export default class Main extends Component<MainProps> {
           {
             Array.from(Array(3).keys()).map(one =>
               <Col>
-                <Card className="Dashboard-card my-3" bg="dark">
+                <Card className="Dashboard-card my-3 shadow" bg="dark">
                   <Card.Body>
                     <Card.Title>Card Title</Card.Title>
                     <Card.Text>

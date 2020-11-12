@@ -52,7 +52,7 @@ export default class Servers extends Component<{}, ServersState> {
       })
       .sort((a, b) => Number(!a.bot_joined) - Number(!b.bot_joined))
       .map((one, index) => (
-        <Card key={index} bg="dark" text="light" className="Dashboard-Servers-Card" style={{
+        <Card key={index} bg="dark" text="light" className="Dashboard-Servers-Card shadow" style={{
           animationDelay: `${index * 80}ms`,
         }}>
           <Card.Body style={{ padding: 'unset', fontSize: '12pt' }}>
@@ -70,7 +70,6 @@ export default class Servers extends Component<{}, ServersState> {
                       ? <Button variant="success" size="sm" href={`/dashboard/${one.id}`}>대시보드</Button>
                       : <Button variant="secondary" size="sm">초대하기</Button>
                   }
-
                 </Col>
               </Row>
             </Container>

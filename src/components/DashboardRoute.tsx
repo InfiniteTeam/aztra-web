@@ -182,7 +182,7 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
                       ? (
                         <Collapse in={this.state.sidebarOpen} timeout={0}>
                           <div id="sidebar-collapse" className="Dashboardroute-sidebar-body">
-                            <Sidebar guild={guild} />
+                            <Sidebar guild={guild!} />
                           </div>
                         </Collapse>
                       )
@@ -190,7 +190,7 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
                         <div className="Dashboardroute-sidebar-body" style={{
                           height: `calc(100vh - ${this.sidebarHeaderRef.current?.clientHeight}px - 90px)`
                         }}>
-                          <Sidebar guild={guild} />
+                          <Sidebar guild={guild!} />
                         </div>
                       )
                   }

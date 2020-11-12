@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
-import { GuildMember } from 'discord.js'
 
 import axios from 'axios'
 import api from '../../datas/api'
-import { MemberExtended, PartialGuild } from '../../types/DiscordTypes';
+import { MemberMinimal, PartialGuild } from '../../types/DiscordTypes';
 import Row from 'react-bootstrap/esm/Row';
-import { Badge, Card, Col, Form } from 'react-bootstrap';
+import { Col, Form } from 'react-bootstrap';
+import MemberListCard from '../../components/forms/MemberListCard';
 
 interface MembersProps {
   readonly guild: PartialGuild | null
 }
 
 interface MembersState {
-  members: MemberExtended[] | null
+  members: MemberMinimal[] | null
   memberSearch: string
   fetchDone: boolean
-  filteredMembers: MemberExtended[] | null
+  filteredMembers: MemberMinimal[] | null,
 }
 
 export default class Members extends Component<MembersProps, MembersState> {
@@ -58,7 +58,7 @@ export default class Members extends Component<MembersProps, MembersState> {
   filterMembers = (e?: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     this.setState({
       filteredMembers: this.state.members?.filter(one =>
-        !e || one.displayName?.toLowerCase()?.includes(e.target.value.toLowerCase())
+        !e || one.user.username?.toLowerCase()?.includes(e.target.value.toLowerCase()) || one.nickname?.toLowerCase()?.includes(e.target.value.toLowerCase())
       )?.sort((a, b) => {
         let aDname = a.displayName!
         let bDname = b.displayName!
@@ -73,28 +73,9 @@ export default class Members extends Component<MembersProps, MembersState> {
   render() {
     console.log('dsds')
     const members = (
-      (this.state.filteredMembers || this.state.members)?.map(one =>
-        <Card bg="dark" className="mb-2">
-          <Card.Header className="d-flex py-1">
-            <img className="my-auto" alt={one.user.tag!} src={one.user.avatar ? `https://cdn.discordapp.com/avatars/${one.user.id}/${one.user.avatar}.jpeg?size=64` : one.user.defaultAvatarURL} style={{ maxHeight: 40, marginRight: 15, borderRadius: '70%' }} />
-            <div>
-              <div className="d-flex">
-                <div>
-                  {one.nickname || one.user.username}
-                </div>
-                <h6>
-                  {one.user.bot && <Badge className="ml-2 my-auto" variant="blurple">BOT</Badge>}
-                </h6>
-              </div>
-              <div className="text-muted font-weight-bold" style={{
-                fontSize: '11pt'
-              }}>
-                @{one.user.tag}
-              </div>
-            </div>
-          </Card.Header>
-        </Card>
-      )
+      (this.state.filteredMembers || this.state.members)?.map((one, idx) => {
+        return <MemberListCard key={idx} member={one} />
+      })
     )
 
     return (
@@ -106,17 +87,28 @@ export default class Members extends Component<MembersProps, MembersState> {
         </Row>
         <Row>
           <Col>
-            {this.state.fetchDone ? <Form>
-              <Form.Group>
-                <Row className="pb-2">
-                  <input hidden={true} />
-                  <Form.Control type="text" placeholder="멤버 검색" onChange={this.filterMembers} />
-                </Row>
-                <Row className="flex-column">
-                  {members}
-                </Row>
-              </Form.Group>
-            </Form> : <h4>멤버 목록을 불러오는 중...</h4>}
+            {
+              this.state.fetchDone
+                ? <Form>
+                  <Form.Group>
+                    <Row className="pb-2">
+                      <Form.Text style={{
+
+                        paddingBottom: '8px',
+                        fontSize: '12pt'
+                      }}>
+                        멤버 {this.state.members?.length} 명
+                      </Form.Text>
+                      <input hidden={true} />
+                      <Form.Control type="text" placeholder="멤버 검색" onChange={this.filterMembers} />
+                    </Row>
+                    <Row className="flex-column">
+                      {members}
+                    </Row>
+                  </Form.Group>
+                </Form>
+                : <h4>멤버 목록을 불러오는 중...</h4>
+            }
           </Col>
         </Row>
       </div>

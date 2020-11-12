@@ -35,8 +35,8 @@ export default class Premium extends Component {
         </h4>
         <Container>
           <Row>
-            <Col sm={3}>
-              <Card bg="dark" className="h-100">
+            <Col sm={6} lg={3} className="mb-4">
+              <Card bg="dark" className="h-100 shadow">
                 <Card.Header className="text-center" style={{
                   fontFamily: "NanumSquare",
                   fontWeight: "bold",
@@ -51,8 +51,8 @@ export default class Premium extends Component {
               </Card>
             </Col>
 
-            <Col sm={3}>
-              <Card bg="dark" className="h-100">
+            <Col sm={6} lg={3} className="mb-4">
+              <Card bg="dark" className="h-100 shadow">
                 <Card.Header className="text-center" style={{
                   fontFamily: "NanumSquare",
                   fontWeight: "bold",
@@ -74,8 +74,8 @@ export default class Premium extends Component {
               </Card>
             </Col>
 
-            <Col sm={3}>
-              <Card bg="dark" className="h-100" onMouseOver={() => console.log('dsdsdsdss')}>
+            <Col sm={6} lg={3} className="mb-4">
+              <Card bg="dark" className="h-100 shadow" onMouseOver={() => console.log('dsdsdsdss')}>
                 <Card.Header className="text-center" style={{
                   fontFamily: "NanumSquare",
                   fontWeight: "bold",
@@ -97,8 +97,8 @@ export default class Premium extends Component {
               </Card>
             </Col>
 
-            <Col sm={3}>
-              <Card bg="dark" className="h-100">
+            <Col sm={6} lg={3} className="mb-4">
+              <Card bg="dark" className="h-100 shadow">
                 <Card.Header className="text-center" style={{
                   fontFamily: "NanumSquare",
                   fontWeight: "bold",

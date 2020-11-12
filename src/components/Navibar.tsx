@@ -48,7 +48,7 @@ export default class Navibar extends Component<{}, NavibarState> {
     return (
       <>
         <div style={{ paddingBottom: 57 }}>
-          <Navbar bg="dark" expand="sm" fixed="top" className="nav-item no-drag navbar-dark">
+          <Navbar bg="dark" expand="sm" fixed="top" className="nav-item no-drag navbar-dark shadow">
             <Container fluid="sm">
               <Navbar.Brand href="/" style={{
                 fontWeight: 500

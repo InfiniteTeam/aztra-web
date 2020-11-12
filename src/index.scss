@@ -183,6 +183,38 @@ body {
     margin-bottom: 30px;
 }
 
+.Main-features {
+    h1 {
+        @include media-breakpoint-up(xs) {
+            font-size: 19pt;
+        }
+        @include media-breakpoint-up(sm) {
+            font-size: 24pt;
+        }
+        
+        font-weight: normal;
+    }
+
+    p {
+        @include media-breakpoint-up(xs) {
+            font-size: 12pt;
+        }
+        @include media-breakpoint-up(sm) {
+            font-size: 13pt;
+        }
+        word-break: keep-all;
+        overflow-wrap: keep-all;
+    }
+
+    img {
+        width: 100%;
+    }
+
+    .row {
+        padding-bottom: 7rem;
+    }
+}
+
 
 /* Navibar */
 
