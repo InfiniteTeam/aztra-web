@@ -38,7 +38,7 @@ export default class Home extends Component {
                 <img src={FeatImg1} className="shadow mb-4" />
               </Col>
               <Col md={1} className="py-3" />
-              <Col md={6} className="text-right">
+              <Col md={6} className="text-md-right">
                 <h1>서버를 더욱 편리하게 관리하세요</h1>
                 <p>기존의 헷갈리고 복잡한 관리봇이 아닌, 사용자 친화적으로 설계된 쉬운 사용법과 풍부한 기능으로 여러분의 서버를 더 성장시킬 수 있습니다.</p>
               </Col>
