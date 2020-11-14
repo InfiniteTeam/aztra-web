@@ -1,36 +1,38 @@
 import React, { Component } from 'react';
 import { Container, Card, Row, Col, Button, Spinner } from 'react-bootstrap'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import urljoin from 'url-join'
 import api from '../../datas/api'
 import { Permissions } from 'discord.js'
 import { PartialGuildExtend } from '../../types/DiscordTypes'
 
+const swal = require('@sweetalert/with-react')
+
 interface ServersState {
   guilds: PartialGuildExtend[]
-  fetchDone: boolean
+  fetchDone: boolean | null,
+  fetchError: AxiosError | null
 }
 
 export default class Servers extends Component<{}, ServersState> {
   state: ServersState = {
     guilds: [],
-    fetchDone: false
+    fetchDone: null,
+    fetchError: null
   }
 
   getGuilds = async (token: string) => {
+    this.setState({ fetchDone: null })
     try {
       let res = await axios.get(urljoin(api, '/discord/users/@me/guilds'), {
         headers: {
           token: token
         }
       })
-      this.setState({ guilds: res.data })
+      this.setState({ guilds: res.data, fetchDone: true })
     }
     catch (e) {
-      this.setState({ guilds: [] })
-    }
-    finally {
-      this.setState({ fetchDone: true })
+      this.setState({ guilds: [], fetchError: e, fetchDone: false })
     }
   }
 
@@ -45,6 +47,27 @@ export default class Servers extends Component<{}, ServersState> {
   }
 
   render() {
+    if (this.state.fetchDone === false) {
+      swal(
+        <div>
+          <h2>서버를 가져올 수 없습니다!</h2>
+          <p className="px-3">
+            서버 데이터를 불러오는 데 실패했습니다.
+          </p>
+          <Button variant="danger" onClick={() => {
+            swal.close()
+            this.componentDidMount()
+          }}>
+            다시 시도하기
+          </Button>
+        </div>,
+        {
+          icon: "error",
+          button: false
+        }
+      )
+    }
+
     const guild_cards = this.state.guilds
       .filter(one => {
         let perms = new Permissions(Number(one.permissions))
@@ -84,9 +107,8 @@ export default class Servers extends Component<{}, ServersState> {
         </Container>
         <Container fluid="sm" style={{ marginBottom: 160 }}>
           {
-            this.state.fetchDone
-              ? guild_cards
-              : <div style={{ color: 'whitesmoke', paddingTop: 80, paddingBottom: 300 }} className="text-center">
+            this.state.fetchDone === null
+              ? <div style={{ color: 'whitesmoke', paddingTop: 80, paddingBottom: 300 }} className="text-center">
                 <Spinner animation="border" variant="aztra" style={{
                   height: 50,
                   width: 50
@@ -95,6 +117,7 @@ export default class Servers extends Component<{}, ServersState> {
                   서버 목록을 가져오고 있습니다...
                   </h3>
               </div>
+              : guild_cards
           }
         </Container>
       </>

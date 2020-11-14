@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 
 import axios from 'axios'
 import api from '../../datas/api'
@@ -6,6 +6,7 @@ import { MemberMinimal, PartialGuild } from '../../types/DiscordTypes';
 import Row from 'react-bootstrap/esm/Row';
 import { Col, Form } from 'react-bootstrap';
 import MemberListCard from '../../components/forms/MemberListCard';
+
 
 interface MembersProps {
   readonly guild: PartialGuild | null
@@ -15,15 +16,13 @@ interface MembersState {
   members: MemberMinimal[] | null
   memberSearch: string
   fetchDone: boolean
-  filteredMembers: MemberMinimal[] | null,
 }
 
-export default class Members extends Component<MembersProps, MembersState> {
+export default class Members extends PureComponent<MembersProps, MembersState> {
   state: MembersState = {
     members: null,
     memberSearch: '',
-    fetchDone: false,
-    filteredMembers: null
+    fetchDone: false
   }
 
   async componentDidMount() {
@@ -45,7 +44,6 @@ export default class Members extends Component<MembersProps, MembersState> {
       })
       console.log(res.data)
       this.setState({ members: res.data })
-      this.filterMembers()
     }
     catch (e) {
       this.setState({ members: null })
@@ -55,27 +53,28 @@ export default class Members extends Component<MembersProps, MembersState> {
     }
   }
 
-  filterMembers = (e?: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    this.setState({
-      filteredMembers: this.state.members?.filter(one =>
-        !e || one.user.username?.toLowerCase()?.includes(e.target.value.toLowerCase()) || one.nickname?.toLowerCase()?.includes(e.target.value.toLowerCase())
-      )?.sort((a, b) => {
-        let aDname = a.displayName!
-        let bDname = b.displayName!
-        if (aDname > bDname) return 1
-        else if (aDname < bDname) return -1
-        return 0
-      }
-      )!
-    })
+  filterMembers = (search?: string) => {
+    var x = this.state.members?.filter(one =>
+      !search || one.user.username?.toLowerCase()?.includes(search.toLowerCase()) || one.nickname?.toLowerCase()?.includes(search.toLowerCase())
+    )?.sort((a, b) => {
+      let aDname = a.displayName!
+      let bDname = b.displayName!
+      if (aDname > bDname) return 1
+      else if (aDname < bDname) return -1
+      return 0
+    })!
+    return x
+  }
+
+  handleSearchOnChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    console.time()
+    await this.setState({ memberSearch: e.target.value })
+    console.timeEnd()
   }
 
   render() {
-    console.log('dsds')
     const members = (
-      (this.state.filteredMembers || this.state.members)?.map((one, idx) => {
-        return <MemberListCard key={idx} member={one} />
-      })
+      (this.filterMembers(this.state.memberSearch) || this.state.members)?.map(one => <MemberListCard key={one.user.id} member={one} />)
     )
 
     return (
@@ -100,7 +99,7 @@ export default class Members extends Component<MembersProps, MembersState> {
                         멤버 {this.state.members?.length} 명
                       </Form.Text>
                       <input hidden={true} />
-                      <Form.Control type="text" placeholder="멤버 검색" onChange={this.filterMembers} />
+                      <Form.Control type="text" placeholder="멤버 검색" onChange={this.handleSearchOnChange} />
                     </Row>
                     <Row className="flex-column">
                       {members}

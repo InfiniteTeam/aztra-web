@@ -7,10 +7,8 @@ export interface MemberListCardProps {
   member: MemberMinimal
 }
 
-export default class MemberListCard extends React.Component<MemberListCardProps, {}> {
+export default class MemberListCard extends React.PureComponent<MemberListCardProps, {}> {
   render() {
-    console.log('조짐')
-
     const member = this.props.member
 
     return (
