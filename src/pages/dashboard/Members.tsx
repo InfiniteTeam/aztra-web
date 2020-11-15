@@ -3,8 +3,7 @@ import React, { Component, PureComponent } from 'react';
 import axios from 'axios'
 import api from '../../datas/api'
 import { MemberMinimal, PartialGuild } from '../../types/DiscordTypes';
-import Row from 'react-bootstrap/esm/Row';
-import { Col, Form } from 'react-bootstrap';
+import { Row, Col, Form } from 'react-bootstrap';
 import MemberListCard from '../../components/forms/MemberListCard';
 
 
@@ -96,7 +95,7 @@ export default class Members extends PureComponent<MembersProps, MembersState> {
                         paddingBottom: '8px',
                         fontSize: '12pt'
                       }}>
-                        멤버 {this.state.members?.length} 명
+                        멤버 전체 {this.state.members?.length} 명{this.state.memberSearch && `, ${members.length}명 검색됨`}
                       </Form.Text>
                       <input hidden={true} />
                       <Form.Control type="text" placeholder="멤버 검색" onChange={this.handleSearchOnChange} />

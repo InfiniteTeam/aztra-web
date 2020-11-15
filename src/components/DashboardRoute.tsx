@@ -5,6 +5,7 @@ import { Route, Switch } from 'react-router-dom';
 import DashboardMain from '../pages/dashboard/Main'
 import DashboardGreeting from '../pages/dashboard/Greeting'
 import DashboardMembers from '../pages/dashboard/Members'
+import MemberDashboard from '../pages/dashboard/MemberDashboard'
 
 import Sidebar from './Sidebar'
 import NotFound from '../pages/NotFound'
@@ -214,6 +215,10 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
                   />
                   <Route exact path={`${this.props.match.url}/members`} render={
                     () => <DashboardMembers guild={guild} />
+                  }
+                  />
+                  <Route path={`${this.props.match.url}/members/:userid(\\d+)`} render={
+                    (props) => <MemberDashboard guild={guild} {...props} />
                   }
                   />
                   <Route component={NotFound} />

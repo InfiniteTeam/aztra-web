@@ -55,8 +55,8 @@ export default class Navibar extends Component<{}, NavibarState> {
               }}>
                 Aztra
               </Navbar.Brand>
-              <Navbar.Toggle aria-controls="basic-navbar-nav" />
-              <Navbar.Collapse id="basic-navbar-nav">
+              <Navbar.Toggle aria-controls="navbar-nav" />
+              <Navbar.Collapse id="navbar-nav">
                 <Nav className="mr-auto">
                   <Nav.Link href="/" className="Navlink">
                     홈
@@ -84,7 +84,7 @@ export default class Navibar extends Component<{}, NavibarState> {
                             marginRight: 5,
                             marginTop: 5
                           }} />
-                          <NavDropdown title={`${user.username}#${user.discriminator}`} id="basic-nav-dropdown" className="dropdown-menu-dark" style={{
+                          <NavDropdown title={`${user.username}#${user.discriminator}`} id="nav-dropdown" className="dropdown-menu-dark" style={{
                             fontSize: '12.5pt'
                           }}>
 
