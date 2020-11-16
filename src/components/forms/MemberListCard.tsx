@@ -1,10 +1,12 @@
 import React from 'react'
-import { Button, ButtonGroup, Card, Dropdown, DropdownButton } from 'react-bootstrap'
+import { Button, ButtonGroup, Card, Col, Dropdown, DropdownButton, Row } from 'react-bootstrap'
 import Badge from 'react-bootstrap/esm/Badge'
+import { Link } from 'react-router-dom'
 import { MemberMinimal } from '../../types/DiscordTypes'
 
 export interface MemberListCardProps {
   member: MemberMinimal
+  guildId: string
 }
 
 export default class MemberListCard extends React.PureComponent<MemberListCardProps, {}> {
@@ -13,8 +15,8 @@ export default class MemberListCard extends React.PureComponent<MemberListCardPr
 
     return (
       <Card bg="dark" className="mb-2">
-        <Card.Body className="d-flex py-1 justify-content-between">
-          <div className="d-flex">
+        <Card.Body as={Row} className="d-flex py-1 justify-content-between">
+          <Col className="d-flex">
             <img className="my-auto" alt={member.user.tag!} src={member.user.avatar ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.jpeg?size=64` : member.user.defaultAvatarURL} style={{ maxHeight: 40, marginRight: 15, borderRadius: '70%' }} />
             <div>
               <div className="d-flex">
@@ -31,17 +33,19 @@ export default class MemberListCard extends React.PureComponent<MemberListCardPr
                 @{member.user.tag}
               </div>
             </div>
-          </div>
-          <div className="my-auto d-flex">
-            <Dropdown as={ButtonGroup} className="dropdown-menu-dark">
-              <Button variant="dark">관리</Button>
-              <Dropdown.Toggle split variant="dark"/>
+          </Col>
+          <Col className="my-auto d-flex col-auto">
+            <Dropdown as={ButtonGroup} className="dropdown-menu-dark d-flex">
+              <Button className="my-auto" variant="dark" size="sm" as={Link} to={`/dashboard/${this.props.guildId}/members/${this.props.member.user.id}`}>
+                관리
+              </Button>
+              <Dropdown.Toggle split variant="dark" size="sm"/>
 
               <Dropdown.Menu>
                 <Dropdown.Item className="dropdown-item-dark">ㅎㅇ</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
-          </div>
+          </Col>
         </Card.Body>
       </Card>
     )

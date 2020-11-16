@@ -73,7 +73,7 @@ export default class Members extends PureComponent<MembersProps, MembersState> {
 
   render() {
     const members = (
-      (this.filterMembers(this.state.memberSearch) || this.state.members)?.map(one => <MemberListCard key={one.user.id} member={one} />)
+      (this.filterMembers(this.state.memberSearch) || this.state.members)?.map(one => <MemberListCard key={one.user.id} member={one} guildId={this.props.guild?.id!} />)
     )
 
     return (

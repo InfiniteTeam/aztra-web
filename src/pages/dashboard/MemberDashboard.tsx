@@ -4,7 +4,7 @@ import axios from 'axios'
 import api from '../../datas/api'
 import { MemberExtended, PartialGuild } from '../../types/DiscordTypes';
 import { match } from 'react-router-dom';
-import { Row, Col, Card } from 'react-bootstrap';
+import { Row, Col, Card, Container, Spinner, Badge } from 'react-bootstrap';
 
 interface MatchParams {
   readonly userid: string
@@ -60,36 +60,53 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
   }
 
   render() {
-    return (
-      <Row className="dashboard-section">
-        <Col className="col-auto">
-          <Card className="flex-md-row my-3 shadow" bg="dark">
-            <Card.Body className="text-center text-md-left">
-              <Card.Img src={`https://cdn.discordapp.com/avatars/${this.state.member?.user.id}/${this.state.member?.user.avatar}.jpeg`} style={{
-                maxWidth: 200,
-                maxHeight: 200
-              }} />
-            </Card.Body>
-            <Card.Body className="pl-md-0 pr-md-5" style={{
+    return this.state.fetchDone
+      ? (
+        <Row className="dashboard-section">
+          <Col className="col-auto">
+            <Card className="flex-row my-3 shadow" bg="dark">
+              <Card.Body className="text-center text-md-left">
+                <Card.Img src={`https://cdn.discordapp.com/avatars/${this.state.member?.user.id}/${this.state.member?.user.avatar}.jpeg`} style={{
+                  maxHeight: 200
+                }} />
+              </Card.Body>
+              <Card.Body className="pl-md-0 pr-md-5" style={{
 
-            }}>
-              <Card.Title className="font-weight-bold text-center text-md-left" style={{
-                fontFamily: 'NanumSquare'
               }}>
-                {this.state.member?.user.tag}
-              </Card.Title>
-              <Card.Text as="div" className="lines">
-                <p>
-                  전체 멤버 수: x
-          </p>
-                <p>
-                  온라인 멤버 수: y
-          </p>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    )
+                <Card.Title className="font-weight-bold text-md-left" style={{
+                  fontFamily: 'NanumSquare'
+                }}>
+                  <div>
+                    {this.state.member?.user.username}
+                    <span className="ml-1 font-weight-bold" style={{
+                      color: '#8f8f8f',
+                      fontSize: '13pt'
+                    }}>
+                      #{this.state.member?.user.discriminator}
+                    </span>
+                    {
+                      this.state.member?.user.bot &&
+                      <Badge variant="blurple" className="ml-2 font-weight-bold" style={{
+                        fontSize: '10pt'
+                      }}>
+                        BOT
+                      </Badge>
+                    }
+                  </div>
+                </Card.Title>
+                <Card.Text as="div" className="lines">
+
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      )
+      : <Container className="d-flex align-items-center justify-content-center flex-column" style={{
+        height: '500px'
+      }}>
+        <h3 className="pb-4">불러오는 중</h3>
+        <Spinner animation="border" variant="aztra" />
+      </Container>
   }
 }
