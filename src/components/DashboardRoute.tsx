@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import { Container, Row, Col, Collapse, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Route, Switch } from 'react-router-dom';
 
 import DashboardMain from '../pages/dashboard/Main'
@@ -119,7 +119,7 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
         }
       )
     }
-    
+
     /*
     if (!wsSupport) {
       swal(
@@ -152,11 +152,11 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
                       alignItems: 'center'
                     }}
                   >
-                    <img
+                    {this.state.fetchDone && <img
                       alt=""
                       src={`https://cdn.discordapp.com/icons/${guild?.id}/${guild?.icon}.png`}
                       style={{ maxHeight: 40, marginRight: 15, borderRadius: '70%' }}
-                    />
+                    />}
                     {guild ? guild?.name : '서버 정보를 불러오는 중...'}
                   </div>
                 </Col>
@@ -181,11 +181,9 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
                   {
                     isXXSsize
                       ? (
-                        <Collapse in={this.state.sidebarOpen} timeout={0}>
-                          <div id="sidebar-collapse" className="Dashboardroute-sidebar-body">
-                            <Sidebar guild={guild!} />
-                          </div>
-                        </Collapse>
+                        <div id="sidebar-collapse" className={`Dashboardroute-sidebar-body ${!this.state.sidebarOpen && 'd-none'}`}>
+                          <Sidebar guild={guild!} />
+                        </div>
                       )
                       : (
                         <div className="Dashboardroute-sidebar-body" style={{

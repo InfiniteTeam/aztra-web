@@ -38,7 +38,6 @@ export default class Navibar extends Component<{}, NavibarState> {
   }
 
   componentDidMount() {
-    console.log(localStorage.getItem('token'))
     const token = localStorage.getItem('token')
     !token || this.getUserInfo(token)
   }

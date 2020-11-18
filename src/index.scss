@@ -1,40 +1,36 @@
-$theme-colors: (
-    "aztra": rgb(127, 70, 202),
-    "blurple": #7289DA
-);
-
+@import "colors";
 @import "bootstrap/scss/bootstrap";
+@import "react-circular-progressbar/dist/styles.css";
 @import "markdown";
 @import "dashboard";
 
 @font-face {
-    font-family: 'NanumBarunGothic';
+    font-family: "NanumBarunGothic";
     font-style: normal;
     font-weight: 400;
-    src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot');
-    src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot?#iefix') format('embedded-opentype'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.woff') format('woff'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.ttf') format('truetype');
+    src: url("//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot");
+    src: url("//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot?#iefix") format("embedded-opentype"),
+        url("//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.woff") format("woff"),
+        url("//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.ttf") format("truetype");
 }
+
+@import url("https://fonts.googleapis.com/css2?family=Teko&display=swap");
 
 /* Default Tags */
 
 h1 {
-    font-family: 'NanumSquare';
+    font-family: "NanumSquare";
     font-weight: 800;
 }
 
 h2 {
-    font-family: 'NanumSquare';
+    font-family: "NanumSquare";
     font-weight: 600;
 }
 
 h3 {
-    font-family: 'NanumSquare';
+    font-family: "NanumSquare";
     font-weight: 600;
-}
-
-p {
-    font-size: 13pt;
-    font-family: 'NanumBarunGothic';
 }
 
 body {
@@ -63,7 +59,6 @@ body {
     visibility: hidden;
 }
 
-
 /* Colors */
 
 .dropdown-menu-dark {
@@ -72,16 +67,15 @@ body {
         a {
             color: white !important;
         }
-        
     }
 }
 
-.dropdown-item-dark:hover, .dropdown-item-dark:focus {
+.dropdown-item-dark:hover,
+.dropdown-item-dark:focus {
     color: white;
     text-decoration: none;
     background-color: #6e6a74;
 }
-
 
 .Title-section-bg {
     height: 320px;
@@ -133,49 +127,52 @@ body {
     .logo {
         max-width: 250px;
     }
-    
+
     animation: fadein 1.5s;
-    
+
     -moz-animation: fadein 1.5s; /* Firefox */
     -webkit-animation: fadein 1.5s; /* Safari and Chrome */
     -o-animation: fadein 1.5s; /* Opera */
-    
+
     @keyframes fadein {
         from {
-            opacity:0;
-        }
-        to {
-            opacity:1;
-        }
-    }
-    @-moz-keyframes fadein { /* Firefox */
-        from {
-            opacity:0;
-        }
-        to {
-            opacity:1;
-        }
-    }
-    @-webkit-keyframes fadein { /* Safari and Chrome */
-        from {
-            opacity:0;
-        }
-        to {
-            opacity:1;
-        }
-    }
-    @-o-keyframes fadein { /* Opera */
-        from {
-            opacity:0;
+            opacity: 0;
         }
         to {
             opacity: 1;
         }
-    }    
+    }
+    @-moz-keyframes fadein {
+        /* Firefox */
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    @-webkit-keyframes fadein {
+        /* Safari and Chrome */
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    @-o-keyframes fadein {
+        /* Opera */
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
 }
 
 .Main-button {
-    font-family: 'NanumSquare';
+    font-family: "NanumSquare";
     font-weight: 800;
     margin-left: 20px;
     margin-right: 20px;
@@ -191,17 +188,13 @@ body {
         @include media-breakpoint-up(sm) {
             font-size: 24pt;
         }
-        
+
         font-weight: normal;
     }
 
     p {
-        @include media-breakpoint-up(xs) {
-            font-size: 12pt;
-        }
-        @include media-breakpoint-up(sm) {
-            font-size: 13pt;
-        }
+        font-size: 13pt;
+        font-family: "NanumBarunGothic";
         word-break: keep-all;
         overflow-wrap: keep-all;
     }
@@ -215,13 +208,11 @@ body {
     }
 }
 
-
 /* Navibar */
 
 .Navlink {
     color: whitesmoke !important;
 }
-
 
 /* Footer */
 
@@ -230,30 +221,30 @@ body {
     padding-top: 2rem;
     padding-bottom: 1rem;
     h4 {
-        font-family: 'NanumSquare';
+        font-family: "NanumSquare";
         font-weight: 1000;
         color: whitesmoke;
     }
     h5 {
-        font-family: 'NanumBarunGothic';
+        font-family: "NanumBarunGothic";
         font-weight: 600;
         font-size: 13pt;
         color: whitesmoke;
     }
     p {
-        font-family: 'NanumSquare';
+        font-family: "NanumSquare";
         font-weight: 800;
         color: whitesmoke;
     }
     a {
         color: whitesmoke;
-        font-family: 'NanumBarunGothic';
+        font-family: "NanumBarunGothic";
         text-decoration: underline;
     }
 }
 
 .Footer-copyright {
-    font-family: 'NanumBarunGothic';
+    font-family: "NanumBarunGothic";
     font-size: 10pt;
     color: whitesmoke;
 }
@@ -261,7 +252,7 @@ body {
 /* Sidebar */
 .guide-sidebar {
     padding: 0.75rem 1rem 0.75rem 1rem;
-    font-family: 'NanumBarunGothic';
+    font-family: "NanumBarunGothic";
     margin-top: 45px;
     margin-bottom: auto;
     background-color: ghostwhite;

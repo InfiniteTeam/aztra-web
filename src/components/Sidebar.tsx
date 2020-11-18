@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Badge, Collapse, ListGroup, Nav } from 'react-bootstrap';
+import { Badge, Collapse, Nav } from 'react-bootstrap';
 import { PartialGuild } from '../types/DiscordTypes'
 
 interface SidebarProps {
