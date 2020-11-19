@@ -1,7 +1,6 @@
 import React, { Component, createRef } from 'react';
 import { Button, Row, Col, Form, Spinner, Container, Card, Alert } from 'react-bootstrap'
 import TextareaAutosize from 'react-textarea-autosize'
-import ChangesNotSaved from '../../components/forms/ChangesNotSaved'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHashtag, faCheckCircle, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'

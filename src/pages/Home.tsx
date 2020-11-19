@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Button, Row, Col } from 'react-bootstrap';
-import { animateScroll as scroll, Link as ScrollLink } from 'react-scroll'
+import { Link as ScrollLink } from 'react-scroll'
 
 import logoinv from '../aztra_inv.png'
 

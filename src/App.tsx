@@ -21,8 +21,8 @@ export default class App extends Component {
     await fetch('/aztrart.txt')
       .then(r => r.text())
       .then(art => console.log(`%c${art}`, 'color:MediumPurple'))
-    
-    if (process.env.NODE_ENV === 'development') {
+
+    if (process.env.NODE_ENV === 'production') {
       let style = 'font-family: NanumSquare; font-size: 16pt;'
       console.log('\n\n\n')
       console.log('%c조심하세요!', 'color: gold; font-size: 34pt; font-weight: bold;')

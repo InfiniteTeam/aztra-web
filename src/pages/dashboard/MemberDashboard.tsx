@@ -4,10 +4,10 @@ import axios from 'axios'
 import api from '../../datas/api'
 import { MemberExtended, PartialGuild } from '../../types/DiscordTypes';
 import { match } from 'react-router-dom';
-import { Row, Col, Card, Container, Spinner, Badge, Button } from 'react-bootstrap';
+import { Row, Col, Card, Container, Spinner, Badge, Button, Alert } from 'react-bootstrap';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faListUl } from '@fortawesome/free-solid-svg-icons'
+import { faBug, faExclamationTriangle, faListUl, faStream, faUserEdit, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
 
 interface MatchParams {
@@ -92,12 +92,12 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
     return this.state.fetchDone
       ? (
         <>
-          <Row className="dashboard-section justify-content-between">
-            <h3>멤버 정보</h3>
-            <div>
+          <Row className="dashboard-section">
+            <h3>멤버 관리</h3>
+            <div className="ml-4">
               <Button variant="aztra" size="sm" href={`/dashboard/${this.props.guild?.id}/members`}>
                 <FontAwesomeIcon icon={faListUl} className="mr-2" />목록으로
-              </Button>
+            </Button>
             </div>
           </Row>
 
@@ -157,11 +157,11 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
             </div>
           </Row>
 
-          <Row className="mt-5">
-            <Col xs={12} sm={8} className="pt-4 d-flex">
-              <div style={{
-                width: 200,
-                height: 200
+          <Row className="my-5">
+            <Col xs={12} xl={5} className="pt-4 pb-5 d-md-flex">
+              <div className="mx-auto mx-md-0" style={{
+                maxWidth: 200,
+                maxHeight: 200
               }}>
 
                 <CircularProgressbarWithChildren value={this.state.value} strokeWidth={5} styles={{
@@ -196,27 +196,114 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
                   </div>
                 </CircularProgressbarWithChildren>
               </div>
-              <div className="pl-sm-5 d-flex align-items-center">
+              <div className="pl-md-5 mt-4 mt-md-0 d-flex align-items-center justify-content-center justify-content-md-left">
                 <div style={{
                   fontFamily: "NanumSquare",
-                  fontSize: '16pt'
+                  fontSize: '13pt'
                 }}>
-                  <p>
-                    총 메시지 수 495개
-                  </p>
-                  <p>
-                    하루 평균 메시지 수 34개
-                  </p>
+                  <div className="pb-2 font-weight-bold" style={{
+                    fontSize: '20pt'
+                  }}>
+                    <FontAwesomeIcon icon={faStream} className="mr-3" />
+                    서버 2위
+                  </div>
+                  <div>
+                    총 메시지:{' '}
+                    <span style={{
+                      fontSize: '17pt'
+                    }}>
+                      495개
+                    </span>
+                  </div>
+                  <div>
+                    하루 평균:{' '}
+                    <span style={{
+                      fontSize: '17pt'
+                    }}>
+                      34개
+                    </span>
+                  </div>
                 </div>
               </div>
             </Col>
-            <Col>
-              <h4 className="mb-3">최근 활동</h4>
+            <Col xs={12} xl={7}>
+              <div className="d-flex justify-content-between">
+                <h4 className="mb-3">최근 활동</h4>
+                <div>
+                  <Button variant="aztra" size="sm">더보기</Button>
+                </div>
+              </div>
+              <Card bg="dark" className="mb-2 shadow-sm">
+                <Card.Body className="py-2 d-flex justify-content-between">
+                  <div>
+                    <FontAwesomeIcon icon={faBug} className="mr-2" />
+                    알파를 버그로 오지게 뚜드렸습니다.
+                  </div>
+                  <small style={{
+                    color: 'lightgrey'
+                  }}>
+                    방금
+                  </small>
+                </Card.Body>
+              </Card>
+              <Card bg="dark" className="mb-2 shadow-sm">
+                <Card.Body className="py-2 d-flex justify-content-between">
+                  <div>
+                    <FontAwesomeIcon icon={faUserEdit} className="mr-2" />
+                    닉네임을 변경했습니다.
+                    <code> Aztra</code>
+                    {' → '}
+                    <code>아즈트라</code>
+                  </div>
+                  <small style={{
+                    color: 'lightgrey'
+                  }}>
+                    3시간 전
+                  </small>
+                </Card.Body>
+              </Card>
+              <Card bg="dark" className="mb-2 shadow-sm">
+                <Card.Body className="py-2 d-flex justify-content-between">
+                  <div>
+                    <FontAwesomeIcon icon={faUserPlus} className="mr-2" />
+                    {member?.user.username} 이(가) 새로 들어왔습니다.
+                  </div>
+                  <small style={{
+                    color: 'lightgrey'
+                  }}>
+                    2개월 전
+                  </small>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col className="pb-5" xs={12} lg={4}>
+              <div className="d-flex justify-content-between">
+                <h4 className="mb-3">받은 경고</h4>
+                <div>
+                  <Button variant="aztra" size="sm">더보기</Button>
+                </div>
+              </div>
               <Card bg="dark" className="mb-2 shadow-sm">
                 <Card.Body className="py-2">
-                  {member?.user.username} 이(가) 방금 새로 들어왔습니다.
-              </Card.Body>
+                  <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2" />
+                  버그로 도배
+                </Card.Body>
               </Card>
+              <Card bg="dark" className="mb-2 shadow-sm">
+                <Card.Body className="py-2">
+                  <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2" />
+                  심한 욕설... 은 아니고 심한 오류 메시지를 뱉음
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col className="pb-5" xs={12} lg={4}>
+              <h4 className="mb-3">티켓</h4>
+              <Alert variant="aztra">
+                현재 이 멤버에 열린 티켓이 없습니다!
+              </Alert>
             </Col>
           </Row>
         </>
