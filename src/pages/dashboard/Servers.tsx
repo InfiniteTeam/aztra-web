@@ -5,6 +5,8 @@ import urljoin from 'url-join'
 import api from '../../datas/api'
 import { Permissions } from 'discord.js'
 import { PartialGuildExtend } from '../../types/DiscordTypes'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar } from '@fortawesome/free-regular-svg-icons';
 
 const swal = require('@sweetalert/with-react')
 
@@ -78,7 +80,7 @@ export default class Servers extends Component<{}, ServersState> {
         <Card key={index} bg="dark" text="light" className="Dashboard-Servers-Card shadow" style={{
           animationDelay: `${index * 80}ms`,
         }}>
-          <Card.Body style={{ padding: 'unset', fontSize: '12pt' }}>
+          <Card.Body className="p-0" style={{ fontSize: '12pt' }}>
             <Container>
               <Row>
                 <Col>
@@ -87,10 +89,13 @@ export default class Servers extends Component<{}, ServersState> {
                     {one.name}
                   </div>
                 </Col>
-                <Col style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                <Col className="d-flex align-items-center justify-content-end">
                   {
                     one.bot_joined
-                      ? <Button variant="success" size="sm" href={`/dashboard/${one.id}`}>대시보드</Button>
+                      ? <>
+                        <FontAwesomeIcon icon={faStar} className="mr-3" />
+                        <Button variant="success" size="sm" href={`/dashboard/${one.id}`}>대시보드</Button>
+                      </>
                       : <Button variant="secondary" size="sm">초대하기</Button>
                   }
                 </Col>

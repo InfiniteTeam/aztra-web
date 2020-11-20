@@ -12,7 +12,6 @@ import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
 
 interface MatchParams {
   readonly userid: string
-  readonly serverid: string
 }
 
 interface Match extends match {
@@ -21,7 +20,7 @@ interface Match extends match {
 
 interface MemberDashboardProps {
   readonly match: Match
-  readonly guild: PartialGuild | null
+  readonly guildId?: string
 }
 
 interface MemberDashboardState {
@@ -51,7 +50,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
 
   getMember = async (token: string) => {
     try {
-      let res = await axios.get(`${api}/discord/guilds/${this.props.guild?.id}/members/${this.props.match.params.userid}`, {
+      let res = await axios.get(`${api}/discord/guilds/${this.props.guildId}/members/${this.props.match.params.userid}`, {
         headers: {
           token: token
         }
@@ -70,6 +69,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
     var statusColor: string | null = null
 
     const member = this.state.member
+    const isBot = member?.user.bot
 
     switch (member?.user.presence.status) {
       case 'online':
@@ -95,7 +95,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
           <Row className="dashboard-section">
             <h3>멤버 관리</h3>
             <div className="ml-4">
-              <Button variant="aztra" size="sm" href={`/dashboard/${this.props.guild?.id}/members`}>
+              <Button variant="aztra" size="sm" href={`/dashboard/${this.props.guildId}/members`}>
                 <FontAwesomeIcon icon={faListUl} className="mr-2" />목록으로
             </Button>
             </div>
@@ -110,7 +110,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
                 <img
                   alt={member?.user.username!}
                   className="rounded-circle no-drag"
-                  src={member?.user.avatar ? `https://cdn.discordapp.com/avatars/${member?.user.id}/${member?.user.avatar}.jpeg?size=128` : member?.user.defaultAvatarURL}
+                  src={member?.user.avatar ? `https://cdn.discordapp.com/avatars/${member?.user.id}/${member?.user.avatar}` : member?.user.defaultAvatarURL}
                   style={{
                     width: 128,
                     height: 128
@@ -158,7 +158,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
           </Row>
 
           <Row className="my-5">
-            <Col xs={12} xl={5} className="pt-4 pb-5 d-md-flex">
+            { !isBot && <Col xs={12} xl={5} className="pt-4 pb-5 d-md-flex">
               <div className="mx-auto mx-md-0" style={{
                 maxWidth: 200,
                 maxHeight: 200
@@ -225,11 +225,11 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
                   </div>
                 </div>
               </div>
-            </Col>
-            <Col xs={12} xl={7}>
-              <div className="d-flex justify-content-between">
+            </Col>}
+            <Col xs={12} xl={isBot ? 12 : 7}>
+              <div className={`d-flex ${!isBot && 'justify-content-between'}`}>
                 <h4 className="mb-3">최근 활동</h4>
-                <div>
+                <div className={`${isBot && 'ml-3'}`}>
                   <Button variant="aztra" size="sm">더보기</Button>
                 </div>
               </div>

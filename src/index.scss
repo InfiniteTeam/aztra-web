@@ -33,6 +33,10 @@ h3 {
     font-weight: 600;
 }
 
+h4, h5, h6 {
+    font-family: "NanumBarunGothic";
+}
+
 code {
     color: lightgrey;
 }
@@ -61,6 +65,10 @@ body {
     position: relative;
     top: -150px;
     visibility: hidden;
+}
+
+.cursor-pointer {
+    cursor: pointer;
 }
 
 /* Colors */

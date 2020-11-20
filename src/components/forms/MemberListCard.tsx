@@ -1,7 +1,6 @@
 import React from 'react'
 import { Button, ButtonGroup, Card, Col, Dropdown, Row, Container } from 'react-bootstrap'
 import Badge from 'react-bootstrap/esm/Badge'
-import { Link } from 'react-router-dom'
 import { MemberMinimal } from '../../types/DiscordTypes'
 
 export interface MemberListCardProps {

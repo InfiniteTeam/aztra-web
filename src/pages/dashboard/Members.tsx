@@ -3,12 +3,12 @@ import React, { PureComponent } from 'react';
 import axios from 'axios'
 import api from '../../datas/api'
 import { MemberMinimal, PartialGuild } from '../../types/DiscordTypes';
-import { Row, Col, Form } from 'react-bootstrap';
+import { Row, Col, Form, Container, Spinner } from 'react-bootstrap';
 import MemberListCard from '../../components/forms/MemberListCard';
 
 
 interface MembersProps {
-  readonly guild: PartialGuild | null
+  readonly guildId?: string
 }
 
 interface MembersState {
@@ -36,7 +36,7 @@ export default class Members extends PureComponent<MembersProps, MembersState> {
 
   getMembers = async (token: string) => {
     try {
-      let res = await axios.get(`${api}/discord/guilds/${this.props.guild?.id}/members`, {
+      let res = await axios.get(`${api}/discord/guilds/${this.props.guildId}/members`, {
         headers: {
           token: token
         }
@@ -73,7 +73,7 @@ export default class Members extends PureComponent<MembersProps, MembersState> {
 
   render() {
     const members = (
-      (this.filterMembers(this.state.memberSearch) || this.state.members)?.map(one => <MemberListCard key={one.user.id} member={one} guildId={this.props.guild?.id!} />)
+      (this.filterMembers(this.state.memberSearch) || this.state.members)?.map(one => <MemberListCard key={one.user.id} member={one} guildId={this.props.guildId!} />)
     )
 
     return (
@@ -105,7 +105,12 @@ export default class Members extends PureComponent<MembersProps, MembersState> {
                     </Row>
                   </Form.Group>
                 </Form>
-                : <h4>멤버 목록을 불러오는 중...</h4>
+                : <Container className="d-flex align-items-center justify-content-center flex-column" style={{
+                  height: '500px'
+                }}>
+                  <h3 className="pb-4 text-center">멤버 목록을 가져오고 있습니다...</h3>
+                  <Spinner animation="border" variant="aztra" />
+                </Container>
             }
           </Col>
         </Row>

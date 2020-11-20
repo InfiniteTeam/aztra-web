@@ -18,6 +18,8 @@ export default function Sidebar(props: SidebarProps) {
         className="col-md-12 d-block d-md-block shadow"
         style={{
           paddingRight: 0,
+          fontFamily: "NanumSquare",
+          fontSize: '1.05rem'
         }}
       >
         <Nav.Item>
@@ -28,6 +30,9 @@ export default function Sidebar(props: SidebarProps) {
         </Nav.Item>
         <Nav.Item>
           <Nav.Link as={Link} to={`/dashboard/${guild?.id}/members`}>멤버 관리</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link as={Link} to={`/dashboard/${guild?.id}/warns`}>경고 관리</Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link style={{ marginLeft: '-3px', paddingLeft: 0 }} onClick={() => setWarnManageOpen(!warnManageOpen)} aria-controls="warn-manage-collapse" aria-expanded={warnManageOpen}>{warnManageOpen ? "▾ " : "▸ "}드롭다운</Nav.Link>

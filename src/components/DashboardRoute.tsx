@@ -1,11 +1,12 @@
-import React, { Component, createRef } from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import { Route, Switch } from 'react-router-dom';
+import React, { Component, createRef } from 'react'
+import { Container, Row, Col, Button } from 'react-bootstrap'
+import { Route, Switch } from 'react-router-dom'
 
 import DashboardMain from '../pages/dashboard/Main'
 import DashboardGreeting from '../pages/dashboard/Greeting'
 import DashboardMembers from '../pages/dashboard/Members'
 import MemberDashboard from '../pages/dashboard/MemberDashboard'
+import DashboardWarns from '../pages/dashboard/Warns'
 
 import Sidebar from './Sidebar'
 import NotFound from '../pages/NotFound'
@@ -145,8 +146,9 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
                 <Col xs={isXXSsize ? 10 : 12} md={12} ref={this.sidebarHeaderRef}>
                   <div
                     style={{
-                      fontSize: '1rem',
+                      fontSize: '1.05rem',
                       fontWeight: 600,
+                      fontFamily: "NanumSquare",
                       paddingLeft: 2,
                       display: 'flex',
                       alignItems: 'center'
@@ -204,19 +206,23 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
               this.state.fetchDone
                 ? <Switch>
                   <Route exact path={this.props.match.url} render={
-                    () => <DashboardMain guild={guild} />
+                    (props) => <DashboardMain guild={guild} {...props} />
                   }
                   />
                   <Route exact path={`${this.props.match.url}/greeting`} render={
-                    () => <DashboardGreeting guild={guild} />
+                    (props) => <DashboardGreeting guildId={this.props.match.params.serverid} {...props} />
                   }
                   />
                   <Route exact path={`${this.props.match.url}/members`} render={
-                    () => <DashboardMembers guild={guild} />
+                    (props) => <DashboardMembers guildId={this.props.match.params.serverid} {...props} />
                   }
                   />
                   <Route path={`${this.props.match.url}/members/:userid(\\d+)`} render={
-                    (props) => <MemberDashboard guild={guild} {...props} />
+                    (props) => <MemberDashboard guildId={this.props.match.params.serverid} {...props} />
+                  }
+                  />
+                  <Route exact path={`${this.props.match.url}/warns`} render={
+                    (props) => <DashboardWarns guildId={this.props.match.params.serverid} {...props} />
                   }
                   />
                   <Route component={NotFound} />

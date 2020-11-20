@@ -5,8 +5,6 @@ import TextareaAutosize from 'react-textarea-autosize'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHashtag, faCheckCircle, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 
-import { PartialGuild } from '../../types/DiscordTypes'
-
 import axios from 'axios'
 
 import { Greetings } from '../../types/dbtypes/greetings'
@@ -14,7 +12,7 @@ import api from '../../datas/api'
 import { GuildChannel } from 'discord.js';
 
 interface GreetingProps {
-  readonly guild: PartialGuild | null
+  readonly guildId?: string
 }
 
 interface GreetingState {
@@ -64,11 +62,9 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
     value_outgoingDescControl: null
   }
 
-  incomingTitleControlRef: React.RefObject<TextareaAutosize> = createRef()
-
   getData = async (token: string) => {
     try {
-      let res = await axios.get(`${api}/servers/${this.props.guild?.id}/greeting`, {
+      let res = await axios.get(`${api}/servers/${this.props.guildId}/greeting`, {
         headers: {
           token: token
         }
@@ -85,7 +81,7 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
 
   getChannels = async (token: string) => {
     try {
-      let res = await axios.get(`${api}/discord/guilds/${this.props.guild?.id}/channels`, {
+      let res = await axios.get(`${api}/discord/guilds/${this.props.guildId}/channels`, {
         headers: {
           token: token
         }
@@ -146,9 +142,7 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
     const checkMark = <FontAwesomeIcon icon={faCheckCircle} className="mr-2 my-auto text-success" size="lg" />
 
     return this.state.fetchDone ? (
-      <div style={{
-        fontFamily: 'NanumBarunGothic'
-      }}>
+      <>
         <Row className="dashboard-section">
           <h3>환영 메시지 설정</h3>
         </Row>
@@ -173,13 +167,13 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
               <div className={!this.state.useJoin ? "d-none" : undefined}>
                 <Form.Group controlId="incomingTitle">
                   <Form.Label>메시지 제목</Form.Label>
-                  <Form.Control ref={this.incomingTitleControlRef} isInvalid={this.state.validation_incomingTitle === false} as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕하세요!" defaultValue={this.state.data?.join_title_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'incomingTitle') }} />
+                  <Form.Control className="shadow" isInvalid={this.state.validation_incomingTitle === false} as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕하세요!" defaultValue={this.state.data?.join_title_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'incomingTitle') }} />
                   <Form.Control.Feedback type="invalid">빈칸일 수 없으며 최대 256자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group controlId="incomingDesc">
                   <Form.Label>메시지 내용</Form.Label>
-                  <Form.Control isInvalid={this.state.validation_incomingDesc === false} as={TextareaAutosize} type="text" placeholder="예) {guild}에 오신 것을 환영합니다." defaultValue={this.state.data?.join_desc_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'incomingDesc') }} />
+                  <Form.Control className="shadow" isInvalid={this.state.validation_incomingDesc === false} as={TextareaAutosize} type="text" placeholder="예) {guild}에 오신 것을 환영합니다." defaultValue={this.state.data?.join_desc_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'incomingDesc') }} />
                   <Form.Control.Feedback type="invalid">빈칸일 수 없으며 최대 2048자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
               </div>
@@ -202,13 +196,13 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
               <div className={!this.state.useLeave ? "d-none" : undefined}>
                 <Form.Group controlId="outgoingTitle">
                   <Form.Label>메시지 제목</Form.Label>
-                  <Form.Control isInvalid={this.state.validation_outgoingTitle === false} as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕히가세요" defaultValue={this.state.data?.leave_title_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'outgoingTitle') }} />
+                  <Form.Control className="shadow" isInvalid={this.state.validation_outgoingTitle === false} as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕히가세요" defaultValue={this.state.data?.leave_title_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'outgoingTitle') }} />
                   <Form.Control.Feedback type="invalid">빈칸일 수 없으며 최대 256자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group controlId="outgoingDesc">
                   <Form.Label>메시지 내용</Form.Label>
-                  <Form.Control isInvalid={this.state.validation_outgoingDesc === false} as={TextareaAutosize} type="text" placeholder="예) {user}님이 나갔습니다." defaultValue={this.state.data?.leave_desc_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'outgoingDesc') }} />
+                  <Form.Control className="shadow" isInvalid={this.state.validation_outgoingDesc === false} as={TextareaAutosize} type="text" placeholder="예) {user}님이 나갔습니다." defaultValue={this.state.data?.leave_desc_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'outgoingDesc') }} />
                   <Form.Control.Feedback type="invalid">빈칸일 수 없으며 최대 2048자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
               </div>
@@ -337,7 +331,7 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
             }
           </Button>
         </Row>
-      </div>
+      </>
     )
       : <Container className="d-flex align-items-center justify-content-center flex-column" style={{
         height: '500px'

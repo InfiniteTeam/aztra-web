@@ -45,7 +45,7 @@ export default class App extends Component {
               <Route exact path="/" component={Home} />
               <Route exact path="/servers" component={DashboardServers} />
               <Route exact path="/premium" component={Premium} />
-              <Route path="/dashboard/:serverid(\d+)" component={DashboardRoute} />
+              <Route path="/dashboard/:serverid(\d+)" render={(props) => <DashboardRoute {...props} />} />
               <Route component={NotFound} />
             </Switch>
             <Footer />
