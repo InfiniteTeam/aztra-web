@@ -35,7 +35,7 @@ export default class Home extends Component {
           <Container>
             <Row className="align-items-center px-3">
               <Col md={5}>
-                <img src={FeatImg1} className="shadow mb-4" />
+                <img alt="경고 명령어" src={FeatImg1} className="shadow mb-4" />
               </Col>
               <Col md={1} className="py-3" />
               <Col md={6} className="text-md-right">
@@ -45,7 +45,7 @@ export default class Home extends Component {
             </Row>
             <Row className="align-items-center flex-row-reverse px-3">
               <Col md={5}>
-                <img src={FeatImg2} />
+                <img alt="모바일 환경" src={FeatImg2} />
               </Col>
               <Col md={1} className="py-3" />
               <Col md={6}>

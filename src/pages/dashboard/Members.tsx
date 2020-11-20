@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 
 import axios from 'axios'
 import api from '../../datas/api'
-import { MemberMinimal, PartialGuild } from '../../types/DiscordTypes';
+import { MemberMinimal } from '../../types/DiscordTypes';
 import { Row, Col, Form, Container, Spinner } from 'react-bootstrap';
 import MemberListCard from '../../components/forms/MemberListCard';
 
