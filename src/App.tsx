@@ -14,7 +14,7 @@ import Navibar from './components/Navibar'
 import Footer from './components/Footer'
 import DashboardRoute from './components/DashboardRoute'
 
-import { default as DashboardServers } from './pages/dashboard/Servers'
+import DashboardServers from './pages/dashboard/Servers'
 
 export default class App extends Component {
   async componentDidMount() {

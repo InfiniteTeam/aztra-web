@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import axios from 'axios'
 import api from '../../datas/api'
-import { MemberExtended, PartialGuild } from '../../types/DiscordTypes';
+import { MemberExtended } from '../../types/DiscordTypes';
 import { match } from 'react-router-dom';
 import { Row, Col, Card, Container, Spinner, Badge, Button, Alert } from 'react-bootstrap';
 

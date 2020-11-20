@@ -1,8 +1,23 @@
 import React, { Component } from 'react';
 import { Container, Row, Col } from 'react-bootstrap'
+import preval from 'preval.macro';
 import links from '../datas/links.json'
 
-export default class Home extends Component {
+const HIDDEN_COUNT = 5
+
+export interface FooterState {
+  hiddenCount: number
+}
+
+export default class Footer extends Component<{}, FooterState> {
+  state: FooterState = {
+    hiddenCount: 0
+  }
+
+  hiddenClick = () => {
+    this.state.hiddenCount < HIDDEN_COUNT && this.setState({ hiddenCount: this.state.hiddenCount + 1 })
+  }
+
   render() {
     return (
       <>
@@ -10,12 +25,25 @@ export default class Home extends Component {
           <Container fluid="sm" className="text-center text-md-left">
             <Row>
               <Col md={5} className="mt-md-0 mt-3">
-                <h4 className="text-uppercase">
+                <h4 className="text-uppercase no-drag" onClick={this.hiddenClick}>
                   Aztra
                 </h4>
-                <p>
+                <p className="mb-2" style={{
+                  fontSize: '13pt'
+                }}>
                   미래를 바꿀 디스코드 관리봇.
                 </p>
+                {
+                  this.state.hiddenCount >= HIDDEN_COUNT && (
+                    <p style={{
+                      fontFamily: "Consolas",
+                      fontWeight: 'normal',
+                      fontSize: '11pt'
+                    }}>
+                      Build Date: {preval`module.exports = new Date().toLocaleString()`}
+                    </p>
+                  )
+                }
               </Col>
               <Col md={2}>
                 <h5>사이트</h5>
