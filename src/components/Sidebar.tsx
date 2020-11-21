@@ -35,6 +35,9 @@ export default function Sidebar(props: SidebarProps) {
           <Nav.Link as={Link} to={`/dashboard/${guild?.id}/warns`}>경고 관리</Nav.Link>
         </Nav.Item>
         <Nav.Item>
+          <Nav.Link as={Link} to={`/dashboard/${guild?.id}/statistics`}>통계</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
           <Nav.Link style={{ marginLeft: '-3px', paddingLeft: 0 }} onClick={() => setWarnManageOpen(!warnManageOpen)} aria-controls="warn-manage-collapse" aria-expanded={warnManageOpen}>{warnManageOpen ? "▾ " : "▸ "}드롭다운</Nav.Link>
           <Collapse in={warnManageOpen}>
             <div id="warn-manage-collapse" className="ml-3">

@@ -7,6 +7,7 @@ import DashboardGreeting from '../pages/dashboard/Greeting'
 import DashboardMembers from '../pages/dashboard/Members'
 import MemberDashboard from '../pages/dashboard/MemberDashboard'
 import DashboardWarns from '../pages/dashboard/Warns'
+import DashboardStatistics from '../pages/dashboard/Statistics'
 
 import Sidebar from './Sidebar'
 import NotFound from '../pages/NotFound'
@@ -223,6 +224,10 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
                   />
                   <Route exact path={`${this.props.match.url}/warns`} render={
                     (props) => <DashboardWarns guildId={this.props.match.params.serverid} {...props} />
+                  }
+                  />
+                  <Route exact path={`${this.props.match.url}/statistics`} render={
+                    (props) => <DashboardStatistics guildId={this.props.match.params.serverid} {...props} />
                   }
                   />
                   <Route component={NotFound} />

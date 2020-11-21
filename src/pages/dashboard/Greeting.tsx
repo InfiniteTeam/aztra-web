@@ -5,7 +5,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHashtag, faCheckCircle, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 
 import { Greetings } from '../../types/dbtypes/greetings'
 import api from '../../datas/api'
@@ -36,6 +36,8 @@ interface GreetingState {
   value_incomingDescControl: string | null
   value_outgoingTitleControl: string | null
   value_outgoingDescControl: string | null
+
+  saveError: AxiosError | null
 }
 
 export default class Greeting extends Component<GreetingProps, GreetingState> {
@@ -59,7 +61,9 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
     value_incomingTitleControl: null,
     value_incomingDescControl: null,
     value_outgoingTitleControl: null,
-    value_outgoingDescControl: null
+    value_outgoingDescControl: null,
+
+    saveError: null
   }
 
   getData = async (token: string) => {
@@ -136,6 +140,31 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
     return !(
       data?.join_title_format === this.state.value_incomingTitleControl
     )
+  }
+
+  save = async (event?: React.MouseEvent<HTMLElement>) => {
+    this.setState({ saving: true })
+    let data: Greetings = {
+      guild: this.state.data?.guild!,
+      channel: this.state.newChannel?.id! || this.state.data?.channel!,
+      join_title_format: this.state.value_incomingTitleControl,
+      join_desc_format: this.state.value_incomingDescControl,
+      leave_title_format: this.state.value_outgoingTitleControl,
+      leave_desc_format: this.state.value_outgoingDescControl
+    }
+    try {
+      let res = await axios.post(`${api}/servers/${this.props.guildId}/greeting`, data, {
+        headers: {
+          token: localStorage.getItem('token')
+        },
+      })
+    }
+    catch (e) {
+      this.setState({ saveError: e })
+    }
+    finally {
+      this.setState({ saving: false })
+    }
   }
 
   render() {
@@ -307,10 +336,10 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
 
         <Row className="mt-4">
           <Button
-            variant="aztra"
-            disabled={this.state.saving}
+            variant={this.state.saveError ? "danger" : "aztra"}
+            disabled={this.state.saving || !!this.state.saveError}
             type="submit"
-            onClick={() => this.setState({ saving: true })}
+            onClick={this.save}
             style={{
               minWidth: 120
             }}
@@ -327,7 +356,7 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
                   />
                   <span className="pl-2">저장 중...</span>
                 </>
-                : <span>저장하기</span>
+                : <span>{this.state.saveError ? "오류" : "저장하기"}</span>
             }
           </Button>
         </Row>
