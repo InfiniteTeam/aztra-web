@@ -76,7 +76,7 @@ export default class Navibar extends Component<{}, NavibarState> {
                           justifyContent: 'left',
                           display: 'flex'
                         }}>
-                          <img alt={user.username} src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`} style={{
+                          <img alt={user.username} src={user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}` : `https://cdn.discordapp.com/embed/avatars/${user.discriminator % 5}.png`} style={{
                             maxHeight: 32,
                             borderRadius: '700%',
                             overflow: 'hidden',

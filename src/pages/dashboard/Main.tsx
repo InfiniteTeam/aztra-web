@@ -21,15 +21,20 @@ export default class Main extends Component<MainProps> {
           <Col className="col-auto">
             <Card className="flex-md-row my-3 shadow" bg="dark">
               <Card.Body className="text-center text-md-left">
-                <Card.Img
-                  src={`https://cdn.discordapp.com/icons/${guild?.id}/${guild?.icon}.png?size=512`} style={{
-                    height: 120,
-                    width: 120
-                  }}
-                />
+                <div style={{
+                  height: 120,
+                  width: 120
+                }}>
+                  {guild?.icon
+                    ? <Card.Img
+                      src={`https://cdn.discordapp.com/icons/${guild?.id}/${guild?.icon}.png?size=512`}
+                    />
+                    : <h1 className="d-flex justify-content-center align-items-center w-100 h-100 display-3">{guild?.name[0]}</h1>
+                  }
+                </div>
               </Card.Body>
               <Card.Body className="pl-md-0 pr-md-5" style={{
-                
+
               }}>
                 <Card.Title className="font-weight-bold text-center text-md-left" style={{
                   fontFamily: 'NanumSquare'

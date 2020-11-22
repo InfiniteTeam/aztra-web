@@ -7,6 +7,7 @@ import { Permissions } from 'discord.js'
 import { PartialGuildExtend } from '../../types/DiscordTypes'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-regular-svg-icons';
+import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 
 const swal = require('@sweetalert/with-react')
 
@@ -106,9 +107,22 @@ export default class Servers extends Component<{}, ServersState> {
       ))
 
     return (
-      <>
+      <div className="min-vh-100">
         <Container fluid="sm" className="text-center">
-          <h2 style={{ color: "whitesmoke", marginTop: 120, marginBottom: 120, fontSize: '30pt' }}>서버를 선택하세요</h2>
+          {
+            this.state.fetchDone === true && guild_cards.length === 0
+              ? <>
+                <h2 className="text-white" style={{ marginTop: 120, marginBottom: 120 }}>
+                  관리할 수 있는 서버가 하나도 없습니다!
+                  <h4 className="text-white mt-5" >관리자 권한이 있는 서버만 표시됩니다.</h4>
+                </h2>
+                <Button variant="aztra" onClick={() => this.componentDidMount()}>
+                  <FontAwesomeIcon icon={faSyncAlt} className="mr-2" />
+                  새로고침
+                </Button>
+              </>
+              : <h2 className="text-white" style={{ marginTop: 120, marginBottom: 120 }}>서버를 선택하세요</h2>
+          }
         </Container>
         <Container fluid="sm" style={{ marginBottom: 160 }}>
           {
@@ -125,7 +139,7 @@ export default class Servers extends Component<{}, ServersState> {
               : guild_cards
           }
         </Container>
-      </>
+      </div>
     )
   }
 }
