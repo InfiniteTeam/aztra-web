@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Button, Row, Col, Form, Spinner, Container, Card, Alert } from 'react-bootstrap'
+import React, { Component, createRef, RefObject } from 'react';
+import { Button, Row, Col, Form, Spinner, Container, Card, Alert, OverlayTrigger, Tooltip, Overlay } from 'react-bootstrap'
 import TextareaAutosize from 'react-textarea-autosize'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -30,15 +30,13 @@ interface GreetingState {
   validation_incomingTitle: boolean | null
   validation_incomingDesc: boolean | null
   validation_outgoingTitle: boolean | null
-  validation_outgoingDesc: boolean | null,
+  validation_outgoingDesc: boolean | null
+  validation_channel: boolean | null
 
-  value_incomingTitleControl: string | null
-  value_incomingDescControl: string | null
-  value_outgoingTitleControl: string | null
-  value_outgoingDescControl: string | null
-
-  saveError: AxiosError | null
+  saveError: boolean
 }
+
+type handleFieldChangeTypes = 'incomingTitle' | 'incomingDesc' | 'outgoingTitle' | 'outgoingDesc' | 'channel'
 
 export default class Greeting extends Component<GreetingProps, GreetingState> {
   state: GreetingState = {
@@ -57,14 +55,15 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
     validation_incomingDesc: null,
     validation_outgoingTitle: null,
     validation_outgoingDesc: null,
+    validation_channel: null,
 
-    value_incomingTitleControl: null,
-    value_incomingDescControl: null,
-    value_outgoingTitleControl: null,
-    value_outgoingDescControl: null,
-
-    saveError: null
+    saveError: false
   }
+
+  refIncomingTitleControl: RefObject<HTMLTextAreaElement> = createRef()
+  refIncomingDescControl: RefObject<HTMLTextAreaElement> = createRef()
+  refOutgoingTitleControl: RefObject<HTMLTextAreaElement> = createRef()
+  refOutgoingDescControl: RefObject<HTMLTextAreaElement> = createRef()
 
   getData = async (token: string) => {
     try {
@@ -116,55 +115,84 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
     }
   }
 
-  handleFieldChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, type: 'incomingTitle' | 'incomingDesc' | 'outgoingTitle' | 'outgoingDesc') => {
-    let value = e.target.value
+  handleFieldChange = async (type?: handleFieldChangeTypes) => {
+    let value
+    let s = this.state
+
     switch (type) {
       case 'incomingTitle':
-        await this.setState({ validation_incomingTitle: 0 < value.length && value.length <= 256 ? null : false, value_incomingTitleControl: e.target.value })
+        value = this.refIncomingTitleControl.current?.value!
+        await this.setState({ validation_incomingTitle: 0 < value.length && value.length <= 256 ? null : s.useJoin ? false : null })
         break
       case 'outgoingTitle':
-        await this.setState({ validation_outgoingTitle: 0 < value.length && value.length <= 256 ? null : false, value_outgoingTitleControl: e.target.value })
+        value = this.refOutgoingTitleControl.current?.value!
+        await this.setState({ validation_outgoingTitle: 0 < value.length && value.length <= 256 ? null : s.useLeave ? false : null })
         break
       case 'incomingDesc':
-        await this.setState({ validation_incomingDesc: 0 < value.length && value.length <= 2048 ? null : false, value_incomingDescControl: e.target.value })
+        value = this.refIncomingDescControl.current?.value!
+        await this.setState({ validation_incomingDesc: 0 < value.length && value.length <= 2048 ? null : s.useJoin ? false : null })
         break
       case 'outgoingDesc':
-        await this.setState({ validation_outgoingDesc: 0 < value.length && value.length <= 2048 ? null : false, value_outgoingDescControl: e.target.value })
+        value = this.refOutgoingDescControl.current?.value!
+        await this.setState({ validation_outgoingDesc: 0 < value.length && value.length <= 2048 ? null : s.useLeave ? false : null })
         break
+      case 'channel':
+        console.log('dd')
+        await this.setState({ validation_channel: this.state.useJoin || this.state.useLeave ? (!!this.state.data?.channel || !!this.state.newChannel ? null : false) : null })
+        break
+      default:
+        for (let x of ['incomingTitle', 'incomingDesc', 'outgoingTitle', 'outgoingDesc', 'channel']) {
+          this.handleFieldChange(x as handleFieldChangeTypes)
+        }
     }
-    console.log(this.isChangesNotSaved())
   }
 
-  isChangesNotSaved = () => {
-    var data = this.state.data
-    return !(
-      data?.join_title_format === this.state.value_incomingTitleControl
+  checkValidate = () => {
+    let s = this.state
+
+    console.log(s)
+    return (
+      s.validation_incomingTitle === null
+      && s.validation_incomingDesc === null
+      && s.validation_outgoingTitle === null
+      && s.validation_outgoingDesc === null
+      && s.validation_channel === null
     )
   }
 
-  save = async (event?: React.MouseEvent<HTMLElement>) => {
+  save = async () => {
     this.setState({ saving: true })
     let data: Greetings = {
       guild: this.state.data?.guild!,
       channel: this.state.newChannel?.id! || this.state.data?.channel!,
-      join_title_format: this.state.value_incomingTitleControl,
-      join_desc_format: this.state.value_incomingDescControl,
-      leave_title_format: this.state.value_outgoingTitleControl,
-      leave_desc_format: this.state.value_outgoingDescControl
+      join_title_format: this.refIncomingTitleControl.current?.value!,
+      join_desc_format: this.refIncomingDescControl.current?.value!,
+      leave_title_format: this.refOutgoingTitleControl.current?.value!,
+      leave_desc_format: this.refOutgoingDescControl.current?.value!
     }
     try {
-      let res = await axios.post(`${api}/servers/${this.props.guildId}/greeting`, data, {
+      await axios.post(`${api}/servers/${this.props.guildId}/greeting`, data, {
         headers: {
           token: localStorage.getItem('token')
         },
       })
     }
     catch (e) {
-      this.setState({ saveError: e })
+      this.setState({ saveError: true })
     }
     finally {
       this.setState({ saving: false })
     }
+  }
+
+  handleSubmit = (e: React.MouseEvent<HTMLElement>) => {
+    this.handleFieldChange()
+      .then(() => {
+        console.log(this.checkValidate())
+        if (this.checkValidate()) {
+          this.save()
+        }
+      })
   }
 
   render() {
@@ -196,13 +224,13 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
               <div className={!this.state.useJoin ? "d-none" : undefined}>
                 <Form.Group controlId="incomingTitle">
                   <Form.Label>메시지 제목</Form.Label>
-                  <Form.Control className="shadow" isInvalid={this.state.validation_incomingTitle === false} as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕하세요!" defaultValue={this.state.data?.join_title_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'incomingTitle') }} />
+                  <Form.Control ref={this.refIncomingTitleControl as unknown as RefObject<TextareaAutosize>} className="shadow" isInvalid={this.state.validation_incomingTitle === false} as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕하세요!" defaultValue={this.state.data?.join_title_format || undefined} onChange={() => { this.handleFieldChange('incomingTitle') }} />
                   <Form.Control.Feedback type="invalid">빈칸일 수 없으며 최대 256자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group controlId="incomingDesc">
                   <Form.Label>메시지 내용</Form.Label>
-                  <Form.Control className="shadow" isInvalid={this.state.validation_incomingDesc === false} as={TextareaAutosize} type="text" placeholder="예) {guild}에 오신 것을 환영합니다." defaultValue={this.state.data?.join_desc_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'incomingDesc') }} />
+                  <Form.Control ref={this.refIncomingDescControl as unknown as RefObject<TextareaAutosize>} className="shadow" isInvalid={this.state.validation_incomingDesc === false} as={TextareaAutosize} type="text" placeholder="예) {guild}에 오신 것을 환영합니다." defaultValue={this.state.data?.join_desc_format || undefined} onChange={() => { this.handleFieldChange('incomingDesc') }} />
                   <Form.Control.Feedback type="invalid">빈칸일 수 없으며 최대 2048자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
               </div>
@@ -225,13 +253,13 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
               <div className={!this.state.useLeave ? "d-none" : undefined}>
                 <Form.Group controlId="outgoingTitle">
                   <Form.Label>메시지 제목</Form.Label>
-                  <Form.Control className="shadow" isInvalid={this.state.validation_outgoingTitle === false} as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕히가세요" defaultValue={this.state.data?.leave_title_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'outgoingTitle') }} />
+                  <Form.Control ref={this.refOutgoingTitleControl as unknown as RefObject<TextareaAutosize>} className="shadow" isInvalid={this.state.validation_outgoingTitle === false} as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕히가세요" defaultValue={this.state.data?.leave_title_format || undefined} onChange={() => { this.handleFieldChange('outgoingTitle') }} />
                   <Form.Control.Feedback type="invalid">빈칸일 수 없으며 최대 256자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group controlId="outgoingDesc">
                   <Form.Label>메시지 내용</Form.Label>
-                  <Form.Control className="shadow" isInvalid={this.state.validation_outgoingDesc === false} as={TextareaAutosize} type="text" placeholder="예) {user}님이 나갔습니다." defaultValue={this.state.data?.leave_desc_format || undefined} onChange={(e) => { this.handleFieldChange(e, 'outgoingDesc') }} />
+                  <Form.Control ref={this.refOutgoingDescControl as unknown as RefObject<TextareaAutosize>} className="shadow" isInvalid={this.state.validation_outgoingDesc === false} as={TextareaAutosize} type="text" placeholder="예) {user}님이 나갔습니다." defaultValue={this.state.data?.leave_desc_format || undefined} onChange={() => { this.handleFieldChange('outgoingDesc') }} />
                   <Form.Control.Feedback type="invalid">빈칸일 수 없으며 최대 2048자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
               </div>
@@ -260,7 +288,7 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
                                     </Card.Header>
                                   </Card>
                                 </>
-                                : <Form.Label as="h5">선택된 채널이 없습니다!</Form.Label>
+                                : <Form.Label as="h5" className={this.state.validation_channel === false ? "text-danger font-weight-bold" : ""}>선택된 채널이 없습니다!</Form.Label>
                             }
 
                           </Row>
@@ -329,36 +357,28 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
                 </Col>
               </Row>
 
-
+              <Row className="mt-4">
+                <Button
+                  variant={this.state.saveError ? "danger" : "aztra"}
+                  disabled={this.state.saving || this.state.saveError}
+                  type="button"
+                  onClick={this.handleSubmit}
+                  style={{
+                    minWidth: 120
+                  }}
+                >
+                  {
+                    this.state.saving
+                      ? <>
+                        <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                        <span className="pl-2">저장 중...</span>
+                      </>
+                      : <span>{this.state.saveError ? "오류" : "저장하기"}</span>
+                  }
+                </Button>
+              </Row>
             </Form>
           </Col>
-        </Row>
-
-        <Row className="mt-4">
-          <Button
-            variant={this.state.saveError ? "danger" : "aztra"}
-            disabled={this.state.saving || !!this.state.saveError}
-            type="submit"
-            onClick={this.save}
-            style={{
-              minWidth: 120
-            }}
-          >
-            {
-              this.state.saving
-                ? <>
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                  />
-                  <span className="pl-2">저장 중...</span>
-                </>
-                : <span>{this.state.saveError ? "오류" : "저장하기"}</span>
-            }
-          </Button>
         </Row>
       </>
     )

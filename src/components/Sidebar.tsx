@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Badge, Collapse, Nav } from 'react-bootstrap';
 import { PartialGuild } from '../types/DiscordTypes'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChartLine, faExclamationTriangle, faHome, faUserPlus, faUsersCog } from '@fortawesome/free-solid-svg-icons';
 
 interface SidebarProps {
   guild: PartialGuild
@@ -23,19 +25,34 @@ export default function Sidebar(props: SidebarProps) {
         }}
       >
         <Nav.Item>
-          <Nav.Link as={Link} to={`/dashboard/${guild?.id}`}>메인</Nav.Link>
+          <Nav.Link as={Link} to={`/dashboard/${guild?.id}`}>
+            <FontAwesomeIcon icon={faHome} className="mr-2" color="grey" size="sm" />
+            메인
+          </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link as={Link} to={`/dashboard/${guild?.id}/greeting`}>환영 메시지</Nav.Link>
+          <Nav.Link as={Link} to={`/dashboard/${guild?.id}/greeting`}>
+            <FontAwesomeIcon icon={faUserPlus} className="mr-2" color="grey" size="sm" />
+            환영 메시지
+          </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link as={Link} to={`/dashboard/${guild?.id}/members`}>멤버 관리</Nav.Link>
+          <Nav.Link as={Link} to={`/dashboard/${guild?.id}/members`}>
+            <FontAwesomeIcon icon={faUsersCog} className="mr-2" color="grey" size="sm" />
+            멤버 관리
+          </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link as={Link} to={`/dashboard/${guild?.id}/warns`}>경고 관리</Nav.Link>
+          <Nav.Link as={Link} to={`/dashboard/${guild?.id}/warns`}>
+            <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2" color="grey" size="sm" />
+            경고 관리
+          </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link as={Link} to={`/dashboard/${guild?.id}/statistics`}>통계</Nav.Link>
+          <Nav.Link as={Link} to={`/dashboard/${guild?.id}/statistics`}>
+            <FontAwesomeIcon icon={faChartLine} className="mr-2" color="grey" size="sm" />
+            통계
+          </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link style={{ marginLeft: '-3px', paddingLeft: 0 }} onClick={() => setWarnManageOpen(!warnManageOpen)} aria-controls="warn-manage-collapse" aria-expanded={warnManageOpen}>{warnManageOpen ? "▾ " : "▸ "}드롭다운</Nav.Link>
