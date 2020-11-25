@@ -17,7 +17,7 @@ export default function Sidebar(props: SidebarProps) {
     <>
       <Nav
         id="dashboard-sidebar"
-        className="col-md-12 d-block d-md-block shadow"
+        className="col-md-12 d-block d-md-block"
         style={{
           paddingRight: 0,
           fontFamily: "NanumSquare",
@@ -26,31 +26,31 @@ export default function Sidebar(props: SidebarProps) {
       >
         <Nav.Item>
           <Nav.Link as={Link} to={`/dashboard/${guild?.id}`}>
-            <FontAwesomeIcon icon={faHome} className="mr-2" color="grey" size="sm" />
+            <FontAwesomeIcon icon={faHome} className="mr-2" color="LightSlateGrey" size="sm" />
             메인
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link as={Link} to={`/dashboard/${guild?.id}/greeting`}>
-            <FontAwesomeIcon icon={faUserPlus} className="mr-2" color="grey" size="sm" />
+            <FontAwesomeIcon icon={faUserPlus} className="mr-2" color="LightSlateGrey" size="sm" />
             환영 메시지
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link as={Link} to={`/dashboard/${guild?.id}/members`}>
-            <FontAwesomeIcon icon={faUsersCog} className="mr-2" color="grey" size="sm" />
+            <FontAwesomeIcon icon={faUsersCog} className="mr-2" color="LightSlateGrey" size="sm" />
             멤버 관리
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link as={Link} to={`/dashboard/${guild?.id}/warns`}>
-            <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2" color="grey" size="sm" />
+            <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2" color="LightSlateGrey" size="sm" />
             경고 관리
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link as={Link} to={`/dashboard/${guild?.id}/statistics`}>
-            <FontAwesomeIcon icon={faChartLine} className="mr-2" color="grey" size="sm" />
+            <FontAwesomeIcon icon={faChartLine} className="mr-2" color="LightSlateGrey" size="sm" />
             통계
           </Nav.Link>
         </Nav.Item>
