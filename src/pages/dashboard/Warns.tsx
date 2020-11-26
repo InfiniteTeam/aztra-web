@@ -1,5 +1,8 @@
 import React from 'react'
-import { Button, Card, Col, OverlayTrigger, Popover, Row, Table } from 'react-bootstrap'
+import api from '../../datas/api'
+import axios from 'axios'
+import { Warns as WarnsType } from '../../types/dbtypes/warns'
+import { Button, Card, Col, OverlayTrigger, Popover, Row, Spinner, Table, Container } from 'react-bootstrap'
 import { faExclamationTriangle, faTrophy } from '@fortawesome/free-solid-svg-icons'
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -8,7 +11,45 @@ export interface WarnsProps {
   guildId: string
 }
 
-export default class Warns extends React.Component<WarnsProps> {
+export interface WarnsState {
+  data: WarnsType[] | null
+  fetchDone: boolean
+}
+
+export default class Warns extends React.Component<WarnsProps, WarnsState> {
+  state: WarnsState = {
+    data: null,
+    fetchDone: false
+  }
+
+  getData = async (token: string) => {
+    try {
+      let res = await axios.get(`${api}/servers/${this.props.guildId}/warns`, {
+        headers: {
+          token: token
+        }
+      })
+      this.setState({ data: res.data })
+    }
+    catch (e) {
+      this.setState({ data: null })
+    }
+    finally {
+      this.setState({ fetchDone: true })
+    }
+  }
+
+  async componentDidMount() {
+    const token = localStorage.getItem('token')
+    if (token) {
+      await this.getData(token)
+      console.log(this.state.data)
+    }
+    else {
+      window.location.assign('/login')
+    }
+  }
+
   render() {
     return (
       <>
@@ -23,18 +64,33 @@ export default class Warns extends React.Component<WarnsProps> {
                 <Button variant="aztra" className="shadow" size="sm">모두 보기</Button>
               </div>
             </div>
-            <Card bg="dark" className="mb-2 shadow-sm shadow">
-              <Card.Body className="py-2">
-                <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2" />
-                버그로 도배
-              </Card.Body>
-            </Card>
-            <Card bg="dark" className="mb-2 shadow-sm shadow">
-              <Card.Body className="py-2">
-                <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2" />
-                심한 욕설... 은 아니고 심한 오류 메시지를 뱉음
-              </Card.Body>
-            </Card>
+            {
+              this.state.fetchDone
+                ? this.state.data?.map(one =>
+                  <Card bg="dark" className="mb-2 shadow-sm shadow">
+                    <Card.Body className="py-2 d-flex justify-content-between">
+                      <div>
+                        <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2" />
+                        {one.reason}
+                      </div>
+                      <small style={{
+                        color: 'lightgrey'
+                      }}>
+                        {one.count}회
+                      </small>
+                    </Card.Body>
+                  </Card>
+                )
+                : (
+                  <div className="d-flex align-items-center justify-content-center flex-column" style={{
+
+                  }}>
+                    <h3 className="pb-4">불러오는 중</h3>
+                    <Spinner animation="border" variant="aztra" />
+                  </div>
+                )
+
+            }
           </Col>
 
           <Col className="pb-5" xs={12} lg={6}>

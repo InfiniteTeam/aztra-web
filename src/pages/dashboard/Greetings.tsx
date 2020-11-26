@@ -1,13 +1,13 @@
 import React, { Component, createRef, RefObject } from 'react';
-import { Button, Row, Col, Form, Spinner, Container, Card, Alert, OverlayTrigger, Tooltip, Overlay } from 'react-bootstrap'
+import { Button, Row, Col, Form, Spinner, Container, Card, Alert } from 'react-bootstrap'
 import TextareaAutosize from 'react-textarea-autosize'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHashtag, faCheckCircle, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 
-import { Greetings } from '../../types/dbtypes/greetings'
+import { Greetings as GreetingsType } from '../../types/dbtypes/greetings'
 import api from '../../datas/api'
 import { GuildChannel } from 'discord.js';
 
@@ -16,7 +16,7 @@ interface GreetingProps {
 }
 
 interface GreetingState {
-  data: Greetings | null
+  data: GreetingsType | null
   fetchDone: boolean
   useJoin: boolean
   useLeave: boolean
@@ -38,7 +38,7 @@ interface GreetingState {
 
 type handleFieldChangeTypes = 'incomingTitle' | 'incomingDesc' | 'outgoingTitle' | 'outgoingDesc' | 'channel'
 
-export default class Greeting extends Component<GreetingProps, GreetingState> {
+export default class Greetings extends Component<GreetingProps, GreetingState> {
   state: GreetingState = {
     data: null,
     fetchDone: false,
@@ -67,7 +67,7 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
 
   getData = async (token: string) => {
     try {
-      let res = await axios.get(`${api}/servers/${this.props.guildId}/greeting`, {
+      let res = await axios.get(`${api}/servers/${this.props.guildId}/greetings`, {
         headers: {
           token: token
         }
@@ -162,7 +162,7 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
 
   save = async () => {
     this.setState({ saving: true })
-    let data: Greetings = {
+    let data: GreetingsType = {
       guild: this.state.data?.guild!,
       channel: this.state.newChannel?.id! || this.state.data?.channel!,
       join_title_format: this.refIncomingTitleControl.current?.value!,
@@ -171,7 +171,7 @@ export default class Greeting extends Component<GreetingProps, GreetingState> {
       leave_desc_format: this.refOutgoingDescControl.current?.value!
     }
     try {
-      await axios.post(`${api}/servers/${this.props.guildId}/greeting`, data, {
+      await axios.post(`${api}/servers/${this.props.guildId}/greetings`, data, {
         headers: {
           token: localStorage.getItem('token')
         },

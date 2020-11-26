@@ -12,6 +12,11 @@ interface SidebarProps {
 export default function Sidebar(props: SidebarProps) {
   const [warnManageOpen, setWarnManageOpen] = useState(false)
 
+  const iconStyle: React.CSSProperties = {
+    height: 20,
+    width: 20,
+  }
+
   const guild = props.guild
   return (
     <>
@@ -25,32 +30,42 @@ export default function Sidebar(props: SidebarProps) {
         }}
       >
         <Nav.Item>
-          <Nav.Link as={Link} to={`/dashboard/${guild?.id}`}>
-            <FontAwesomeIcon icon={faHome} className="mr-2" color="LightSlateGrey" size="sm" />
+          <Nav.Link className="d-flex" as={Link} to={`/dashboard/${guild?.id}`}>
+            <div style={iconStyle} className="mr-2">
+              <FontAwesomeIcon icon={faHome} color="LightSlateGrey" size="sm" />
+            </div>
             메인
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link as={Link} to={`/dashboard/${guild?.id}/greeting`}>
-            <FontAwesomeIcon icon={faUserPlus} className="mr-2" color="LightSlateGrey" size="sm" />
+          <Nav.Link className="d-flex" as={Link} to={`/dashboard/${guild?.id}/greeting`}>
+            <div style={iconStyle} className="mr-2">
+              <FontAwesomeIcon icon={faUserPlus} className="mr-2" color="LightSlateGrey" size="sm" />
+            </div>
             환영 메시지
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link as={Link} to={`/dashboard/${guild?.id}/members`}>
-            <FontAwesomeIcon icon={faUsersCog} className="mr-2" color="LightSlateGrey" size="sm" />
+          <Nav.Link className="d-flex" as={Link} to={`/dashboard/${guild?.id}/members`}>
+            <div style={iconStyle} className="mr-2">
+              <FontAwesomeIcon icon={faUsersCog} className="mr-2" color="LightSlateGrey" size="sm" />
+            </div>
             멤버 관리
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link as={Link} to={`/dashboard/${guild?.id}/warns`}>
-            <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2" color="LightSlateGrey" size="sm" />
+          <Nav.Link className="d-flex" as={Link} to={`/dashboard/${guild?.id}/warns`}>
+            <div style={iconStyle} className="mr-2">
+              <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2" color="LightSlateGrey" size="sm" />
+            </div>
             경고 관리
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link as={Link} to={`/dashboard/${guild?.id}/statistics`}>
-            <FontAwesomeIcon icon={faChartLine} className="mr-2" color="LightSlateGrey" size="sm" />
+          <Nav.Link className="d-flex" as={Link} to={`/dashboard/${guild?.id}/statistics`}>
+            <div style={iconStyle} className="mr-2">
+              <FontAwesomeIcon icon={faChartLine} className="mr-2" color="LightSlateGrey" size="sm" />
+            </div>
             통계
           </Nav.Link>
         </Nav.Item>

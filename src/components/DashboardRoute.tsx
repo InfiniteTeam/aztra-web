@@ -3,7 +3,7 @@ import { Container, Row, Col, Button } from 'react-bootstrap'
 import { Route, Switch } from 'react-router-dom'
 
 import DashboardMain from '../pages/dashboard/Main'
-import DashboardGreeting from '../pages/dashboard/Greeting'
+import DashboardGreeting from '../pages/dashboard/Greetings'
 import DashboardMembers from '../pages/dashboard/Members'
 import MemberDashboard from '../pages/dashboard/MemberDashboard'
 import DashboardWarns from '../pages/dashboard/Warns'
