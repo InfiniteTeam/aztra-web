@@ -2,27 +2,41 @@ import React from 'react'
 import api from '../../datas/api'
 import axios from 'axios'
 import { Warns as WarnsType } from '../../types/dbtypes/warns'
-import { Button, Card, Col, OverlayTrigger, Popover, Row, Spinner, Table, Container } from 'react-bootstrap'
-import { faExclamationTriangle, faTrophy } from '@fortawesome/free-solid-svg-icons'
+import { Button, Card, Col, OverlayTrigger, Popover, Row, Spinner, Table } from 'react-bootstrap'
+import { faTrophy } from '@fortawesome/free-solid-svg-icons'
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-export interface WarnsProps {
+import dayjs from 'dayjs'
+import dayjsRelativeTime from 'dayjs/plugin/relativeTime'
+import dayjsUTC from 'dayjs/plugin/utc'
+import 'dayjs/locale/ko'
+import { MemberMinimal } from '../../types/DiscordTypes'
+dayjs.locale('ko')
+dayjs.extend(dayjsRelativeTime)
+dayjs.extend(dayjsUTC)
+
+
+export interface WarnsMainProps {
   guildId: string
 }
 
-export interface WarnsState {
+export interface WarnsMainState {
   data: WarnsType[] | null
-  fetchDone: boolean
+  warnsFetchDone: boolean
+  membersFetchDone: boolean
+  members: MemberMinimal[] | null
 }
 
-export default class Warns extends React.Component<WarnsProps, WarnsState> {
-  state: WarnsState = {
+export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMainState> {
+  state: WarnsMainState = {
     data: null,
-    fetchDone: false
+    warnsFetchDone: false,
+    membersFetchDone: false,
+    members: null
   }
 
-  getData = async (token: string) => {
+  getWarns = async (token: string) => {
     try {
       let res = await axios.get(`${api}/servers/${this.props.guildId}/warns`, {
         headers: {
@@ -35,14 +49,33 @@ export default class Warns extends React.Component<WarnsProps, WarnsState> {
       this.setState({ data: null })
     }
     finally {
-      this.setState({ fetchDone: true })
+      this.setState({ warnsFetchDone: true })
     }
   }
 
-  async componentDidMount() {
+  getMembers = async (token: string) => {
+    try {
+      let res = await axios.get(`${api}/discord/guilds/${this.props.guildId}/members`, {
+        headers: {
+          token: token
+        }
+      })
+      console.log(res.data)
+      this.setState({ members: res.data })
+    }
+    catch (e) {
+      this.setState({ members: null })
+    }
+    finally {
+      this.setState({ membersFetchDone: true })
+    }
+  }
+
+  componentDidMount() {
     const token = localStorage.getItem('token')
     if (token) {
-      await this.getData(token)
+      this.getWarns(token)
+      this.getMembers(token)
       console.log(this.state.data)
     }
     else {
@@ -59,27 +92,39 @@ export default class Warns extends React.Component<WarnsProps, WarnsState> {
         <Row>
           <Col className="pb-5" xs={12} lg={6}>
             <div className="d-flex justify-content-between">
-              <h4 className="mb-3">전체 경고 목록</h4>
+              <h4 className="mb-3">최근 경고 목록</h4>
               <div>
-                <Button variant="aztra" className="shadow" size="sm">모두 보기</Button>
+                <Button variant="aztra" className="shadow" size="sm" href={`/dashboard/${this.props.guildId}/warns/warns-list`}>모두 보기</Button>
               </div>
             </div>
             {
-              this.state.fetchDone
-                ? this.state.data?.map(one =>
-                  <Card bg="dark" className="mb-2 shadow-sm shadow">
+              this.state.warnsFetchDone && this.state.membersFetchDone
+                ? this.state.data?.map(one => {
+                  const target = this.state.members?.find(m => m.user.id === one.member)?.user
+                  return <Card bg="dark" className="mb-2 shadow-sm shadow">
                     <Card.Body className="py-2 d-flex justify-content-between">
-                      <div>
-                        <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2" />
-                        {one.reason}
+                      <div className="d-flex">
+                        <img
+                          src={target?.avatar ? `https://cdn.discordapp.com/avatars/${target?.id}/${target?.avatar}` : target?.defaultAvatarURL}
+                          alt={target?.username!}
+                          className="rounded-circle no-drag mr-3"
+                          style={{
+                            height: 35,
+                            width: 35
+                          }}
+                        />
+                        <div className="my-auto">
+                          {one.reason}
+                        </div>
                       </div>
-                      <small style={{
+                      <small className="my-auto pb-1" style={{
                         color: 'lightgrey'
                       }}>
-                        {one.count}회
+                        {one.count}회, {dayjs.utc(one.dt).local().fromNow()}
                       </small>
                     </Card.Body>
                   </Card>
+                }
                 )
                 : (
                   <div className="d-flex align-items-center justify-content-center flex-column" style={{

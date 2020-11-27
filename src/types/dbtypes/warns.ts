@@ -5,5 +5,5 @@ export interface Warns {
     count: number
     warnby: string
     reason: string
-    dt: Date
+    dt: string
 }

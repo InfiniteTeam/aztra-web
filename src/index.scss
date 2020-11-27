@@ -37,6 +37,13 @@ h4, h5, h6 {
     font-family: "NanumBarunGothic";
 }
 
+a {
+    &:hover {
+        color: lightgray;
+    }
+    color: white;
+}
+
 code {
     color: lightgrey;
 }

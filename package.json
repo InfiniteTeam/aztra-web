@@ -26,6 +26,7 @@
     "axios": "^0.20.0",
     "bootstrap": "^4.5.3",
     "chart.js": "^2.9.4",
+    "dayjs": "^1.9.6",
     "discord.js": "^12.4.1",
     "node-sass": "^4.14.1",
     "preval.macro": "^5.0.0",

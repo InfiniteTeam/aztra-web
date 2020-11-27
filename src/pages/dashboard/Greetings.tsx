@@ -73,6 +73,12 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
         }
       })
       this.setState({ data: res.data })
+      const useJoin = res.data.join_title_format || res.data.join_desc_format
+      const useLeave = res.data.leave_title_format || res.data.leave_desc_format
+      this.setState({
+        useJoin: !!useJoin,
+        useLeave: !!useLeave
+      })
     }
     catch (e) {
       this.setState({ data: null })
@@ -96,19 +102,12 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
     }
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const token = localStorage.getItem('token')
     if (token) {
-      await this.getData(token)
+      this.getData(token)
       this.getChannels(token)
       console.log(this.state.data)
-      const data = this.state.data
-      const useJoin = data?.join_title_format || data?.join_desc_format
-      const useLeave = data?.leave_title_format || data?.leave_desc_format
-      this.setState({
-        useJoin: !!useJoin,
-        useLeave: !!useLeave
-      })
     }
     else {
       window.location.assign('/login')

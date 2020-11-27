@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Route, Switch, BrowserRouter } from 'react-router-dom';
+import React, { Component } from 'react'
+import { Route, Switch, BrowserRouter } from 'react-router-dom'
 
 import oauth from './datas/oauth'
 
@@ -8,7 +8,7 @@ import Auth from './pages/Auth'
 import NotFound from './pages/NotFound'
 import Redirecting from './pages/Redirecting'
 import Logout from './pages/Logout'
-import Premium from './pages/Premium';
+import Premium from './pages/Premium'
 
 import Navibar from './components/Navibar'
 import Footer from './components/Footer'
