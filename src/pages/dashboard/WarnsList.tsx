@@ -3,12 +3,12 @@ import React, { PureComponent } from 'react';
 import axios from 'axios'
 import api from '../../datas/api'
 import { Warns as WarnsType } from '../../types/dbtypes/warns';
-import { Row, Col, Form, Container, Spinner, Button, Table } from 'react-bootstrap';
+import { Row, Col, Form, Container, Spinner, Button, Table, ButtonGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import MemberListCard from '../../components/forms/MemberListCard';
 import { MemberMinimal } from '../../types/DiscordTypes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
-
+import RemoveCircleOutline from '@material-ui/icons/RemoveCircleOutline'
 
 interface WarnsListProps {
   readonly guildId?: string
@@ -21,6 +21,8 @@ interface WarnsListState {
 
   warns: WarnsType[] | null
   warnsFetchDone: boolean
+
+  searchType: 'reason' | 'target' | 'warnby'
 }
 
 export default class Members extends PureComponent<WarnsListProps, WarnsListState> {
@@ -29,7 +31,8 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
     memberSearch: '',
     membersFetchDone: false,
     warns: null,
-    warnsFetchDone: false
+    warnsFetchDone: false,
+    searchType: 'reason'
   }
 
   componentDidMount() {
@@ -102,6 +105,32 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
       (this.filterMembers(this.state.memberSearch) || this.state.members)?.map(one => <MemberListCard key={one.user.id} member={one} guildId={this.props.guildId!} />)
     )
 
+    const memberCell = (member: MemberMinimal) =>
+      member !== undefined
+        ?
+        <a href={`/dashboard/${this.props.guildId}/members/${member.user.id}`} className="d-flex align-items-center">
+          <img
+            className="rounded-circle no-drag"
+            src={member.user.avatar ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}` : member.user.defaultAvatarURL}
+            alt={member.user.tag!}
+            style={{
+              height: 30,
+              width: 30
+            }}
+          />
+          <div className="ml-3">
+            <span className="font-weight-bold">
+              {member.displayName}
+            </span>
+            <span className="ml-1" style={{
+              color: '#9f9f9f'
+            }}>
+              @{member?.user.tag}
+            </span>
+          </div>
+        </a>
+        : <span className="font-italic">(존재하지 않는 멤버)</span>
+
     return (
       <div style={{
         fontFamily: 'NanumBarunGothic'
@@ -121,27 +150,85 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
               this.state.membersFetchDone && this.state.warnsFetchDone
                 ? <Form>
                   <Form.Group>
-                    <Row className="pb-2">
+                    <Row className="pb-2 justify-content-between">
                       <Form.Text style={{
-
-                        paddingBottom: '8px',
                         fontSize: '12pt'
                       }}>
-                        전체 경고 {this.state.members?.length} 건{this.state.memberSearch && `, ${[].length}건 검색됨`}
+                        전체 경고 {this.state.warns?.length} 건{this.state.memberSearch && `, ${[].length}건 검색됨`}
                       </Form.Text>
+                      <div className="my-auto d-flex">
+                        <span>검색 조건:</span>
+                        <Form.Check className="ml-4" type="radio" label="경고 사유" />
+                        <Form.Check className="ml-4" type="radio" label="대상 멤버" />
+                        <Form.Check className="ml-4" type="radio" label="경고를 부여한 사람" />
+                      </div>
+                    </Row>
+
+                    <Row className="mb-2">
                       <input hidden={true} />
                       <Form.Control type="text" placeholder="경고 검색" onChange={this.handleSearchOnChange} />
                     </Row>
+
                     <Row className="flex-column">
-                      <Table striped bordered hover variant="dark">
+                      <Table id="warn-list-table" variant="dark" style={{
+                        tableLayout: 'fixed'
+                      }} >
                         <thead>
                           <tr>
-                            <th>대상 멤버</th>
+                            <th style={{ width: '4%' }} />
+                            <th style={{ width: '17%' }}>대상 멤버</th>
                             <th>경고 사유</th>
-                            <th>경고 횟수</th>
-                            <th>경고를 부여한 사람</th>
+                            <th style={{ width: '6%' }}>경고 횟수</th>
+                            <th style={{ width: '17%' }}>경고를 부여한 사람</th>
+                            <th style={{ width: '8%' }} />
                           </tr>
                         </thead>
+                        <tbody>
+                          {
+                            this.state.warns?.map(one => {
+                              const target = this.state.members?.find(m => m.user.id === one.member)
+                              const warnby = this.state.members?.find(m => m.user.id === one.warnby)
+                              return <tr>
+                                <td className="align-middle text-center">
+                                  <Form.Check style={{
+                                    transform: 'scale(1.25)',
+                                    WebkitTransform: 'scale(1.25)'
+                                  }} />
+                                </td>
+                                <td className="align-middle">
+                                  <span className="d-inline-block text-wrap">
+                                    {memberCell(target!)}
+                                  </span>
+                                </td>
+                                <td className="align-middle">
+                                  <span className="d-inline-block text-truncate mw-100 align-middle">
+                                    {one.reason}
+                                  </span>
+                                </td>
+                                <td className="align-middle">{one.count}회</td>
+                                <td className="align-middle">
+                                  {memberCell(warnby!)}
+                                </td>
+                                <td className="align-middle text-center">
+                                  <ButtonGroup>
+                                    <OverlayTrigger
+                                      placement="top"
+                                      overlay={
+                                        <Tooltip id="warn-list-row-remove-warn">
+                                          이 경고 취소하기
+                                        </Tooltip>
+                                      }
+                                    >
+                                      <Button variant="dark" className="d-flex">
+                                        <RemoveCircleOutline />
+                                      </Button>
+                                    </OverlayTrigger>
+                                  </ButtonGroup>
+                                </td>
+                              </tr>
+                            })
+                          }
+                        </tbody>
                       </Table>
                     </Row>
                   </Form.Group>

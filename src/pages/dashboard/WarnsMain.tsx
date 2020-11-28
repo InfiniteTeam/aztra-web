@@ -102,26 +102,35 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
                 ? this.state.data?.map(one => {
                   const target = this.state.members?.find(m => m.user.id === one.member)?.user
                   return <Card bg="dark" className="mb-2 shadow-sm shadow">
-                    <Card.Body className="py-2 d-flex justify-content-between">
-                      <div className="d-flex">
+                    <Card.Body as={Row} className="py-2 d-flex justify-content-between">
+                      <Col xs={9} md={10} className="d-flex">
                         <img
                           src={target?.avatar ? `https://cdn.discordapp.com/avatars/${target?.id}/${target?.avatar}` : target?.defaultAvatarURL}
-                          alt={target?.username!}
+                          alt={target?.tag!}
                           className="rounded-circle no-drag mr-3"
                           style={{
                             height: 35,
                             width: 35
                           }}
                         />
-                        <div className="my-auto">
+                        <div className="my-auto d-inline-block text-truncate" style={{
+
+                        }}>
                           {one.reason}
                         </div>
-                      </div>
-                      <small className="my-auto pb-1" style={{
-                        color: 'lightgrey'
-                      }}>
-                        {one.count}회, {dayjs.utc(one.dt).local().fromNow()}
-                      </small>
+                      </Col>
+                      <Col xs={3} md={2} className="d-flex align-items-center my-0 justify-content-end">
+                        <div className="my-auto small" style={{
+                          color: 'lightgrey'
+                        }}>
+                          <div className="text-right">
+                            {one.count}회
+                          </div>
+                          <div className="text-right">
+                            {dayjs.utc(one.dt).local().fromNow()}
+                          </div>
+                        </div>
+                      </Col>
                     </Card.Body>
                   </Card>
                 }

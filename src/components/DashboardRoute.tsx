@@ -211,7 +211,7 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
                     (props) => <DashboardMain guild={guild} {...props} />
                   }
                   />
-                  <Route exact path={`${this.props.match.url}/greeting`} render={
+                  <Route exact path={`${this.props.match.url}/greetings`} render={
                     (props) => <DashboardGreeting guildId={this.props.match.params.serverid} {...props} />
                   }
                   />

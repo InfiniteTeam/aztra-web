@@ -103,8 +103,24 @@
     @include media-breakpoint-up(xs) {
         height: 20vh;
         .nav-link {
+            color: lightgrey;
+            font-family: "NanumSquare";
+            font-size: 1rem;
+            line-height: 1.6rem;
             padding-bottom: 0.25rem !important;
             padding-top: 0.25rem !important;
+            .MuiSvgIcon-root {
+                color: grey;
+            }
+
+            &.active {
+                font-size: 1.1rem;
+                color: white;
+                .MuiSvgIcon-root {
+                    color: white;
+                }
+                font-weight: 900;
+            }
         }
     }
     @include media-breakpoint-up(sm) {
@@ -113,6 +129,12 @@
             padding-top: 0.25rem !important;
             padding-bottom: 0.25rem !important;
         }
+    }
+}
+
+#warn-list-table {
+    td {
+        word-break: break-all;;
     }
 }
 
