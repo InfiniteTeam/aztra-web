@@ -66,6 +66,7 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
           })
           .find((one: PartialGuild) => one.id === this.props.match.params.serverid)
         this.setState({ guild: guild })
+        localStorage.setItem('guildCache', JSON.stringify(guild))
       })
       .catch(e => {
         this.setState({ guild: null })
@@ -104,6 +105,9 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
     // const wsSupport = 'WebSocket' in window || 'MozWebSocket' in window
 
     const isXXSsize = this.state.winWidth < 576
+
+    const guildCacheString = localStorage.getItem('guildCache')
+    const guildCache: PartialGuild | null = guildCacheString === null ? null : JSON.parse(guildCacheString)
 
     if (this.state.fetchDone && !guild) {
       swal(
@@ -156,12 +160,22 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
                       alignItems: 'center'
                     }}
                   >
-                    {this.state.fetchDone && <img
+                    <img
                       alt=""
-                      src={`https://cdn.discordapp.com/icons/${guild?.id}/${guild?.icon}.png`}
+                      src={
+                        guildCache?.id === this.props.match.params.serverid
+                          ? `https://cdn.discordapp.com/icons/${guildCache?.id}/${guildCache?.icon}.png`
+                          : `https://cdn.discordapp.com/icons/${guild?.id}/${guild?.icon}.png`
+                      }
                       style={{ maxHeight: 40, marginRight: 15, borderRadius: '70%' }}
-                    />}
-                    {guild ? guild?.name : '서버 정보를 불러오는 중...'}
+                    />
+                    {
+                      guild
+                        ? guild.name
+                        : guildCache?.id === this.props.match.params.serverid
+                          ? guildCache.name
+                          : '서버 정보를 불러오는 중...'
+                    }
                   </div>
                 </Col>
                 <Col xs={isXXSsize ? 2 : 0} className="text-center my-auto pl-1 d-sm-none d-md-none d-lg-none d-xl-none">
@@ -186,14 +200,14 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
                     isXXSsize
                       ? (
                         <div id="sidebar-collapse" className={`Dashboardroute-sidebar-body ${!this.state.sidebarOpen && 'd-none'}`}>
-                          <Sidebar guild={guild!} />
+                          <Sidebar guild={guild || guildCache!} />
                         </div>
                       )
                       : (
                         <div className="Dashboardroute-sidebar-body" style={{
                           height: `calc(100vh - ${this.sidebarHeaderRef.current?.clientHeight}px - 90px)`
                         }}>
-                          <Sidebar guild={guild!} />
+                          <Sidebar guild={guild || guildCache!} />
                         </div>
                       )
                   }

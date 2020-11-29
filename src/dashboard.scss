@@ -133,6 +133,11 @@
 }
 
 #warn-list-table {
+    th {
+        font-size: 12pt;
+        font-weight: normal;
+        word-break: keep-all;
+    }
     td {
         word-break: break-all;;
     }

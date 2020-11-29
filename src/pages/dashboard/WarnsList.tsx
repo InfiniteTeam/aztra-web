@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, useRef } from 'react';
 
 import axios from 'axios'
 import api from '../../datas/api'
@@ -10,11 +10,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import RemoveCircleOutline from '@material-ui/icons/RemoveCircleOutline'
 
-interface WarnsListProps {
+export interface WarnsListProps {
   readonly guildId?: string
 }
 
-interface WarnsListState {
+export interface WarnsListState {
   members: MemberMinimal[] | null
   memberSearch: string
   membersFetchDone: boolean
@@ -23,6 +23,50 @@ interface WarnsListState {
   warnsFetchDone: boolean
 
   searchType: 'reason' | 'target' | 'warnby'
+}
+
+interface MemberCellProps {
+  member: MemberMinimal
+  guildId: string
+}
+
+const MemberCell: React.FC<MemberCellProps> = ({ member, guildId }) => {
+
+  return member !== undefined
+    ?
+    <OverlayTrigger
+      placement="top"
+      overlay={
+        <Tooltip id={`member-${member.user.id}-tag-tooltip`}>
+          @{member.user.tag}
+        </Tooltip>
+      }
+    >
+      {
+        ({ ref, ...triggerHandler }) => (
+          <a href={`/dashboard/${guildId}/members/${member.user.id}`} {...triggerHandler} className="d-flex align-items-center justify-content-center justify-content-lg-start">
+            <img
+              ref={ref}
+              className="rounded-circle no-drag"
+              src={member.user.avatar ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}` : member.user.defaultAvatarURL}
+              alt={member.user.tag!}
+              style={{
+                height: 30,
+                width: 30
+              }}
+              {...triggerHandler}
+            />
+            <div className="ml-3 d-none d-lg-block">
+              <span className="font-weight-bold">
+                {member.displayName}
+              </span>
+
+            </div>
+          </a>
+        )
+      }
+    </OverlayTrigger>
+    : <span className="font-italic">(존재하지 않는 멤버)</span>
 }
 
 export default class Members extends PureComponent<WarnsListProps, WarnsListState> {
@@ -105,32 +149,6 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
       (this.filterMembers(this.state.memberSearch) || this.state.members)?.map(one => <MemberListCard key={one.user.id} member={one} guildId={this.props.guildId!} />)
     )
 
-    const memberCell = (member: MemberMinimal) =>
-      member !== undefined
-        ?
-        <a href={`/dashboard/${this.props.guildId}/members/${member.user.id}`} className="d-flex align-items-center">
-          <img
-            className="rounded-circle no-drag"
-            src={member.user.avatar ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}` : member.user.defaultAvatarURL}
-            alt={member.user.tag!}
-            style={{
-              height: 30,
-              width: 30
-            }}
-          />
-          <div className="ml-3">
-            <span className="font-weight-bold">
-              {member.displayName}
-            </span>
-            <span className="ml-1" style={{
-              color: '#9f9f9f'
-            }}>
-              @{member?.user.tag}
-            </span>
-          </div>
-        </a>
-        : <span className="font-italic">(존재하지 않는 멤버)</span>
-
     return (
       <div style={{
         fontFamily: 'NanumBarunGothic'
@@ -160,7 +178,7 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
                         <span>검색 조건:</span>
                         <Form.Check className="ml-4" type="radio" label="경고 사유" />
                         <Form.Check className="ml-4" type="radio" label="대상 멤버" />
-                        <Form.Check className="ml-4" type="radio" label="경고를 부여한 사람" />
+                        <Form.Check className="ml-4" type="radio" label="경고 부여자" />
                       </div>
                     </Row>
 
@@ -175,12 +193,12 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
                       }} >
                         <thead>
                           <tr>
-                            <th style={{ width: '4%' }} />
+                            <th style={{ width: 50 }} />
                             <th style={{ width: '17%' }}>대상 멤버</th>
                             <th>경고 사유</th>
-                            <th style={{ width: '6%' }}>경고 횟수</th>
-                            <th style={{ width: '17%' }}>경고를 부여한 사람</th>
-                            <th style={{ width: '8%' }} />
+                            <th style={{ width: '6%' }} className="d-none d-lg-table-cell">경고 횟수</th>
+                            <th style={{ width: '17%' }}>경고 부여자</th>
+                            <th style={{ width: 70 }} />
                           </tr>
                         </thead>
                         <tbody>
@@ -196,18 +214,16 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
                                   }} />
                                 </td>
                                 <td className="align-middle">
-                                  <span className="d-inline-block text-wrap">
-                                    {memberCell(target!)}
-                                  </span>
+                                  <MemberCell member={target!} guildId={this.props.guildId!} />
                                 </td>
                                 <td className="align-middle">
                                   <span className="d-inline-block text-truncate mw-100 align-middle">
                                     {one.reason}
                                   </span>
                                 </td>
-                                <td className="align-middle">{one.count}회</td>
+                                <td className="align-middle d-none d-lg-table-cell">{one.count}회</td>
                                 <td className="align-middle">
-                                  {memberCell(warnby!)}
+                                  <MemberCell member={warnby!} guildId={this.props.guildId!} />
                                 </td>
                                 <td className="align-middle text-center">
                                   <ButtonGroup>

@@ -18,7 +18,7 @@ export default class Auth extends React.Component<AuthProps, AuthState> {
 
   ProcessAuth = async () => {
     var code = new URLSearchParams(this.props.location.search).get('code')
-    localStorage.setItem('authcode', code!)
+    process.env.NODE_ENV === "development" && localStorage.setItem('authcode', code!)
     await axios.get(`${api}/oauth2/token`, {
       params: {
         code: code

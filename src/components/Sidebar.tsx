@@ -41,7 +41,7 @@ export default function Sidebar(props: SidebarProps) {
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link className="d-flex mb-1" as={Link} to={`/dashboard/${guild?.id}/greetings`} active={window.location.pathname === `/dashboard/${guild?.id}/greetings`}>
+          <Nav.Link className="d-flex mb-1" as={Link} to={`/dashboard/${guild?.id}/greetings`} active={window.location.pathname.startsWith(`/dashboard/${guild?.id}/greetings`)}>
             <div style={iconStyle} className="mr-3">
               <PersonAddIcon />
             </div>
@@ -49,7 +49,7 @@ export default function Sidebar(props: SidebarProps) {
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link className="d-flex mb-1" as={Link} to={`/dashboard/${guild?.id}/members`} active={window.location.pathname === `/dashboard/${guild?.id}/members`}>
+          <Nav.Link className="d-flex mb-1" as={Link} to={`/dashboard/${guild?.id}/members`} active={window.location.pathname.startsWith(`/dashboard/${guild?.id}/members`)}>
             <div style={iconStyle} className="mr-3">
               <GroupIcon />
             </div>
@@ -57,7 +57,7 @@ export default function Sidebar(props: SidebarProps) {
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link className="d-flex mb-1" as={Link} to={`/dashboard/${guild?.id}/warns`} active={window.location.pathname === `/dashboard/${guild?.id}/warns`}>
+          <Nav.Link className="d-flex mb-1" as={Link} to={`/dashboard/${guild?.id}/warns`} active={window.location.pathname.startsWith(`/dashboard/${guild?.id}/warns`)}>
             <div style={iconStyle} className="mr-3">
               <ReportProblemRoundedIcon />
             </div>
@@ -65,7 +65,7 @@ export default function Sidebar(props: SidebarProps) {
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link className="d-flex mb-1" as={Link} to={`/dashboard/${guild?.id}/statistics`} active={window.location.pathname === `/dashboard/${guild?.id}/statistics`}>
+          <Nav.Link className="d-flex mb-1" as={Link} to={`/dashboard/${guild?.id}/statistics`} active={window.location.pathname.startsWith(`/dashboard/${guild?.id}/statistics`)}>
             <div style={iconStyle} className="mr-3">
               <AssessmentIcon />
             </div>
