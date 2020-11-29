@@ -7,6 +7,8 @@ import { faTrophy } from '@fortawesome/free-solid-svg-icons'
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+import { Menu as MenuIcon } from '@material-ui/icons'
+
 import dayjs from 'dayjs'
 import dayjsRelativeTime from 'dayjs/plugin/relativeTime'
 import dayjsUTC from 'dayjs/plugin/utc'
@@ -94,7 +96,10 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
             <div className="d-flex justify-content-between">
               <h4 className="mb-3">최근 경고 목록</h4>
               <div>
-                <Button variant="aztra" className="shadow" size="sm" href={`/dashboard/${this.props.guildId}/warns/warns-list`}>모두 보기</Button>
+                <Button variant="aztra" className="shadow align-items-center d-flex" size="sm" href={`/dashboard/${this.props.guildId}/warns/warns-list`}>
+                  <MenuIcon className="mr-2" />
+                  모두 보기
+                </Button>
               </div>
             </div>
             {
@@ -108,7 +113,7 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
                           <img
                             src={target?.avatar ? `https://cdn.discordapp.com/avatars/${target?.id}/${target?.avatar}` : target?.defaultAvatarURL}
                             alt={target?.tag!}
-                            className="rounded-circle no-drag mr-3"
+                            className="my-auto rounded-circle no-drag mr-3"
                             style={{
                               height: 35,
                               width: 35

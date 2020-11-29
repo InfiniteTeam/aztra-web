@@ -3,11 +3,11 @@ import React, { PureComponent, useRef } from 'react';
 import axios from 'axios'
 import api from '../../datas/api'
 import { Warns as WarnsType } from '../../types/dbtypes/warns';
-import { Row, Col, Form, Container, Spinner, Button, Table, ButtonGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Row, Col, Form, Container, Spinner, Button, Table, ButtonGroup, OverlayTrigger, Tooltip, Alert } from 'react-bootstrap';
 import MemberListCard from '../../components/forms/MemberListCard';
 import { MemberMinimal } from '../../types/DiscordTypes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import RemoveCircleOutline from '@material-ui/icons/RemoveCircleOutline'
 
 export interface WarnsListProps {
@@ -162,6 +162,12 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
             <h3 className="mt-4">전체 경고 목록</h3>
           </div>
         </Row>
+        <Row className="d-md-none">
+          <Alert variant="warning" className="d-flex">
+            <FontAwesomeIcon icon={faExclamationTriangle} color="darkorange" size="lg" className="my-auto mr-2" />
+            이 페이지는 좁은 모바일 화면에서 확인하기 불편하기에 PC 버전에서 이용하시는 것을 권장드립니다.
+          </Alert>
+        </Row>
         <Row>
           <Col>
             {
@@ -176,9 +182,9 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
                       </Form.Text>
                       <div className="my-auto d-flex">
                         <span>검색 조건:</span>
-                        <Form.Check className="ml-4" type="radio" label="경고 사유" />
-                        <Form.Check className="ml-4" type="radio" label="대상 멤버" />
-                        <Form.Check className="ml-4" type="radio" label="경고 부여자" />
+                        <Form.Check className="ml-4" type="radio" label="경고 사유" style={{ wordBreak: 'keep-all' }} />
+                        <Form.Check className="ml-4" type="radio" label="대상 멤버" style={{ wordBreak: 'keep-all' }} />
+                        <Form.Check className="ml-4" type="radio" label="경고 부여자" style={{ wordBreak: 'keep-all' }} />
                       </div>
                     </Row>
 
@@ -193,11 +199,16 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
                       }} >
                         <thead>
                           <tr>
-                            <th style={{ width: 50 }} />
-                            <th style={{ width: '17%' }}>대상 멤버</th>
-                            <th>경고 사유</th>
-                            <th style={{ width: '6%' }} className="d-none d-lg-table-cell">경고 횟수</th>
-                            <th style={{ width: '17%' }}>경고 부여자</th>
+                            <th className="align-middle text-center" style={{ width: 50 }}>
+                              <Form.Check style={{
+                                transform: 'scale(1.25)',
+                                WebkitTransform: 'scale(1.25)'
+                              }} />
+                            </th>
+                            <th className="text-center text-md-left" style={{ width: '17%' }}>대상 멤버</th>
+                            <th className="text-center text-md-left d-none d-md-table-cell">경고 사유</th>
+                            <th className="text-center text-md-left" style={{ width: '8%' }}>경고 횟수</th>
+                            <th className="text-center text-md-left" style={{ width: '17%' }}>경고 부여자</th>
                             <th style={{ width: 70 }} />
                           </tr>
                         </thead>
@@ -216,12 +227,12 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
                                 <td className="align-middle">
                                   <MemberCell member={target!} guildId={this.props.guildId!} />
                                 </td>
-                                <td className="align-middle">
+                                <td className="align-middle d-none d-md-table-cell">
                                   <span className="d-inline-block text-truncate mw-100 align-middle">
                                     {one.reason}
                                   </span>
                                 </td>
-                                <td className="align-middle d-none d-lg-table-cell">{one.count}회</td>
+                                <td className="align-middle">{one.count}회</td>
                                 <td className="align-middle">
                                   <MemberCell member={warnby!} guildId={this.props.guildId!} />
                                 </td>

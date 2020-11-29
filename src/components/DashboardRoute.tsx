@@ -104,7 +104,7 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
     const guild = this.state.guild
     // const wsSupport = 'WebSocket' in window || 'MozWebSocket' in window
 
-    const isXXSsize = this.state.winWidth < 576
+    const isXSsize = this.state.winWidth < 768
 
     const guildCacheString = localStorage.getItem('guildCache')
     const guildCache: PartialGuild | null = guildCacheString === null ? null : JSON.parse(guildCacheString)
@@ -140,24 +140,22 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
     }
     */
 
+    console.log(isXSsize)
+
     return (
       <Container fluid>
         <Row>
           {/* 대시보드 사이드바 */}
-          <Col xl={2} lg={3} md={3} sm={4} className="Dashboardroute-sidebar">
+          <Col xl={2} lg={3} md={3} className="Dashboardroute-sidebar">
 
             <Container className="pl-0 pr-0 pb-1" id="sidebar-header">
               {/* 사이드바 헤더 */}
               <Row>
-                <Col xs={isXXSsize ? 10 : 12} md={12} ref={this.sidebarHeaderRef}>
-                  <div
+                <Col xs={isXSsize ? 10 : 12} md={12} ref={this.sidebarHeaderRef}>
+                  <div className="d-flex pl-1 font-weight-bold align-items-center"
                     style={{
                       fontSize: '1.05rem',
-                      fontWeight: 600,
                       fontFamily: "NanumSquare",
-                      paddingLeft: 2,
-                      display: 'flex',
-                      alignItems: 'center'
                     }}
                   >
                     <img
@@ -178,7 +176,7 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
                     }
                   </div>
                 </Col>
-                <Col xs={isXXSsize ? 2 : 0} className="text-center my-auto pl-1 d-sm-none d-md-none d-lg-none d-xl-none">
+                <Col xs={isXSsize ? 2 : 0} className="text-center my-auto pl-1 d-md-none">
                   <Button
                     size="sm"
                     variant="secondary"
@@ -197,9 +195,9 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
               <Row>
                 <Col>
                   {
-                    isXXSsize
+                    isXSsize
                       ? (
-                        <div id="sidebar-collapse" className={`Dashboardroute-sidebar-body ${!this.state.sidebarOpen && 'd-none'}`}>
+                        <div className={`Dashboardroute-sidebar-body ${!this.state.sidebarOpen && 'd-none'}`}>
                           <Sidebar guild={guild || guildCache!} />
                         </div>
                       )
@@ -217,7 +215,7 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
           </Col>
 
           {/* 대시보드 본문 */}
-          <Col xl={10} lg={9} md={9} sm={8} className="Dashboardroute-body">
+          <Col xl={10} lg={9} md={9} className="Dashboardroute-body">
             {
               this.state.fetchDone
                 ? <Switch>

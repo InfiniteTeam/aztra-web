@@ -123,7 +123,7 @@
             }
         }
     }
-    @include media-breakpoint-up(sm) {
+    @include media-breakpoint-up(md) {
         height: 100vh;
         .nav-link {
             padding-top: 0.25rem !important;
