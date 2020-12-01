@@ -3,11 +3,11 @@ import React, { createRef, PureComponent } from 'react';
 import axios from 'axios'
 import api from '../../datas/api'
 import { Warns as WarnsType } from '../../types/dbtypes/warns';
-import { Row, Col, Form, Container, Spinner, Button, Table, ButtonGroup, OverlayTrigger, Tooltip, Alert, Popover } from 'react-bootstrap';
+import { Row, Col, Form, Container, Spinner, Button, Table, ButtonGroup, OverlayTrigger, Tooltip, Alert, Popover, Dropdown } from 'react-bootstrap';
 import { MemberMinimal } from '../../types/DiscordTypes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { RemoveCircleOutline, FileCopy as FileCopyIcon } from '@material-ui/icons'
+import { RemoveCircleOutline, FileCopy as FileCopyIcon, MoreVert as MoreVertIcon } from '@material-ui/icons'
 
 export interface WarnsListProps {
   readonly guildId?: string
@@ -143,6 +143,8 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
         case 'warnby':
           let warnby = this.state.members?.find(m => m.user.id === one.warnby)
           return warnby?.user.username?.toLowerCase()?.includes(searchLowercase) || warnby?.nickname?.toLowerCase()?.includes(searchLowercase)
+        default:
+          return false
       }
     })?.sort((a, b) => {
       switch (this.state.sortType) {
@@ -154,6 +156,8 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
           return b.count - a.count
         case 'count_least':
           return a.count - b.count
+        default:
+          return 0
       }
     })!
   )
@@ -181,67 +185,78 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
       (this.filterSortWarns(this.state.warnSearch) || this.state.warns)?.map(one => {
         const target = this.state.members?.find(m => m.user.id === one.member)
         const warnby = this.state.members?.find(m => m.user.id === one.warnby)
-        return <tr>
-          <td className="align-middle text-center">
-            <Form.Check style={{
-              transform: 'scale(1.25)',
-              WebkitTransform: 'scale(1.25)'
-            }} />
-          </td>
-          <td className="align-middle">
-            <MemberCell member={target!} guildId={this.props.guildId!} />
-          </td>
-          <td className="align-middle d-none d-md-table-cell">
-            <OverlayTrigger
-              trigger="click"
-              placement="top"
-              overlay={
-                <Popover id={`member-${one.member}-warn-reason-details`} style={{
-                  maxWidth: 500
-                }}>
-                  <Popover.Title className="font-weight-bold">
-                    경고 사유 자세히
-                  </Popover.Title>
-                  <Popover.Content>
-                    <div className="p-1">
-                      {one.reason}
-                    </div>
-                    <div className="d-flex justify-content-center my-2">
-                      <Button size="sm" variant="secondary" className="d-flex align-items-center">
-                        <FileCopyIcon className="mr-1" style={{transform: 'scale(0.8)'}} />
-                        복사하기
-                      </Button>
-                    </div>
-                  </Popover.Content>
-                </Popover>
-              }
-            >
-              <span className="d-inline-block text-truncate mw-100 align-middle cursor-pointer">
-                {one.reason}
-              </span>
-            </OverlayTrigger>
-          </td>
-          <td className="align-middle">{one.count}회</td>
-          <td className="align-middle">
-            <MemberCell member={warnby!} guildId={this.props.guildId!} />
-          </td>
-          <td className="align-middle text-center">
-            <ButtonGroup>
+        return (
+          <tr>
+            <td className="align-middle text-center">
+              <Form.Check style={{
+                transform: 'scale(1.25)',
+                WebkitTransform: 'scale(1.25)'
+              }} />
+            </td>
+            <td className="align-middle">
+              <MemberCell member={target!} guildId={this.props.guildId!} />
+            </td>
+            <td className="align-middle d-none d-md-table-cell">
               <OverlayTrigger
+                trigger="click"
                 placement="top"
                 overlay={
-                  <Tooltip id="warn-list-row-remove-warn">
-                    이 경고 취소하기
-                  </Tooltip>
+                  <Popover id={`member-${one.member}-warn-reason-details`} style={{
+                    maxWidth: 500
+                  }}>
+                    <Popover.Title className="font-weight-bold">
+                      경고 사유 자세히
+                  </Popover.Title>
+                    <Popover.Content>
+                      <div className="p-1">
+                        {one.reason}
+                      </div>
+                      <div className="d-flex justify-content-center my-2">
+                        <Button size="sm" variant="secondary" className="d-flex align-items-center">
+                          <FileCopyIcon className="mr-1" style={{ transform: 'scale(0.8)' }} />
+                        복사하기
+                      </Button>
+                      </div>
+                    </Popover.Content>
+                  </Popover>
                 }
               >
-                <Button variant="dark" className="d-flex">
-                  <RemoveCircleOutline />
-                </Button>
+                <span className="d-inline-block text-truncate mw-100 align-middle cursor-pointer">
+                  {one.reason}
+                </span>
               </OverlayTrigger>
-            </ButtonGroup>
-          </td>
-        </tr>
+            </td>
+            <td className="align-middle">{one.count}회</td>
+            <td className="align-middle">
+              <MemberCell member={warnby!} guildId={this.props.guildId!} />
+            </td>
+            <td className="align-middle text-center">
+              <ButtonGroup>
+                <Dropdown drop="left">
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={
+                      <Tooltip id="warn-list-row-remove-warn">
+                        더보기
+                    </Tooltip>
+                    }
+                  >
+                    <Dropdown.Toggle variant="dark" className="d-flex px-1 remove-before">
+                      <MoreVertIcon />
+                    </Dropdown.Toggle>
+                  </OverlayTrigger>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item>
+                      ㅎㅇ
+                  </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+
+              </ButtonGroup>
+            </td>
+          </tr>
+        )
       })
     )
 
@@ -271,26 +286,48 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
                 ? <Form>
                   <Form.Group>
                     <Row className="pb-2 justify-content-between">
-                      <Form.Text style={{
-                        fontSize: '12pt'
-                      }}>
+                      <Col
+                        className="d-flex align-items-end mt-4 mt-xl-0 px-0"
+                        xs={{
+                          span: 0,
+                          order: "last"
+                        }}
+                        xl={{
+                          order: "first"
+                        }}
+                        style={{
+                          fontSize: '12pt'
+                        }}>
                         전체 경고 {this.state.warns?.length} 건{this.state.warnSearch && `, ${warns.length}건 검색됨`}
-                      </Form.Text>
-                      <div className="my-auto">
+                      </Col>
+                      <Col
+                        className="px-0"
+                        xs={{
+                          span: "auto",
+                          order: "first"
+                        }}
+                        xl={{
+                          span: "auto",
+                          order: "last"
+                        }}>
                         <div className="d-flex">
                           <span>검색 조건:</span>
-                          <Form.Check className="ml-4" type="radio" label="경고 사유" checked={this.state.searchType === 'reason'} style={{ wordBreak: 'keep-all' }} onChange={() => this.handleSearchTypeOnChange('reason')} />
-                          <Form.Check className="ml-4" type="radio" label="대상 멤버" checked={this.state.searchType === 'target'} style={{ wordBreak: 'keep-all' }} onChange={() => this.handleSearchTypeOnChange('target')} />
-                          <Form.Check className="ml-4" type="radio" label="경고 부여자" checked={this.state.searchType === 'warnby'} style={{ wordBreak: 'keep-all' }} onChange={() => this.handleSearchTypeOnChange('warnby')} />
+                          <div className="d-lg-flex">
+                            <Form.Check className="ml-4" type="radio" label="경고 사유" checked={this.state.searchType === 'reason'} style={{ wordBreak: 'keep-all' }} onChange={() => this.handleSearchTypeOnChange('reason')} />
+                            <Form.Check className="ml-4" type="radio" label="대상 멤버" checked={this.state.searchType === 'target'} style={{ wordBreak: 'keep-all' }} onChange={() => this.handleSearchTypeOnChange('target')} />
+                            <Form.Check className="ml-4" type="radio" label="경고 부여자" checked={this.state.searchType === 'warnby'} style={{ wordBreak: 'keep-all' }} onChange={() => this.handleSearchTypeOnChange('warnby')} />
+                          </div>
                         </div>
-                        <div className="d-flex">
+                        <div className="d-flex mt-4 mt-lg-0">
                           <span>정렬 조건:</span>
-                          <Form.Check className="ml-4" type="radio" label="최신순" checked={this.state.sortType === 'latest'} style={{ wordBreak: 'keep-all' }} onChange={() => this.handleSortTypeOnChange('latest')} />
-                          <Form.Check className="ml-4" type="radio" label="과거순" checked={this.state.sortType === 'oldest'} style={{ wordBreak: 'keep-all' }} onChange={() => this.handleSortTypeOnChange('oldest')} />
-                          <Form.Check className="ml-4" type="radio" label="경고수 많은순" checked={this.state.sortType === 'count'} style={{ wordBreak: 'keep-all' }} onChange={() => this.handleSortTypeOnChange('count')} />
-                          <Form.Check className="ml-4" type="radio" label="경고수 적은순" checked={this.state.sortType === 'count_least'} style={{ wordBreak: 'keep-all' }} onChange={() => this.handleSortTypeOnChange('count_least')} />
+                          <div className="d-lg-flex">
+                            <Form.Check className="ml-4" type="radio" label="최신순" checked={this.state.sortType === 'latest'} style={{ wordBreak: 'keep-all' }} onChange={() => this.handleSortTypeOnChange('latest')} />
+                            <Form.Check className="ml-4" type="radio" label="과거순" checked={this.state.sortType === 'oldest'} style={{ wordBreak: 'keep-all' }} onChange={() => this.handleSortTypeOnChange('oldest')} />
+                            <Form.Check className="ml-4" type="radio" label="경고수 많은순" checked={this.state.sortType === 'count'} style={{ wordBreak: 'keep-all' }} onChange={() => this.handleSortTypeOnChange('count')} />
+                            <Form.Check className="ml-4" type="radio" label="경고수 적은순" checked={this.state.sortType === 'count_least'} style={{ wordBreak: 'keep-all' }} onChange={() => this.handleSortTypeOnChange('count_least')} />
+                          </div>
                         </div>
-                      </div>
+                      </Col>
                     </Row>
 
                     <Row className="mb-2">
@@ -312,7 +349,7 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
                             </th>
                             <th className="text-center text-md-left" style={{ width: '17%' }}>대상 멤버</th>
                             <th className="text-center text-md-left d-none d-md-table-cell">경고 사유</th>
-                            <th className="text-center text-md-left" style={{ width: '8%' }}>경고 횟수</th>
+                            <th className="text-center text-md-left" style={{ width: '10%' }}>경고 횟수</th>
                             <th className="text-center text-md-left" style={{ width: '17%' }}>경고 부여자</th>
                             <th style={{ width: 70 }} />
                           </tr>

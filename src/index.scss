@@ -78,6 +78,14 @@ body {
     cursor: pointer;
 }
 
+.remove-after::after {
+    display: none;
+}
+
+.remove-before::before {
+    display: none;
+}
+
 /* Colors */
 
 .dropdown-menu-dark {

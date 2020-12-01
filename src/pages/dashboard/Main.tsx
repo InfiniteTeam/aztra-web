@@ -1,16 +1,82 @@
 import React, { Component } from 'react';
-import { Card, Button, Row, Col } from 'react-bootstrap'
-import { PartialGuild } from '../../types/DiscordTypes'
+import axios from 'axios'
+import { Card, Button, Row, Col, Container, Spinner } from 'react-bootstrap'
+import { MemberMinimal, PartialGuild } from '../../types/DiscordTypes'
+import urljoin from 'url-join';
+import api from '../../datas/api';
 
 interface MainProps {
-  readonly guild: PartialGuild | null
+  readonly guildId?: string
 }
 
-export default class Main extends Component<MainProps> {
-  render() {
-    const guild = this.props.guild
+interface MainState {
+  guild: PartialGuild | null
+  guildFetchDone: boolean
+  membersFetchDone: boolean
+  members: MemberMinimal[] | null
+}
 
-    return (
+export default class Main extends Component<MainProps, MainState> {
+  state: MainState = {
+    guild: null,
+    guildFetchDone: false,
+    membersFetchDone: false,
+    members: null
+  }
+
+  componentDidMount() {
+    const token = localStorage.getItem('token')
+    if (token) {
+      this.getGuild(token)
+      this.getMembers(token)
+    }
+    else {
+      window.location.assign('/login')
+    }
+  }
+
+  getGuild = async (token: string) => {
+    await axios.get(urljoin(api, '/discord/users/@me/guilds'), {
+      headers: {
+        token: token
+      }
+    })
+      .then(res => {
+        let guild = res.data
+          .find((one: PartialGuild) => one.id === this.props.guildId)
+        this.setState({ guild: guild })
+      })
+      .catch(e => {
+        this.setState({ guild: null })
+        console.log(e)
+      })
+      .finally(() => {
+        this.setState({ guildFetchDone: true })
+      })
+  }
+
+  getMembers = async (token: string) => {
+    try {
+      let res = await axios.get(`${api}/discord/guilds/${this.props.guildId}/members`, {
+        headers: {
+          token: token
+        }
+      })
+      console.log(res.data)
+      this.setState({ members: res.data })
+    }
+    catch (e) {
+      this.setState({ members: null })
+    }
+    finally {
+      this.setState({ membersFetchDone: true })
+    }
+  }
+
+  render() {
+    const guild = this.state.guild
+
+    return this.state.guildFetchDone && this.state.membersFetchDone ? (
       <div style={{
         fontFamily: 'NanumBarunGothic'
       }}>
@@ -62,35 +128,24 @@ export default class Main extends Component<MainProps> {
           </div>
         </Row>
         <Row className="dashboard-section">
-          <Col>
+          <Col xs={3}>
             <Card className="Dashboard-card my-3 shadow" bg="dark">
               <Card.Body>
-                <Card.Title>멤버 차단됨</Card.Title>
+                <Card.Title>개발 중</Card.Title>
                 <Card.Text>
-                  <span className="font-weight-bold">Dacon#0001</span>멤버가 차단되었습니다.
+                  <span className="font-weight-bold">이 기능</span>은 개발 중입니다.
                 </Card.Text>
                 <Button variant="secondary" size="sm">자세히</Button>
               </Card.Body>
             </Card>
           </Col>
-          {
-            Array.from(Array(3).keys()).map(one =>
-              <Col>
-                <Card className="Dashboard-card my-3 shadow" bg="dark">
-                  <Card.Body>
-                    <Card.Title>Card Title</Card.Title>
-                    <Card.Text>
-                      Some quick example text to build on the card title and make up the bulk of
-                      the card's content.
-                    </Card.Text>
-                    <Button variant="secondary" size="sm">Go somewhere</Button>
-                  </Card.Body>
-                </Card>
-              </Col>
-            )
-          }
         </Row>
       </div>
-    )
+    ) : <Container className="d-flex align-items-center justify-content-center flex-column" style={{
+      height: '500px'
+    }}>
+        <h3 className="pb-4">불러오는 중</h3>
+        <Spinner animation="border" variant="aztra" />
+      </Container>
   }
 }

@@ -36,12 +36,13 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
     value: 0
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const token = localStorage.getItem('token')
     if (token) {
-      await this.getMember(token)
-      await this.setState({ value: 0 })
-      await setTimeout(() => this.setState({ value: 30 }), 200)
+      this.getMember(token).then(async () => {
+        await this.setState({ value: 0 })
+        await setTimeout(() => this.setState({ value: 30 }), 200)
+      })
     }
     else {
       window.location.assign('/login')
@@ -158,7 +159,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
           </Row>
 
           <Row className="my-5">
-            { !isBot && <Col xs={12} xl={5} className="pt-4 pb-5 d-md-flex">
+            {!isBot && <Col xs={12} xl={5} className="pt-4 pb-5 d-md-flex">
               <div className="mx-auto mx-md-0" style={{
                 maxWidth: 200,
                 maxHeight: 200
