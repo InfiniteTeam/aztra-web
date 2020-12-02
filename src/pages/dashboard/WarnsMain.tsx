@@ -2,7 +2,7 @@ import React from 'react'
 import api from '../../datas/api'
 import axios from 'axios'
 import { Warns as WarnsType } from '../../types/dbtypes/warns'
-import { Button, Card, Col, OverlayTrigger, Popover, Row, Spinner, Table } from 'react-bootstrap'
+import { Button, Card, Col, Container, OverlayTrigger, Popover, Row, Spinner, Table } from 'react-bootstrap'
 import { faTrophy } from '@fortawesome/free-solid-svg-icons'
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -87,7 +87,7 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
 
   render() {
     return (
-      <>
+      <Container fluid>
         <Row className="dashboard-section">
           <h3>경고 관리</h3>
         </Row>
@@ -105,7 +105,10 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
             {
               this.state.warnsFetchDone && this.state.membersFetchDone
                 ? this.state.data?.length
-                  ? this.state.data?.map(one => {
+                  ?
+                  this.state.data?.sort((a, b) =>
+                    new Date(b.dt).getTime() - new Date(a.dt).getTime()
+                  )?.map(one => {
                     const target = this.state.members?.find(m => m.user.id === one.member)?.user
                     return <Card bg="dark" className="mb-2 shadow-sm shadow">
                       <Card.Body as={Row} className="py-2 d-flex justify-content-between">
@@ -228,7 +231,7 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
             </Table>
           </Col>
         </Row>
-      </>
+      </Container>
     )
   }
 }

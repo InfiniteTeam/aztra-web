@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Col, OverlayTrigger, Popover, Row } from 'react-bootstrap'
+import { Button, Col, Container, OverlayTrigger, Popover, Row } from 'react-bootstrap'
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons'
 import { faFileExcel, faFileImage } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -66,7 +66,7 @@ export default class Statistics extends React.Component<StatisticsProps> {
     }
 
     return (
-      <>
+      <Container fluid>
         <Row className="dashboard-section">
           <h3>서버 통계</h3>
         </Row>
@@ -176,7 +176,7 @@ export default class Statistics extends React.Component<StatisticsProps> {
             </div>
           </Col>
         </Row>
-      </>
+      </Container>
     )
   }
 }

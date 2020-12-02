@@ -33,7 +33,9 @@ h3 {
     font-weight: 600;
 }
 
-h4, h5, h6 {
+h4,
+h5,
+h6 {
     font-family: "NanumBarunGothic";
 }
 
@@ -50,6 +52,7 @@ code {
 
 body {
     background-color: #252a2e;
+    overflow-x: visible;
 }
 
 /* Globals */
@@ -79,21 +82,23 @@ body {
 }
 
 .remove-after::after {
-    display: none;
+    display: none !important;
 }
 
 .remove-before::before {
-    display: none;
+    display: none !important;
+}
+
+button:focus {
+    outline: none;
 }
 
 /* Colors */
 
-.dropdown-menu-dark {
-    .dropdown-menu {
-        background-color: rgb(86, 85, 94) !important;
-        a {
-            color: white !important;
-        }
+.dropdown-menu-dark .dropdown-menu {
+    background-color: rgb(86, 85, 94) !important;
+    a {
+        color: white !important;
     }
 }
 
@@ -102,6 +107,20 @@ body {
     color: white;
     text-decoration: none;
     background-color: #6e6a74;
+}
+
+.modal-dark {
+    .modal-content {
+        background-color: $dark;
+        color: white;
+        .modal-header,
+        .modal-footer {
+            border-color: scale-color($dark, $lightness: -30%);
+        }
+    }
+    .close {
+        color: white;
+    }
 }
 
 .Title-section-bg {

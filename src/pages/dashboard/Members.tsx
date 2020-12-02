@@ -77,7 +77,7 @@ export default class Members extends PureComponent<MembersProps, MembersState> {
     )
 
     return (
-      <div style={{
+      <Container fluid style={{
         fontFamily: 'NanumBarunGothic'
       }}>
         <Row className="dashboard-section">
@@ -114,7 +114,7 @@ export default class Members extends PureComponent<MembersProps, MembersState> {
             }
           </Col>
         </Row>
-      </div>
+      </Container>
     )
   }
 }

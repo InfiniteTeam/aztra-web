@@ -92,7 +92,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
 
     return this.state.fetchDone
       ? (
-        <>
+        <Container fluid>
           <Row className="dashboard-section">
             <h3>멤버 관리</h3>
             <div className="ml-4">
@@ -307,7 +307,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
               </Alert>
             </Col>
           </Row>
-        </>
+        </Container>
       )
       : <Container className="d-flex align-items-center justify-content-center flex-column" style={{
         height: '500px'

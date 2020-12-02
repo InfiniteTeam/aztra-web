@@ -1,13 +1,14 @@
-import React, { createRef, PureComponent } from 'react';
+import React, { createRef, PureComponent, useState } from 'react';
 
 import axios from 'axios'
 import api from '../../datas/api'
 import { Warns as WarnsType } from '../../types/dbtypes/warns';
-import { Row, Col, Form, Container, Spinner, Button, Table, ButtonGroup, OverlayTrigger, Tooltip, Alert, Popover, Dropdown } from 'react-bootstrap';
+import MobileAlert from '../../components/MobileAlert'
+import { Row, Col, Form, Container, Spinner, Button, Table, ButtonGroup, OverlayTrigger, Tooltip, Popover, Modal } from 'react-bootstrap';
 import { MemberMinimal } from '../../types/DiscordTypes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { RemoveCircleOutline, FileCopy as FileCopyIcon, MoreVert as MoreVertIcon } from '@material-ui/icons'
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { RemoveCircleOutline, FileCopy as FileCopyIcon, OpenInNew as OpenInNewIcon } from '@material-ui/icons'
 
 export interface WarnsListProps {
   readonly guildId?: string
@@ -32,9 +33,10 @@ export interface WarnsListState {
 interface MemberCellProps {
   member: MemberMinimal
   guildId: string
+  wrap?: boolean
 }
 
-const MemberCell: React.FC<MemberCellProps> = ({ member, guildId }) => {
+const MemberCell: React.FC<MemberCellProps> = ({ member, guildId, wrap = false }) => {
   return member !== undefined
     ?
     <OverlayTrigger
@@ -47,7 +49,7 @@ const MemberCell: React.FC<MemberCellProps> = ({ member, guildId }) => {
     >
       {
         ({ ref, ...triggerHandler }) => (
-          <a href={`/dashboard/${guildId}/members/${member.user.id}`} {...triggerHandler} className="d-flex align-items-center justify-content-center justify-content-lg-start">
+          <a href={`/dashboard/${guildId}/members/${member.user.id}`} {...triggerHandler} className="d-flex align-items-center">
             <img
               ref={ref}
               className="rounded-circle no-drag"
@@ -59,8 +61,8 @@ const MemberCell: React.FC<MemberCellProps> = ({ member, guildId }) => {
               }}
               {...triggerHandler}
             />
-            <div className="ml-3 d-none d-lg-block">
-              <span className="font-weight-bold">
+            <div className={wrap ? "ml-lg-3" : "ml-3"}>
+              <span className={`${wrap ? 'd-none d-lg-block' : ''} font-weight-bold`}>
                 {member.displayName}
               </span>
 
@@ -70,6 +72,156 @@ const MemberCell: React.FC<MemberCellProps> = ({ member, guildId }) => {
       }
     </OverlayTrigger>
     : <span className="font-italic">(존재하지 않는 멤버)</span>
+}
+
+interface WarnsListCardProps {
+  target: MemberMinimal
+  warnby: MemberMinimal
+  warn: WarnsType
+  guildId?: string
+}
+
+const WarnsListCard: React.FC<WarnsListCardProps> = ({ target, warnby, warn, guildId }) => {
+  {
+    const [showInfo, setShowInfo] = useState(false)
+    return (
+      <tr>
+        <td className="align-middle text-center">
+          <Form.Check style={{
+            transform: 'scale(1.25)',
+            WebkitTransform: 'scale(1.25)'
+          }} />
+        </td>
+        <td className="align-middle">
+          <div className="d-flex justify-content-center justify-content-lg-start">
+            <MemberCell member={target!} guildId={guildId!} wrap />
+          </div>
+        </td>
+        <td className="align-middle d-none d-md-table-cell">
+          <OverlayTrigger
+            trigger="click"
+            placement="top"
+            overlay={
+              <Popover id={`member-${warn.member}-warn-reason-details`} style={{
+                maxWidth: 500
+              }}>
+                <Popover.Title className="font-weight-bold">
+                  경고 사유 자세히
+              </Popover.Title>
+                <Popover.Content>
+                  <div className="p-1">
+                    {warn.reason}
+                  </div>
+                  <div className="d-flex my-2">
+                    <Button size="sm" variant="secondary" className="d-flex align-items-center">
+                      <FileCopyIcon className="mr-1" style={{ transform: 'scale(0.8)' }} />
+                    복사하기
+                  </Button>
+                  </div>
+                </Popover.Content>
+              </Popover>
+            }
+          >
+            <span className="d-inline-block text-truncate mw-100 align-middle cursor-pointer">
+              {warn.reason}
+            </span>
+          </OverlayTrigger>
+        </td>
+        <td className="align-middle">{warn.count}회</td>
+        <td className="align-middle">
+          <div className="d-flex justify-content-center justify-content-lg-start">
+            <MemberCell member={warnby!} guildId={guildId!} wrap />
+          </div>
+        </td>
+        <td className="align-middle text-center">
+          <ButtonGroup>
+            <OverlayTrigger
+              placement="top"
+              trigger="hover"
+              overlay={
+                <Tooltip id="warn-list-row-remove-warn">
+                  이 경고 취소하기
+                </Tooltip>
+              }
+            >
+              <Button variant="dark" className="d-flex px-1 remove-before">
+                <RemoveCircleOutline />
+              </Button>
+            </OverlayTrigger>
+            <OverlayTrigger
+              placement="top"
+              trigger="hover"
+              overlay={
+                <Tooltip id="warn-list-row-remove-warn">
+                  경고 자세히 보기
+                </Tooltip>
+              }
+            >
+              <Button variant="dark" className="d-flex px-1 remove-before" onClick={() => setShowInfo(true)}>
+                <OpenInNewIcon />
+              </Button>
+            </OverlayTrigger>
+
+            <Modal className="modal-dark" show={showInfo} onHide={() => setShowInfo(false)} centered size="lg">
+              <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter" style={{
+                  fontFamily: "NanumSquare",
+                  fontWeight: 900,
+
+                }}>
+                  경고 상세 정보
+                </Modal.Title>
+              </Modal.Header>
+              <Modal.Body className="py-4">
+                <Container>
+                  <Row>
+                    <Col xs={12} md={6}>
+                      <h5 className="font-weight-bold">대상 멤버</h5>
+                      <p>
+                        <MemberCell guildId={guildId!} member={target} />
+                      </p>
+                    </Col>
+                    <Col xs={12} md={6}>
+                      <h5 className="font-weight-bold">경고 부여자</h5>
+                      <p>
+                        <MemberCell guildId={guildId!} member={warnby} />
+                      </p>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xs={12} md={6}>
+                      <h5 className="font-weight-bold">경고 횟수</h5>
+                      <p>
+                        {warn.count}회
+                      </p>
+                    </Col>
+                    <Col xs={12} md={6}>
+                      <h5 className="font-weight-bold">경고 날짜</h5>
+                      <p>
+                        {new Date(warn.dt).toLocaleString()}
+                      </p>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xs={12}>
+                      <h5 className="font-weight-bold">경고 사유</h5>
+                      <p>
+                        {warn.reason}
+                      </p>
+                    </Col>
+                  </Row>
+                </Container>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="aztra" onClick={() => setShowInfo(false)}>닫기</Button>
+              </Modal.Footer>
+            </Modal>
+
+          </ButtonGroup>
+        </td>
+      </tr>
+    )
+  }
 }
 
 export default class Members extends PureComponent<WarnsListProps, WarnsListState> {
@@ -185,83 +337,12 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
       (this.filterSortWarns(this.state.warnSearch) || this.state.warns)?.map(one => {
         const target = this.state.members?.find(m => m.user.id === one.member)
         const warnby = this.state.members?.find(m => m.user.id === one.warnby)
-        return (
-          <tr>
-            <td className="align-middle text-center">
-              <Form.Check style={{
-                transform: 'scale(1.25)',
-                WebkitTransform: 'scale(1.25)'
-              }} />
-            </td>
-            <td className="align-middle">
-              <MemberCell member={target!} guildId={this.props.guildId!} />
-            </td>
-            <td className="align-middle d-none d-md-table-cell">
-              <OverlayTrigger
-                trigger="click"
-                placement="top"
-                overlay={
-                  <Popover id={`member-${one.member}-warn-reason-details`} style={{
-                    maxWidth: 500
-                  }}>
-                    <Popover.Title className="font-weight-bold">
-                      경고 사유 자세히
-                  </Popover.Title>
-                    <Popover.Content>
-                      <div className="p-1">
-                        {one.reason}
-                      </div>
-                      <div className="d-flex justify-content-center my-2">
-                        <Button size="sm" variant="secondary" className="d-flex align-items-center">
-                          <FileCopyIcon className="mr-1" style={{ transform: 'scale(0.8)' }} />
-                        복사하기
-                      </Button>
-                      </div>
-                    </Popover.Content>
-                  </Popover>
-                }
-              >
-                <span className="d-inline-block text-truncate mw-100 align-middle cursor-pointer">
-                  {one.reason}
-                </span>
-              </OverlayTrigger>
-            </td>
-            <td className="align-middle">{one.count}회</td>
-            <td className="align-middle">
-              <MemberCell member={warnby!} guildId={this.props.guildId!} />
-            </td>
-            <td className="align-middle text-center">
-              <ButtonGroup>
-                <Dropdown drop="left">
-                  <OverlayTrigger
-                    placement="top"
-                    overlay={
-                      <Tooltip id="warn-list-row-remove-warn">
-                        더보기
-                    </Tooltip>
-                    }
-                  >
-                    <Dropdown.Toggle variant="dark" className="d-flex px-1 remove-before">
-                      <MoreVertIcon />
-                    </Dropdown.Toggle>
-                  </OverlayTrigger>
-
-                  <Dropdown.Menu>
-                    <Dropdown.Item>
-                      ㅎㅇ
-                  </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-
-              </ButtonGroup>
-            </td>
-          </tr>
-        )
+        return <WarnsListCard target={target!} warnby={warnby!} warn={one} />
       })
     )
 
     return (
-      <div style={{
+      <Container fluid style={{
         fontFamily: 'NanumBarunGothic'
       }}>
         <Row className="dashboard-section">
@@ -274,10 +355,7 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
           </div>
         </Row>
         <Row className="d-md-none">
-          <Alert variant="warning" className="d-flex">
-            <FontAwesomeIcon icon={faExclamationTriangle} color="darkorange" size="lg" className="my-auto mr-2" />
-            이 페이지는 좁은 모바일 화면에서 확인하기 불편하기에 PC 버전에서 이용하시는 것을 권장드립니다.
-          </Alert>
+          <MobileAlert />
         </Row>
         <Row>
           <Col>
@@ -351,7 +429,7 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
                             <th className="text-center text-md-left d-none d-md-table-cell">경고 사유</th>
                             <th className="text-center text-md-left" style={{ width: '10%' }}>경고 횟수</th>
                             <th className="text-center text-md-left" style={{ width: '17%' }}>경고 부여자</th>
-                            <th style={{ width: 70 }} />
+                            <th style={{ width: 100 }} />
                           </tr>
                         </thead>
                         <tbody>
@@ -370,7 +448,7 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
             }
           </Col>
         </Row>
-      </div>
+      </Container>
     )
   }
 }

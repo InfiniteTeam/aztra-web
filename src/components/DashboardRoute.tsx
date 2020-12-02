@@ -140,8 +140,6 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
     }
     */
 
-    console.log(isXSsize)
-
     return (
       <Container fluid>
         <Row>
