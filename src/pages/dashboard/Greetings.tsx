@@ -198,7 +198,7 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
     const checkMark = <FontAwesomeIcon icon={faCheckCircle} className="mr-2 my-auto text-success" size="lg" />
 
     return this.state.fetchDone ? (
-      <Container fluid>
+      <div>
         <Row className="dashboard-section">
           <h3>환영 메시지 설정</h3>
         </Row>
@@ -379,7 +379,7 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
             </Form>
           </Col>
         </Row>
-      </Container>
+      </div>
     )
       : <Container className="d-flex align-items-center justify-content-center flex-column" style={{
         height: '500px'

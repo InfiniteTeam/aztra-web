@@ -1,10 +1,10 @@
-import React, { createRef, PureComponent, useState } from 'react';
+import React, { createRef, PureComponent, useRef, useState } from 'react';
 
 import axios from 'axios'
 import api from '../../datas/api'
 import { Warns as WarnsType } from '../../types/dbtypes/warns';
 import MobileAlert from '../../components/MobileAlert'
-import { Row, Col, Form, Container, Spinner, Button, Table, ButtonGroup, OverlayTrigger, Tooltip, Popover, Modal } from 'react-bootstrap';
+import { Row, Col, Form, Container, Spinner, Button, Table, ButtonGroup, OverlayTrigger, Tooltip, Popover, Modal, Overlay } from 'react-bootstrap';
 import { MemberMinimal } from '../../types/DiscordTypes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
@@ -78,12 +78,16 @@ interface WarnsListCardProps {
   target: MemberMinimal
   warnby: MemberMinimal
   warn: WarnsType
-  guildId?: string
+  guildId: string
 }
 
 const WarnsListCard: React.FC<WarnsListCardProps> = ({ target, warnby, warn, guildId }) => {
   {
     const [showInfo, setShowInfo] = useState(false)
+    const [copied, setCopied] = useState(false)
+    const warnReasonRef = useRef<HTMLParagraphElement>(null)
+    const copyButtonRef = useRef<HTMLButtonElement>(null)
+
     return (
       <tr>
         <td className="align-middle text-center">
@@ -94,7 +98,7 @@ const WarnsListCard: React.FC<WarnsListCardProps> = ({ target, warnby, warn, gui
         </td>
         <td className="align-middle">
           <div className="d-flex justify-content-center justify-content-lg-start">
-            <MemberCell member={target!} guildId={guildId!} wrap />
+            <MemberCell member={target!} guildId={guildId} wrap />
           </div>
         </td>
         <td className="align-middle d-none d-md-table-cell">
@@ -130,14 +134,13 @@ const WarnsListCard: React.FC<WarnsListCardProps> = ({ target, warnby, warn, gui
         <td className="align-middle">{warn.count}회</td>
         <td className="align-middle">
           <div className="d-flex justify-content-center justify-content-lg-start">
-            <MemberCell member={warnby!} guildId={guildId!} wrap />
+            <MemberCell member={warnby!} guildId={guildId} wrap />
           </div>
         </td>
         <td className="align-middle text-center">
           <ButtonGroup>
             <OverlayTrigger
               placement="top"
-              trigger="hover"
               overlay={
                 <Tooltip id="warn-list-row-remove-warn">
                   이 경고 취소하기
@@ -150,7 +153,6 @@ const WarnsListCard: React.FC<WarnsListCardProps> = ({ target, warnby, warn, gui
             </OverlayTrigger>
             <OverlayTrigger
               placement="top"
-              trigger="hover"
               overlay={
                 <Tooltip id="warn-list-row-remove-warn">
                   경고 자세히 보기
@@ -205,15 +207,37 @@ const WarnsListCard: React.FC<WarnsListCardProps> = ({ target, warnby, warn, gui
                   <Row>
                     <Col xs={12}>
                       <h5 className="font-weight-bold">경고 사유</h5>
-                      <p>
+                      <p ref={warnReasonRef}>
                         {warn.reason}
                       </p>
                     </Col>
                   </Row>
                 </Container>
               </Modal.Body>
-              <Modal.Footer>
-                <Button variant="aztra" onClick={() => setShowInfo(false)}>닫기</Button>
+              <Modal.Footer className="justify-content-between">
+                <div>
+                  <Button ref={copyButtonRef} variant="aztra" onClick={() => {
+                    navigator.clipboard.writeText(warn.reason)
+                      .then(async () => {
+                        if (!copied) {
+                          await setCopied(true)
+                          await setTimeout(() => setCopied(false), 800)
+                        }
+                      })
+                  }}>
+                    <FileCopyIcon className="mr-2" style={{ transform: 'scale(0.9)' }} />
+                    경고 사유 복사
+                  </Button>
+
+                  <Overlay target={copyButtonRef.current} show={copied}>
+                    {(props) => (
+                      <Tooltip id="wan-copied-tooltop" {...props}>
+                        복사됨!
+                      </Tooltip>
+                    )}
+                  </Overlay>
+                </div>
+                <Button variant="success" onClick={() => setShowInfo(false)}>닫기</Button>
               </Modal.Footer>
             </Modal>
 
@@ -337,12 +361,12 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
       (this.filterSortWarns(this.state.warnSearch) || this.state.warns)?.map(one => {
         const target = this.state.members?.find(m => m.user.id === one.member)
         const warnby = this.state.members?.find(m => m.user.id === one.warnby)
-        return <WarnsListCard target={target!} warnby={warnby!} warn={one} />
+        return <WarnsListCard target={target!} warnby={warnby!} warn={one} guildId={this.props.guildId!} />
       })
     )
 
     return (
-      <Container fluid style={{
+      <div style={{
         fontFamily: 'NanumBarunGothic'
       }}>
         <Row className="dashboard-section">
@@ -448,7 +472,7 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
             }
           </Col>
         </Row>
-      </Container>
+      </div>
     )
   }
 }

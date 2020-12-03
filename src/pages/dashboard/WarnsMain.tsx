@@ -2,7 +2,7 @@ import React from 'react'
 import api from '../../datas/api'
 import axios from 'axios'
 import { Warns as WarnsType } from '../../types/dbtypes/warns'
-import { Button, Card, Col, Container, OverlayTrigger, Popover, Row, Spinner, Table } from 'react-bootstrap'
+import { Button, Card, Col, OverlayTrigger, Popover, Row, Spinner, Table } from 'react-bootstrap'
 import { faTrophy } from '@fortawesome/free-solid-svg-icons'
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -87,7 +87,7 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
 
   render() {
     return (
-      <Container fluid>
+      <div>
         <Row className="dashboard-section">
           <h3>경고 관리</h3>
         </Row>
@@ -231,7 +231,7 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
             </Table>
           </Col>
         </Row>
-      </Container>
+      </div>
     )
   }
 }

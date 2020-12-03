@@ -66,7 +66,7 @@ export default class Statistics extends React.Component<StatisticsProps> {
     }
 
     return (
-      <Container fluid>
+      <div>
         <Row className="dashboard-section">
           <h3>서버 통계</h3>
         </Row>
@@ -176,7 +176,7 @@ export default class Statistics extends React.Component<StatisticsProps> {
             </div>
           </Col>
         </Row>
-      </Container>
+      </div>
     )
   }
 }

@@ -4,7 +4,7 @@ import axios from 'axios'
 import api from '../../datas/api'
 import { MemberExtended } from '../../types/DiscordTypes';
 import { match } from 'react-router-dom';
-import { Row, Col, Card, Container, Spinner, Badge, Button, Alert } from 'react-bootstrap';
+import { Row, Col, Card, Container, Spinner, Badge, Button, Alert, OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBug, faExclamationTriangle, faListUl, faStream, faUserEdit, faUserPlus } from '@fortawesome/free-solid-svg-icons'
@@ -68,6 +68,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
 
   render() {
     var statusColor: string | null = null
+    var statusName: string | null = null
 
     const member = this.state.member
     const isBot = member?.user.bot
@@ -75,16 +76,20 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
     switch (member?.user.presence.status) {
       case 'online':
         statusColor = 'limegreen'
+        statusName = '온라인'
         break
       case 'dnd':
         statusColor = 'red'
+        statusName = '다른 용무 중'
         break
       case 'idle':
         statusColor = 'gold'
+        statusName = '자리 비움'
         break
       case 'offline':
       case 'invisible':
         statusColor = 'darkgrey'
+        statusName = '오프라인'
         break
       default:
         break
@@ -92,7 +97,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
 
     return this.state.fetchDone
       ? (
-        <Container fluid>
+        <div>
           <Row className="dashboard-section">
             <h3>멤버 관리</h3>
             <div className="ml-4">
@@ -118,17 +123,30 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
                   }}
                 />
               </div>
-              {statusColor && <div style={{
-                width: 38,
-                height: 38,
-                borderRadius: '50%',
-                backgroundColor: statusColor,
-                position: 'absolute',
-                bottom: 1,
-                right: 1,
-                border: '7px solid #252a2e',
-                backgroundClip: 'border-box'
-              }} />}
+              {
+                statusColor && (
+                  <OverlayTrigger
+                    placement="bottom"
+                    overlay={
+                      <Tooltip id="member-status-tooltip">
+                        {statusName}
+                      </Tooltip>
+                    }
+                  >
+                    <div style={{
+                      width: 38,
+                      height: 38,
+                      borderRadius: '50%',
+                      backgroundColor: statusColor,
+                      position: 'absolute',
+                      bottom: 1,
+                      right: 1,
+                      border: '7px solid #252a2e',
+                      backgroundClip: 'border-box'
+                    }} />
+                  </OverlayTrigger>
+                )
+              }
             </div>
             <div className="text-center text-sm-left mt-4 mt-sm-0 px-4">
               <div style={{
@@ -307,7 +325,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
               </Alert>
             </Col>
           </Row>
-        </Container>
+        </div>
       )
       : <Container className="d-flex align-items-center justify-content-center flex-column" style={{
         height: '500px'

@@ -77,7 +77,7 @@ export default class Main extends Component<MainProps, MainState> {
     const guild = this.state.guild
 
     return this.state.guildFetchDone && this.state.membersFetchDone ? (
-      <Container fluid style={{
+      <div style={{
         fontFamily: 'NanumBarunGothic'
       }}>
         <Row>
@@ -140,7 +140,7 @@ export default class Main extends Component<MainProps, MainState> {
             </Card>
           </Col>
         </Row>
-      </Container>
+      </div>
     ) : <Container className="d-flex align-items-center justify-content-center flex-column" style={{
       height: '500px'
     }}>
