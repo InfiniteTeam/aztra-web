@@ -107,7 +107,6 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
     if (token) {
       this.getData(token)
       this.getChannels(token)
-      console.log(this.state.data)
     }
     else {
       window.location.assign('/login')
@@ -136,7 +135,6 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
         await this.setState({ validation_outgoingDesc: 0 < value.length && value.length <= 2048 ? null : s.useLeave ? false : null })
         break
       case 'channel':
-        console.log('dd')
         await this.setState({ validation_channel: this.state.useJoin || this.state.useLeave ? (!!this.state.data?.channel || !!this.state.newChannel ? null : false) : null })
         break
       default:
@@ -149,7 +147,6 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
   checkValidate = () => {
     let s = this.state
 
-    console.log(s)
     return (
       s.validation_incomingTitle === null
       && s.validation_incomingDesc === null
@@ -164,11 +161,12 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
     let data: GreetingsType = {
       guild: this.state.data?.guild!,
       channel: this.state.newChannel?.id! || this.state.data?.channel!,
-      join_title_format: this.refIncomingTitleControl.current?.value!,
-      join_desc_format: this.refIncomingDescControl.current?.value!,
-      leave_title_format: this.refOutgoingTitleControl.current?.value!,
-      leave_desc_format: this.refOutgoingDescControl.current?.value!
+      join_title_format: this.state.useJoin ? this.refIncomingTitleControl.current?.value! : '',
+      join_desc_format: this.state.useJoin ? this.refIncomingDescControl.current?.value! : '',
+      leave_title_format: this.state.useLeave ? this.refOutgoingTitleControl.current?.value! : '',
+      leave_desc_format: this.state.useLeave ? this.refOutgoingDescControl.current?.value! : ''
     }
+
     try {
       await axios.post(`${api}/servers/${this.props.guildId}/greetings`, data, {
         headers: {
@@ -187,7 +185,6 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
   handleSubmit = (e: React.MouseEvent<HTMLElement>) => {
     this.handleFieldChange()
       .then(() => {
-        console.log(this.checkValidate())
         if (this.checkValidate()) {
           this.save()
         }
