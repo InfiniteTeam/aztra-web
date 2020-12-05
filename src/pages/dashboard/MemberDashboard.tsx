@@ -9,6 +9,9 @@ import { Row, Col, Card, Container, Spinner, Badge, Button, Alert, OverlayTrigge
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBug, faExclamationTriangle, faListUl, faStream, faUserEdit, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
+import BackTo from '../../components/BackTo';
+
+import { calcLevel } from '@aztra/level-utils'
 
 interface MatchParams {
   readonly userid: string
@@ -25,21 +28,27 @@ interface MemberDashboardProps {
 
 interface MemberDashboardState {
   member: MemberExtended | null
-  fetchDone: boolean
+  exp: number | null
+  memberFetchDone: boolean
+  expFetchDone: boolean
   value: number
 }
 
 export default class MemberDashboard extends Component<MemberDashboardProps, MemberDashboardState> {
   state: MemberDashboardState = {
     member: null,
-    fetchDone: false,
+    exp: null,
+    memberFetchDone: false,
+    expFetchDone: false,
     value: 0
   }
 
   componentDidMount() {
     const token = localStorage.getItem('token')
     if (token) {
-      this.getMember(token).then(async () => {
+      this.getMember(token)
+      this.getExp(token).then(async () => {
+        console.log(this.state.exp)
         await this.setState({ value: 0 })
         await setTimeout(() => this.setState({ value: 30 }), 200)
       })
@@ -58,11 +67,22 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
       })
       this.setState({ member: res.data })
     }
-    catch (e) {
-      this.setState({ member: null })
+    finally {
+      this.setState({ memberFetchDone: true })
+    }
+  }
+
+  getExp = async (token: string) => {
+    try {
+      let res = await axios.get(`${api}/servers/${this.props.guildId}/exps/${this.props.match.params.userid}`, {
+        headers: {
+          token: token
+        }
+      })
+      this.setState({ exp: res.data.exp })
     }
     finally {
-      this.setState({ fetchDone: true })
+      this.setState({ expFetchDone: true })
     }
   }
 
@@ -95,15 +115,20 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
         break
     }
 
-    return this.state.fetchDone
+    return this.state.memberFetchDone && this.state.expFetchDone
       ? (
         <div>
           <Row className="dashboard-section">
-            <h3>멤버 관리</h3>
-            <div className="ml-4">
-              <Button variant="aztra" size="sm" href={`/dashboard/${this.props.guildId}/members`}>
-                <FontAwesomeIcon icon={faListUl} className="mr-2" />목록으로
-            </Button>
+            <div>
+              <BackTo className="pl-2 mb-4" name="멤버 목록" href={`/dashboard/${this.props.guildId}/members`} />
+              <div className="d-flex">
+                <h3>멤버 관리</h3>
+                <div className="ml-4">
+                  <Button variant="aztra" size="sm" href={`/dashboard/${this.props.guildId}/members`}>
+                    <FontAwesomeIcon icon={faListUl} className="mr-2" />목록으로
+                  </Button>
+                </div>
+              </div>
             </div>
           </Row>
 
@@ -200,7 +225,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
                       fontSize: "4.5rem",
                       lineHeight: "3rem"
                     }}>
-                      13
+                      {calcLevel(this.state.exp!)}
                       <span style={{
                         fontSize: '2rem'
                       }}>

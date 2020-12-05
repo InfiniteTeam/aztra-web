@@ -6,7 +6,7 @@ export default class Home extends Component {
     render() {
         return (
             <>
-                <img src={DacoonAvatar}></img>
+                <img src={DacoonAvatar} style={{ width: 100, height: 100 }}></img>
                 <h1 className="text-white">다쿤을 찬양하세요</h1>
             </>
         );

@@ -9,6 +9,7 @@ import { MemberMinimal } from '../../types/DiscordTypes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { RemoveCircleOutline, FileCopy as FileCopyIcon, OpenInNew as OpenInNewIcon } from '@material-ui/icons'
+import BackTo from '../../components/BackTo';
 
 export interface WarnsListProps {
   readonly guildId?: string
@@ -79,14 +80,25 @@ interface WarnsListCardProps {
   warnby: MemberMinimal
   warn: WarnsType
   guildId: string
+  onDelete: Function
 }
 
-const WarnsListCard: React.FC<WarnsListCardProps> = ({ target, warnby, warn, guildId }) => {
+const WarnsListCard: React.FC<WarnsListCardProps> = ({ target, warnby, warn, guildId, onDelete }) => {
   {
     const [showInfo, setShowInfo] = useState(false)
+    const [showDel, setShowDel] = useState(false)
     const [copied, setCopied] = useState(false)
     const warnReasonRef = useRef<HTMLParagraphElement>(null)
     const copyButtonRef = useRef<HTMLButtonElement>(null)
+
+    const delWarn = (uuid: string) => {
+      axios.delete(`${api}/servers/${guildId}/warns/${uuid}`, {
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      })
+        .then(() => onDelete())
+    }
 
     return (
       <tr>
@@ -147,10 +159,34 @@ const WarnsListCard: React.FC<WarnsListCardProps> = ({ target, warnby, warn, gui
                 </Tooltip>
               }
             >
-              <Button variant="dark" className="d-flex px-1 remove-before">
+              <Button variant="dark" className="d-flex px-1 remove-before" onClick={() => setShowDel(true)}>
                 <RemoveCircleOutline />
               </Button>
             </OverlayTrigger>
+
+            <Modal className="modal-dark" show={showDel} onHide={() => setShowDel(false)} centered>
+              <Modal.Header closeButton>
+                <Modal.Title style={{
+                  fontFamily: "NanumSquare",
+                  fontWeight: 900,
+                }}>
+                  경고 취소하기
+                </Modal.Title>
+              </Modal.Header>
+              <Modal.Body className="py-4">
+                이 경고를 취소하시겠습니까?
+              </Modal.Body>
+              <Modal.Footer className="justify-content-end">
+                <Button variant="aztra" onClick={async () => {
+                  await setShowDel(false)
+                  delWarn(warn.uuid)
+                }}>
+                  확인
+                </Button>
+                <Button variant="dark" onClick={() => setShowDel(false)}>취소</Button>
+              </Modal.Footer>
+            </Modal>
+
             <OverlayTrigger
               placement="top"
               overlay={
@@ -166,10 +202,9 @@ const WarnsListCard: React.FC<WarnsListCardProps> = ({ target, warnby, warn, gui
 
             <Modal className="modal-dark" show={showInfo} onHide={() => setShowInfo(false)} centered size="lg">
               <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter" style={{
+                <Modal.Title style={{
                   fontFamily: "NanumSquare",
                   fontWeight: 900,
-
                 }}>
                   경고 상세 정보
                 </Modal.Title>
@@ -294,7 +329,6 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
           token: token
         }
       })
-      console.log(res.data)
       this.setState({ members: res.data })
     }
     catch (e) {
@@ -361,7 +395,7 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
       (this.filterSortWarns(this.state.warnSearch) || this.state.warns)?.map(one => {
         const target = this.state.members?.find(m => m.user.id === one.member)
         const warnby = this.state.members?.find(m => m.user.id === one.warnby)
-        return <WarnsListCard target={target!} warnby={warnby!} warn={one} guildId={this.props.guildId!} />
+        return <WarnsListCard target={target!} warnby={warnby!} warn={one} guildId={this.props.guildId!} onDelete={() => this.componentDidMount()} />
       })
     )
 
@@ -371,11 +405,8 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
       }}>
         <Row className="dashboard-section">
           <div>
-            <a className="d-flex align-items-center pl-2" href={`/dashboard/${this.props.guildId}/warns`}>
-              <FontAwesomeIcon icon={faChevronLeft} className="mr-2" />
-              [경고 관리] 로 돌아가기
-            </a>
-            <h3 className="mt-4">전체 경고 목록</h3>
+            <BackTo className="pl-2 mb-4" name="경고 관리" href={`/dashboard/${this.props.guildId}/warns`}/>
+            <h3>전체 경고 목록</h3>
           </div>
         </Row>
         <Row className="d-md-none">

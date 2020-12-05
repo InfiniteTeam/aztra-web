@@ -96,7 +96,7 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
             <div className="d-flex justify-content-between">
               <h4 className="mb-3">최근 경고 목록</h4>
               <div>
-                <Button variant="aztra" className="shadow align-items-center d-flex" size="sm" href={`/dashboard/${this.props.guildId}/warns/warns-list`}>
+                <Button variant="aztra" className="shadow align-items-center d-flex" size="sm" href={`/dashboard/${this.props.guildId}/warns-list`}>
                   <MenuIcon className="mr-2" />
                   모두 보기
                 </Button>
@@ -113,15 +113,20 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
                     return <Card bg="dark" className="mb-2 shadow-sm shadow">
                       <Card.Body as={Row} className="py-2 d-flex justify-content-between">
                         <Col xs={9} md={10} className="d-flex">
-                          <img
-                            src={target?.avatar ? `https://cdn.discordapp.com/avatars/${target?.id}/${target?.avatar}` : target?.defaultAvatarURL}
-                            alt={target?.tag!}
-                            className="my-auto rounded-circle no-drag mr-3"
-                            style={{
-                              height: 35,
-                              width: 35
-                            }}
-                          />
+                          <div className="mr-2 my-auto" style={{
+                            height: 35,
+                            width: 35
+                          }}>
+                            <img
+                              src={target?.avatar ? `https://cdn.discordapp.com/avatars/${target?.id}/${target?.avatar}` : target?.defaultAvatarURL}
+                              alt={target?.tag!}
+                              className="rounded-circle no-drag"
+                              style={{
+                                height: 35,
+                                width: 35
+                              }}
+                            />
+                          </div>
                           <div className="my-auto d-inline-block text-truncate" style={{
 
                           }}>
@@ -211,7 +216,7 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
                 </OverlayTrigger>
               </div>
             </div>
-            <Table className="m-2" variant="dark" hover>
+            <Table variant="dark" hover>
               <thead>
                 <tr>
                   <th>경고 수</th>

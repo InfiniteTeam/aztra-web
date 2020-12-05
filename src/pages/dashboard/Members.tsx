@@ -80,8 +80,8 @@ export default class Members extends PureComponent<MembersProps, MembersState> {
       <div style={{
         fontFamily: 'NanumBarunGothic'
       }}>
-        <Row className="dashboard-section">
-          <h3>멤버 관리</h3>
+        <Row className="dashboard-section">         
+          <h3>멤버 목록</h3>
         </Row>
         <Row>
           <Col>

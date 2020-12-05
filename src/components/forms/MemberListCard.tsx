@@ -13,7 +13,7 @@ export default class MemberListCard extends React.PureComponent<MemberListCardPr
     const member = this.props.member
 
     return (
-      <Card as={Container} fluid bg="dark" className="mb-2">
+      <Card as={Container} fluid bg="dark" className="mb-2 shadow">
         <Card.Body as={Row} className="flex-column flex-sm-row py-1">
           <Col sm={8} className="d-flex pb-2 pb-sm-0 px-0 align-items-center">
             <img className="my-auto" alt={member.user.tag!} src={member.user.avatar ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.jpeg?size=64` : member.user.defaultAvatarURL} style={{ maxHeight: 40, marginRight: 15, borderRadius: '70%' }} />
