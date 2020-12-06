@@ -7,7 +7,8 @@ import {
   PersonAdd as PersonAddIcon,
   Group as GroupIcon,
   ReportProblemRounded as ReportProblemRoundedIcon,
-  Assessment as AssessmentIcon
+  Assessment as AssessmentIcon,
+  DataUsage as DataUsageIcon
 } from '@material-ui/icons'
 
 interface SidebarProps {
@@ -62,6 +63,14 @@ export default function Sidebar(props: SidebarProps) {
               <ReportProblemRoundedIcon />
             </div>
             경고 관리
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link className="d-flex mb-1" as={Link} to={`/dashboard/${guild?.id}/leveling`} active={window.location.pathname.startsWith(`/dashboard/${guild?.id}/leveling`)}>
+            <div style={iconStyle} className="mr-3">
+              <DataUsageIcon />
+            </div>
+            레벨링 설정
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>

@@ -11,7 +11,9 @@ import { faBug, faExclamationTriangle, faListUl, faStream, faUserEdit, faUserPlu
 import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import BackTo from '../../components/BackTo';
 
-import { calcLevel } from '@aztra/level-utils'
+import { calcLevel, getAccumulateExp, getRequiredEXP } from '@aztra/level-utils'
+import { Exp } from '../../types/dbtypes/exps';
+import { numberCommaFormat } from '../../utils/numberComma';
 
 interface MatchParams {
   readonly userid: string
@@ -28,19 +30,19 @@ interface MemberDashboardProps {
 
 interface MemberDashboardState {
   member: MemberExtended | null
-  exp: number | null
+  exps: Exp[] | null
   memberFetchDone: boolean
   expFetchDone: boolean
-  value: number
+  showPercent: boolean
 }
 
 export default class MemberDashboard extends Component<MemberDashboardProps, MemberDashboardState> {
   state: MemberDashboardState = {
     member: null,
-    exp: null,
+    exps: null,
     memberFetchDone: false,
     expFetchDone: false,
-    value: 0
+    showPercent: false
   }
 
   componentDidMount() {
@@ -48,9 +50,8 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
     if (token) {
       this.getMember(token)
       this.getExp(token).then(async () => {
-        console.log(this.state.exp)
-        await this.setState({ value: 0 })
-        await setTimeout(() => this.setState({ value: 30 }), 200)
+        console.log(this.state.exps)
+        await setTimeout(() => this.setState({ showPercent: true }), 200)
       })
     }
     else {
@@ -74,12 +75,12 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
 
   getExp = async (token: string) => {
     try {
-      let res = await axios.get(`${api}/servers/${this.props.guildId}/exps/${this.props.match.params.userid}`, {
+      let res = await axios.get(`${api}/servers/${this.props.guildId}/exps`, {
         headers: {
           token: token
         }
       })
-      this.setState({ exp: res.data.exp })
+      this.setState({ exps: res.data })
     }
     finally {
       this.setState({ expFetchDone: true })
@@ -113,6 +114,23 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
         break
       default:
         break
+    }
+
+    const exp = this.state.exps?.find(m => m.id === member?.user.id)?.exp!
+    const level = calcLevel(exp)
+    const reqExp = getRequiredEXP(level)
+    const accuExp = getAccumulateExp(level)
+    const reqCompleted = (reqExp || 0) - accuExp + exp
+    let expIndex = this.state.exps?.sort((a, b) => b.exp - a.exp).findIndex(m => m.id === member?.user.id)
+
+    let expRank
+    switch (expIndex) {
+      case -1:
+      case undefined:
+        expRank = undefined
+        break
+      default:
+        expRank = expIndex + 1
     }
 
     return this.state.memberFetchDone && this.state.expFetchDone
@@ -208,7 +226,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
                 maxHeight: 200
               }}>
 
-                <CircularProgressbarWithChildren value={this.state.value} strokeWidth={5} styles={{
+                <CircularProgressbarWithChildren value={this.state.showPercent ? reqExp ? reqCompleted / reqExp * 100 : 100 : 0} strokeWidth={5} styles={{
                   path: {
                     stroke: "#8c53c6",
                     strokeLinecap: "butt",
@@ -225,7 +243,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
                       fontSize: "4.5rem",
                       lineHeight: "3rem"
                     }}>
-                      {calcLevel(this.state.exp!)}
+                      {level}
                       <span style={{
                         fontSize: '2rem'
                       }}>
@@ -235,7 +253,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
                     <div style={{
                       fontSize: "1.5rem"
                     }}>
-                      1500/5000 P
+                      {reqExp ? numberCommaFormat(reqCompleted) : '--'}/{reqExp ? numberCommaFormat(reqExp) : '--'} P
                     </div>
                   </div>
                 </CircularProgressbarWithChildren>
@@ -249,22 +267,14 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
                     fontSize: '20pt'
                   }}>
                     <FontAwesomeIcon icon={faStream} className="mr-3" />
-                    서버 2위
+                    서버 {expRank || '--'}위
                   </div>
                   <div>
-                    총 메시지:{' '}
+                    총 경험치:{' '}
                     <span style={{
                       fontSize: '17pt'
                     }}>
-                      495개
-                    </span>
-                  </div>
-                  <div>
-                    하루 평균:{' '}
-                    <span style={{
-                      fontSize: '17pt'
-                    }}>
-                      34개
+                      {numberCommaFormat(exp)}
                     </span>
                   </div>
                 </div>
