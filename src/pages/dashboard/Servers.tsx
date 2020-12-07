@@ -29,7 +29,7 @@ export default class Servers extends Component<{}, ServersState> {
     try {
       let res = await axios.get(urljoin(api, '/discord/users/@me/guilds'), {
         headers: {
-          token: token
+          Authorization: `Bearer ${token}`
         }
       })
       this.setState({ guilds: res.data, fetchDone: true })

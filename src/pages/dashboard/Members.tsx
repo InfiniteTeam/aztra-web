@@ -38,7 +38,7 @@ export default class Members extends PureComponent<MembersProps, MembersState> {
     try {
       let res = await axios.get(`${api}/discord/guilds/${this.props.guildId}/members`, {
         headers: {
-          token: token
+          Authorization: `Bearer ${token}`
         }
       })
       console.log(res.data)

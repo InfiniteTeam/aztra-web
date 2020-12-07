@@ -38,7 +38,7 @@ export default class Main extends Component<MainProps, MainState> {
   getGuild = async (token: string) => {
     await axios.get(urljoin(api, '/discord/users/@me/guilds'), {
       headers: {
-        token: token
+        Authorization: `Bearer ${token}`
       }
     })
       .then(res => {
@@ -59,7 +59,7 @@ export default class Main extends Component<MainProps, MainState> {
     try {
       let res = await axios.get(`${api}/discord/guilds/${this.props.guildId}/members`, {
         headers: {
-          token: token
+          Authorization: `Bearer ${token}`
         }
       })
       console.log(res.data)

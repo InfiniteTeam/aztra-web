@@ -69,7 +69,7 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
     try {
       let res = await axios.get(`${api}/servers/${this.props.guildId}/greetings`, {
         headers: {
-          token: token
+          Authorization: `Bearer ${token}`
         }
       })
       this.setState({ data: res.data })
@@ -92,7 +92,7 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
     try {
       let res = await axios.get(`${api}/discord/guilds/${this.props.guildId}/channels`, {
         headers: {
-          token: token
+          Authorization: `Bearer ${token}`
         }
       })
       this.setState({ channels: res.data })

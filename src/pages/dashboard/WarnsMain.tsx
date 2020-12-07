@@ -42,7 +42,7 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
     try {
       let res = await axios.get(`${api}/servers/${this.props.guildId}/warns`, {
         headers: {
-          token: token
+          Authorization: `Bearer ${token}`
         }
       })
       this.setState({ data: res.data })
@@ -59,7 +59,7 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
     try {
       let res = await axios.get(`${api}/discord/guilds/${this.props.guildId}/members`, {
         headers: {
-          token: token
+          Authorization: `Bearer ${token}`
         }
       })
       console.log(res.data)

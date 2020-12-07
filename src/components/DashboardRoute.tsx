@@ -55,7 +55,7 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
   getGuild = async (token: string) => {
     await axios.get(urljoin(api, '/discord/users/@me/guilds'), {
       headers: {
-        token: token
+        Authorization: `Bearer ${token}`
       }
     })
       .then(res => {

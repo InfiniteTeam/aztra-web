@@ -63,7 +63,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
     try {
       let res = await axios.get(`${api}/discord/guilds/${this.props.guildId}/members/${this.props.match.params.userid}`, {
         headers: {
-          token: token
+          Authorization: `Bearer ${token}`
         }
       })
       this.setState({ member: res.data })
@@ -77,7 +77,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
     try {
       let res = await axios.get(`${api}/servers/${this.props.guildId}/exps`, {
         headers: {
-          token: token
+          Authorization: `Bearer ${token}`
         }
       })
       this.setState({ exps: res.data })

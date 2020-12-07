@@ -309,7 +309,7 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
     try {
       let res = await axios.get(`${api}/servers/${this.props.guildId}/warns`, {
         headers: {
-          token: token
+          Authorization: `Bearer ${token}`
         }
       })
       this.setState({ warns: res.data })
@@ -326,7 +326,7 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
     try {
       let res = await axios.get(`${api}/discord/guilds/${this.props.guildId}/members`, {
         headers: {
-          token: token
+          Authorization: `Bearer ${token}`
         }
       })
       this.setState({ members: res.data })
