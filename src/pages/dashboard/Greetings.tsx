@@ -197,7 +197,12 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
     return this.state.fetchDone ? (
       <div>
         <Row className="dashboard-section">
-          <h3>환영 메시지 설정</h3>
+          <div>
+            <h3>환영 메시지</h3>
+            <div className="py-2">
+              멤버가 서버에 들어오거나 나갈 때 자동으로 특정 채널에 환영 메시지를 보냅니다.
+            </div>
+          </div>
         </Row>
         <Row>
           <Col>
@@ -232,13 +237,13 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
               </div>
 
               <Row className="pt-4 pb-2">
-                <h4>보내는 메시지</h4>
+                <h4>나가는 메시지</h4>
               </Row>
 
               <Form.Group controlId="outgoingUse">
                 <Form.Check
                   type="switch"
-                  label="보내는 메시지 사용"
+                  label="나가는 메시지 사용"
                   checked={this.state.useLeave}
                   onClick={() => this.setState({ useLeave: !this.state.useLeave })}
                   aria-controls="outgoingForm"

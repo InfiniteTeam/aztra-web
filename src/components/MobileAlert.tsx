@@ -9,7 +9,7 @@ export default function MobileAlert() {
   useEffect(() => {
     let value = localStorage.getItem('hideMobileAlert')
     setHidden(value === 'true')
-  })  
+  }, [])
 
   const onClose = () => {
     localStorage.setItem('hideMobileAlert', 'true')

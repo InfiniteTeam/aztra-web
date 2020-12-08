@@ -50,7 +50,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
     if (token) {
       this.getMember(token)
       this.getExp(token).then(async () => {
-        console.log(this.state.exps)
+        
         await setTimeout(() => this.setState({ showPercent: true }), 200)
       })
     }
@@ -80,6 +80,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
           Authorization: `Bearer ${token}`
         }
       })
+      console.log(res.data)
       this.setState({ exps: res.data })
     }
     finally {
@@ -116,12 +117,14 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
         break
     }
 
-    const exp = this.state.exps?.find(m => m.id === member?.user.id)?.exp!
+    console.log(member?.user.id)
+    const exp = this.state.exps?.find(m => m.id === member?.user.id)?.exp || 0
     const level = calcLevel(exp)
     const reqExp = getRequiredEXP(level)
     const accuExp = getAccumulateExp(level)
     const reqCompleted = (reqExp || 0) - accuExp + exp
     let expIndex = this.state.exps?.sort((a, b) => b.exp - a.exp).findIndex(m => m.id === member?.user.id)
+
 
     let expRank
     switch (expIndex) {

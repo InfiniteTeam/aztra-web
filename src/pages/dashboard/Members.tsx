@@ -1,11 +1,9 @@
 import React, { PureComponent } from 'react';
-
 import axios from 'axios'
 import api from '../../datas/api'
 import { MemberMinimal } from '../../types/DiscordTypes';
 import { Row, Col, Form, Container, Spinner } from 'react-bootstrap';
 import MemberListCard from '../../components/forms/MemberListCard';
-
 
 interface MembersProps {
   readonly guildId?: string
@@ -80,7 +78,7 @@ export default class Members extends PureComponent<MembersProps, MembersState> {
       <div style={{
         fontFamily: 'NanumBarunGothic'
       }}>
-        <Row className="dashboard-section">         
+        <Row className="dashboard-section">
           <h3>멤버 목록</h3>
         </Row>
         <Row>

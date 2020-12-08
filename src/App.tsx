@@ -10,11 +10,9 @@ import Redirecting from './pages/Redirecting'
 import Logout from './pages/Logout'
 import Premium from './pages/Premium'
 import Praise from './pages/Praise'
-
 import Navibar from './components/Navibar'
 import Footer from './components/Footer'
 import DashboardRoute from './components/DashboardRoute'
-
 import DashboardServers from './pages/dashboard/Servers'
 
 export default class App extends Component {

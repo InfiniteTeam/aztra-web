@@ -6,8 +6,6 @@ import { Warns as WarnsType } from '../../types/dbtypes/warns';
 import MobileAlert from '../../components/MobileAlert'
 import { Row, Col, Form, Container, Spinner, Button, Table, ButtonGroup, OverlayTrigger, Tooltip, Popover, Modal, Overlay } from 'react-bootstrap';
 import { MemberMinimal } from '../../types/DiscordTypes';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { RemoveCircleOutline, FileCopy as FileCopyIcon, OpenInNew as OpenInNewIcon } from '@material-ui/icons'
 import BackTo from '../../components/BackTo';
 
@@ -84,203 +82,201 @@ interface WarnsListCardProps {
 }
 
 const WarnsListCard: React.FC<WarnsListCardProps> = ({ target, warnby, warn, guildId, onDelete }) => {
-  {
-    const [showInfo, setShowInfo] = useState(false)
-    const [showDel, setShowDel] = useState(false)
-    const [copied, setCopied] = useState(false)
-    const warnReasonRef = useRef<HTMLParagraphElement>(null)
-    const copyButtonRef = useRef<HTMLButtonElement>(null)
+  const [showInfo, setShowInfo] = useState(false)
+  const [showDel, setShowDel] = useState(false)
+  const [copied, setCopied] = useState(false)
+  const warnReasonRef = useRef<HTMLParagraphElement>(null)
+  const copyButtonRef = useRef<HTMLButtonElement>(null)
 
-    const delWarn = (uuid: string) => {
-      axios.delete(`${api}/servers/${guildId}/warns/${uuid}`, {
-        headers: {
-          token: localStorage.getItem('token')
-        }
-      })
-        .then(() => onDelete())
-    }
+  const delWarn = (uuid: string) => {
+    axios.delete(`${api}/servers/${guildId}/warns/${uuid}`, {
+      headers: {
+        token: localStorage.getItem('token')
+      }
+    })
+      .then(() => onDelete())
+  }
 
-    return (
-      <tr>
-        <td className="align-middle text-center">
-          <Form.Check style={{
-            transform: 'scale(1.25)',
-            WebkitTransform: 'scale(1.25)'
-          }} />
-        </td>
-        <td className="align-middle">
-          <div className="d-flex justify-content-center justify-content-lg-start">
-            <MemberCell member={target!} guildId={guildId} wrap />
-          </div>
-        </td>
-        <td className="align-middle d-none d-md-table-cell">
+  return (
+    <tr>
+      <td className="align-middle text-center">
+        <Form.Check style={{
+          transform: 'scale(1.25)',
+          WebkitTransform: 'scale(1.25)'
+        }} />
+      </td>
+      <td className="align-middle">
+        <div className="d-flex justify-content-center justify-content-lg-start">
+          <MemberCell member={target!} guildId={guildId} wrap />
+        </div>
+      </td>
+      <td className="align-middle d-none d-md-table-cell">
+        <OverlayTrigger
+          trigger="click"
+          placement="top"
+          overlay={
+            <Popover id={`member-${warn.member}-warn-reason-details`} style={{
+              maxWidth: 500
+            }}>
+              <Popover.Title className="font-weight-bold">
+                경고 사유 자세히
+            </Popover.Title>
+              <Popover.Content>
+                <div className="p-1">
+                  {warn.reason}
+                </div>
+                <div className="d-flex my-2">
+                  <Button size="sm" variant="secondary" className="d-flex align-items-center">
+                    <FileCopyIcon className="mr-1" style={{ transform: 'scale(0.8)' }} />
+                  복사하기
+                </Button>
+                </div>
+              </Popover.Content>
+            </Popover>
+          }
+        >
+          <span className="d-inline-block text-truncate mw-100 align-middle cursor-pointer">
+            {warn.reason}
+          </span>
+        </OverlayTrigger>
+      </td>
+      <td className="align-middle">{warn.count}회</td>
+      <td className="align-middle">
+        <div className="d-flex justify-content-center justify-content-lg-start">
+          <MemberCell member={warnby!} guildId={guildId} wrap />
+        </div>
+      </td>
+      <td className="align-middle text-center">
+        <ButtonGroup>
           <OverlayTrigger
-            trigger="click"
             placement="top"
             overlay={
-              <Popover id={`member-${warn.member}-warn-reason-details`} style={{
-                maxWidth: 500
-              }}>
-                <Popover.Title className="font-weight-bold">
-                  경고 사유 자세히
-              </Popover.Title>
-                <Popover.Content>
-                  <div className="p-1">
-                    {warn.reason}
-                  </div>
-                  <div className="d-flex my-2">
-                    <Button size="sm" variant="secondary" className="d-flex align-items-center">
-                      <FileCopyIcon className="mr-1" style={{ transform: 'scale(0.8)' }} />
-                    복사하기
-                  </Button>
-                  </div>
-                </Popover.Content>
-              </Popover>
+              <Tooltip id="warn-list-row-remove-warn">
+                이 경고 취소하기
+              </Tooltip>
             }
           >
-            <span className="d-inline-block text-truncate mw-100 align-middle cursor-pointer">
-              {warn.reason}
-            </span>
+            <Button variant="dark" className="d-flex px-1 remove-before" onClick={() => setShowDel(true)}>
+              <RemoveCircleOutline />
+            </Button>
           </OverlayTrigger>
-        </td>
-        <td className="align-middle">{warn.count}회</td>
-        <td className="align-middle">
-          <div className="d-flex justify-content-center justify-content-lg-start">
-            <MemberCell member={warnby!} guildId={guildId} wrap />
-          </div>
-        </td>
-        <td className="align-middle text-center">
-          <ButtonGroup>
-            <OverlayTrigger
-              placement="top"
-              overlay={
-                <Tooltip id="warn-list-row-remove-warn">
-                  이 경고 취소하기
-                </Tooltip>
-              }
-            >
-              <Button variant="dark" className="d-flex px-1 remove-before" onClick={() => setShowDel(true)}>
-                <RemoveCircleOutline />
-              </Button>
-            </OverlayTrigger>
 
-            <Modal className="modal-dark" show={showDel} onHide={() => setShowDel(false)} centered>
-              <Modal.Header closeButton>
-                <Modal.Title style={{
-                  fontFamily: "NanumSquare",
-                  fontWeight: 900,
+          <Modal className="modal-dark" show={showDel} onHide={() => setShowDel(false)} centered>
+            <Modal.Header closeButton>
+              <Modal.Title style={{
+                fontFamily: "NanumSquare",
+                fontWeight: 900,
+              }}>
+                경고 취소하기
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="py-4">
+              이 경고를 취소하시겠습니까?
+            </Modal.Body>
+            <Modal.Footer className="justify-content-end">
+              <Button variant="aztra" onClick={async () => {
+                await setShowDel(false)
+                delWarn(warn.uuid)
+              }}>
+                확인
+              </Button>
+              <Button variant="dark" onClick={() => setShowDel(false)}>취소</Button>
+            </Modal.Footer>
+          </Modal>
+
+          <OverlayTrigger
+            placement="top"
+            overlay={
+              <Tooltip id="warn-list-row-remove-warn">
+                경고 자세히 보기
+              </Tooltip>
+            }
+          >
+            <Button variant="dark" className="d-flex px-1 remove-before" onClick={() => setShowInfo(true)}>
+              <OpenInNewIcon />
+            </Button>
+          </OverlayTrigger>
+
+          <Modal className="modal-dark" show={showInfo} onHide={() => setShowInfo(false)} centered size="lg">
+            <Modal.Header closeButton>
+              <Modal.Title style={{
+                fontFamily: "NanumSquare",
+                fontWeight: 900,
+              }}>
+                경고 상세 정보
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="py-4">
+              <Container>
+                <Row>
+                  <Col xs={12} md={6}>
+                    <h5 className="font-weight-bold">대상 멤버</h5>
+                    <p>
+                      <MemberCell guildId={guildId!} member={target} />
+                    </p>
+                  </Col>
+                  <Col xs={12} md={6}>
+                    <h5 className="font-weight-bold">경고 부여자</h5>
+                    <p>
+                      <MemberCell guildId={guildId!} member={warnby} />
+                    </p>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={12} md={6}>
+                    <h5 className="font-weight-bold">경고 횟수</h5>
+                    <p>
+                      {warn.count}회
+                    </p>
+                  </Col>
+                  <Col xs={12} md={6}>
+                    <h5 className="font-weight-bold">경고 날짜</h5>
+                    <p>
+                      {new Date(warn.dt).toLocaleString()}
+                    </p>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={12}>
+                    <h5 className="font-weight-bold">경고 사유</h5>
+                    <p ref={warnReasonRef}>
+                      {warn.reason}
+                    </p>
+                  </Col>
+                </Row>
+              </Container>
+            </Modal.Body>
+            <Modal.Footer className="justify-content-between">
+              <div>
+                <Button ref={copyButtonRef} variant="aztra" onClick={() => {
+                  navigator.clipboard.writeText(warn.reason)
+                    .then(async () => {
+                      if (!copied) {
+                        await setCopied(true)
+                        await setTimeout(() => setCopied(false), 800)
+                      }
+                    })
                 }}>
-                  경고 취소하기
-                </Modal.Title>
-              </Modal.Header>
-              <Modal.Body className="py-4">
-                이 경고를 취소하시겠습니까?
-              </Modal.Body>
-              <Modal.Footer className="justify-content-end">
-                <Button variant="aztra" onClick={async () => {
-                  await setShowDel(false)
-                  delWarn(warn.uuid)
-                }}>
-                  확인
+                  <FileCopyIcon className="mr-2" style={{ transform: 'scale(0.9)' }} />
+                  경고 사유 복사
                 </Button>
-                <Button variant="dark" onClick={() => setShowDel(false)}>취소</Button>
-              </Modal.Footer>
-            </Modal>
 
-            <OverlayTrigger
-              placement="top"
-              overlay={
-                <Tooltip id="warn-list-row-remove-warn">
-                  경고 자세히 보기
-                </Tooltip>
-              }
-            >
-              <Button variant="dark" className="d-flex px-1 remove-before" onClick={() => setShowInfo(true)}>
-                <OpenInNewIcon />
-              </Button>
-            </OverlayTrigger>
+                <Overlay target={copyButtonRef.current} show={copied}>
+                  {(props) => (
+                    <Tooltip id="wan-copied-tooltop" {...props}>
+                      복사됨!
+                    </Tooltip>
+                  )}
+                </Overlay>
+              </div>
+              <Button variant="success" onClick={() => setShowInfo(false)}>닫기</Button>
+            </Modal.Footer>
+          </Modal>
 
-            <Modal className="modal-dark" show={showInfo} onHide={() => setShowInfo(false)} centered size="lg">
-              <Modal.Header closeButton>
-                <Modal.Title style={{
-                  fontFamily: "NanumSquare",
-                  fontWeight: 900,
-                }}>
-                  경고 상세 정보
-                </Modal.Title>
-              </Modal.Header>
-              <Modal.Body className="py-4">
-                <Container>
-                  <Row>
-                    <Col xs={12} md={6}>
-                      <h5 className="font-weight-bold">대상 멤버</h5>
-                      <p>
-                        <MemberCell guildId={guildId!} member={target} />
-                      </p>
-                    </Col>
-                    <Col xs={12} md={6}>
-                      <h5 className="font-weight-bold">경고 부여자</h5>
-                      <p>
-                        <MemberCell guildId={guildId!} member={warnby} />
-                      </p>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col xs={12} md={6}>
-                      <h5 className="font-weight-bold">경고 횟수</h5>
-                      <p>
-                        {warn.count}회
-                      </p>
-                    </Col>
-                    <Col xs={12} md={6}>
-                      <h5 className="font-weight-bold">경고 날짜</h5>
-                      <p>
-                        {new Date(warn.dt).toLocaleString()}
-                      </p>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col xs={12}>
-                      <h5 className="font-weight-bold">경고 사유</h5>
-                      <p ref={warnReasonRef}>
-                        {warn.reason}
-                      </p>
-                    </Col>
-                  </Row>
-                </Container>
-              </Modal.Body>
-              <Modal.Footer className="justify-content-between">
-                <div>
-                  <Button ref={copyButtonRef} variant="aztra" onClick={() => {
-                    navigator.clipboard.writeText(warn.reason)
-                      .then(async () => {
-                        if (!copied) {
-                          await setCopied(true)
-                          await setTimeout(() => setCopied(false), 800)
-                        }
-                      })
-                  }}>
-                    <FileCopyIcon className="mr-2" style={{ transform: 'scale(0.9)' }} />
-                    경고 사유 복사
-                  </Button>
-
-                  <Overlay target={copyButtonRef.current} show={copied}>
-                    {(props) => (
-                      <Tooltip id="wan-copied-tooltop" {...props}>
-                        복사됨!
-                      </Tooltip>
-                    )}
-                  </Overlay>
-                </div>
-                <Button variant="success" onClick={() => setShowInfo(false)}>닫기</Button>
-              </Modal.Footer>
-            </Modal>
-
-          </ButtonGroup>
-        </td>
-      </tr>
-    )
-  }
+        </ButtonGroup>
+      </td>
+    </tr>
+  )
 }
 
 export default class Members extends PureComponent<WarnsListProps, WarnsListState> {
@@ -405,7 +401,7 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
       }}>
         <Row className="dashboard-section">
           <div>
-            <BackTo className="pl-2 mb-4" name="경고 관리" href={`/dashboard/${this.props.guildId}/warns`}/>
+            <BackTo className="pl-2 mb-4" name="경고 관리" href={`/dashboard/${this.props.guildId}/warns`} />
             <h3>전체 경고 목록</h3>
           </div>
         </Row>

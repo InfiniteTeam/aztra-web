@@ -9,6 +9,7 @@ import MemberDashboard from '../pages/dashboard/MemberDashboard'
 import DashboardWarnsMain from '../pages/dashboard/WarnsMain'
 import DashboardWarnsList from '../pages/dashboard/WarnsList'
 import DashboardStatistics from '../pages/dashboard/Statistics'
+import DashboardLeveling from '../pages/dashboard/Leveling'
 
 import Sidebar from './Sidebar'
 import NotFound from '../pages/NotFound'
@@ -243,6 +244,10 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
                   />
                   <Route exact path={`${this.props.match.url}/statistics`} render={
                     (props) => <DashboardStatistics guildId={this.props.match.params.serverid} {...props} />
+                  }
+                  />
+                  <Route exact path={`${this.props.match.url}/leveling`} render={
+                    (props) => <DashboardLeveling guildId={this.props.match.params.serverid} {...props} />
                   }
                   />
                   <Route component={NotFound} />

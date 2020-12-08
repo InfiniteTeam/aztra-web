@@ -92,7 +92,7 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
           <h3>경고 관리</h3>
         </Row>
         <Row>
-          <Col className="pb-5" xs={12} lg={6}>
+          <Col className="mb-5" xs={12} lg={6}>
             <div className="d-flex justify-content-between">
               <h4 className="mb-3">최근 경고 목록</h4>
               <div>
@@ -148,15 +148,11 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
                       </Card.Body>
                     </Card>
                   })
-                  : <div className="d-flex align-items-center justify-content-center" style={{
-
-                  }}>
-                    <h4 className="my-4">경고가 하나도 없습니다!</h4>
+                  : <div className="d-flex align-items-center justify-content-center h-75">
+                    <div className="my-4" style={{color: 'lightgray'}}>경고가 하나도 없습니다! 평화롭네요.</div>
                   </div>
                 : (
-                  <div className="d-flex align-items-center justify-content-center flex-column" style={{
-
-                  }}>
+                  <div className="d-flex align-items-center justify-content-center flex-column">
                     <h3 className="pb-4">불러오는 중</h3>
                     <Spinner animation="border" variant="aztra" />
                   </div>
@@ -165,7 +161,7 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
             }
           </Col>
 
-          <Col className="pb-5" xs={12} lg={6}>
+          <Col className="mb-5" xs={12} lg={6}>
             <div className="d-flex justify-content-between">
               <h4 className="mb-3">멤버 경고 순위</h4>
               <div>

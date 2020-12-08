@@ -1,14 +1,29 @@
 import React from 'react'
 import { Button, ButtonGroup, Card, Col, Dropdown, Row, Container } from 'react-bootstrap'
 import Badge from 'react-bootstrap/esm/Badge'
-import { MemberMinimal } from '../../types/DiscordTypes'
 
-export interface MemberListCardProps {
-  member: MemberMinimal
+
+interface UserData {
+  avatar: string | null
+  tag: string | null
+  username: string | null
+  id: string
+  bot: boolean
+  defaultAvatarURL: string
+}
+
+interface MemberData {
+  displayName: string | null
+  nickname: string | null
+  user: UserData
+}
+
+interface MemberListCardProps {
+  member: MemberData
   guildId: string
 }
 
-export default class MemberListCard extends React.PureComponent<MemberListCardProps, {}> {
+export default class MemberListCard extends React.PureComponent<MemberListCardProps> {
   render() {
     const member = this.props.member
 
