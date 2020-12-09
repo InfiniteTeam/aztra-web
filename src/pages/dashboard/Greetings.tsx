@@ -9,7 +9,7 @@ import axios from 'axios'
 
 import { Greetings as GreetingsType } from '../../types/dbtypes/greetings'
 import api from '../../datas/api'
-import { GuildChannel } from 'discord.js';
+import { ChannelMinimal } from '../../types/DiscordTypes';
 
 interface GreetingProps {
   readonly guildId?: string
@@ -21,17 +21,22 @@ interface GreetingState {
   useJoin: boolean
   useLeave: boolean
   saving: boolean
-  channels: GuildChannel[] | null
+  channels: ChannelMinimal[] | null
   channelFetchDone: boolean
   channelSearch: string
-  newChannel: GuildChannel | null
-  filteredChannels: GuildChannel[] | null
+  newChannel: ChannelMinimal | null
+  filteredChannels: ChannelMinimal[] | null
 
   validation_incomingTitle: boolean | null
   validation_incomingDesc: boolean | null
   validation_outgoingTitle: boolean | null
   validation_outgoingDesc: boolean | null
   validation_channel: boolean | null
+
+  incomingTitle: string | null
+  incomingDesc: string | null
+  outgoingTitle: string | null
+  outgoingDesc: string | null
 
   saveError: boolean
 }
@@ -57,13 +62,13 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
     validation_outgoingDesc: null,
     validation_channel: null,
 
+    incomingTitle: null,
+    incomingDesc: null,
+    outgoingTitle: null,
+    outgoingDesc: null,
+
     saveError: false
   }
-
-  refIncomingTitleControl: RefObject<HTMLTextAreaElement> = createRef()
-  refIncomingDescControl: RefObject<HTMLTextAreaElement> = createRef()
-  refOutgoingTitleControl: RefObject<HTMLTextAreaElement> = createRef()
-  refOutgoingDescControl: RefObject<HTMLTextAreaElement> = createRef()
 
   getData = async (token: string) => {
     try {
@@ -100,6 +105,9 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
     catch (e) {
       this.setState({ channels: null })
     }
+    finally {
+      this.setState({ channelFetchDone: true })
+    }
   }
 
   componentDidMount() {
@@ -119,19 +127,19 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
 
     switch (type) {
       case 'incomingTitle':
-        value = this.refIncomingTitleControl.current?.value!
+        value = this.state.incomingTitle!
         await this.setState({ validation_incomingTitle: 0 < value.length && value.length <= 256 ? null : s.useJoin ? false : null })
         break
       case 'outgoingTitle':
-        value = this.refOutgoingTitleControl.current?.value!
+        value = this.state.outgoingTitle!
         await this.setState({ validation_outgoingTitle: 0 < value.length && value.length <= 256 ? null : s.useLeave ? false : null })
         break
       case 'incomingDesc':
-        value = this.refIncomingDescControl.current?.value!
+        value = this.state.incomingDesc!
         await this.setState({ validation_incomingDesc: 0 < value.length && value.length <= 2048 ? null : s.useJoin ? false : null })
         break
       case 'outgoingDesc':
-        value = this.refOutgoingDescControl.current?.value!
+        value = this.state.outgoingDesc!
         await this.setState({ validation_outgoingDesc: 0 < value.length && value.length <= 2048 ? null : s.useLeave ? false : null })
         break
       case 'channel':
@@ -161,16 +169,16 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
     let data: GreetingsType = {
       guild: this.state.data?.guild!,
       channel: this.state.newChannel?.id! || this.state.data?.channel!,
-      join_title_format: this.state.useJoin ? this.refIncomingTitleControl.current?.value! : '',
-      join_desc_format: this.state.useJoin ? this.refIncomingDescControl.current?.value! : '',
-      leave_title_format: this.state.useLeave ? this.refOutgoingTitleControl.current?.value! : '',
-      leave_desc_format: this.state.useLeave ? this.refOutgoingDescControl.current?.value! : ''
+      join_title_format: this.state.useJoin ? this.state.incomingTitle! : '',
+      join_desc_format: this.state.useJoin ? this.state.incomingDesc! : '',
+      leave_title_format: this.state.useLeave ? this.state.outgoingTitle! : '',
+      leave_desc_format: this.state.useLeave ? this.state.outgoingDesc! : ''
     }
 
     try {
       await axios.post(`${api}/servers/${this.props.guildId}/greetings`, data, {
         headers: {
-          token: localStorage.getItem('token')
+          Authorization: `Bearer ${localStorage.getItem('token')}`
         },
       })
     }
@@ -191,10 +199,65 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
       })
   }
 
-  render() {
+  isChanged = () => {
+    if (!this.state.fetchDone || !this.state.channelFetchDone) {
+      return false
+    }
+
+    let data = this.state.data!
+    return (
+      (data.channel !== this.state.newChannel?.id && this.state.newChannel !== null)
+      || this.state.incomingTitle !== null && (data.join_title_format !== this.state.incomingTitle)
+      || this.state.incomingDesc !== null && (data.join_desc_format !== this.state.incomingDesc)
+      || this.state.outgoingTitle !== null && (data.leave_title_format !== this.state.outgoingTitle)
+      || this.state.outgoingDesc !== null && (data.leave_desc_format !== this.state.outgoingDesc)
+      || (!!data.join_title_format || !!data.join_desc_format) !== this.state.useJoin
+      || (!!data.leave_title_format || !!data.leave_desc_format) !== this.state.useLeave
+    )
+  }
+
+  filterChannels = () => {
     const checkMark = <FontAwesomeIcon icon={faCheckCircle} className="mr-2 my-auto text-success" size="lg" />
 
-    return this.state.fetchDone ? (
+    return this.state.channels
+      ?.filter(one => one.type === "text")
+      ?.filter(one => one.name?.includes(this.state.channelSearch))
+      ?.sort((a, b) => a.rawPosition - b.rawPosition)
+      ?.map((one, idx) =>
+        <Card bg="dark" className="mr-2" onClick={() => { this.setState({ newChannel: one }) }} style={{
+          cursor: 'pointer',
+          marginBottom: 5
+        }}>
+          <Card.Body className="d-flex justify-content-between py-1 my-0 pr-2">
+            <div className="d-flex">
+              <FontAwesomeIcon icon={faHashtag} className="mr-2 my-auto" size="sm" />
+              <div style={{
+                fontSize: '13pt'
+              }}>
+                {one.name}
+              </div>
+              <div className="ml-2 small" style={{
+                color: 'gray'
+              }}>
+                {this.state.channels?.find(c => c.id === one.parentID)?.name}
+              </div>
+            </div>
+
+            {
+              this.state.newChannel === one
+                ? checkMark
+                : (!this.state.newChannel && one.id === this.state.data?.channel) && checkMark
+            }
+          </Card.Body>
+        </Card>
+      )
+  }
+
+  render() {
+    const channels = this.filterChannels()
+    console.log(this.state.incomingTitle)
+
+    return this.state.fetchDone && this.state.channelFetchDone ? (
       <div>
         <Row className="dashboard-section">
           <div>
@@ -225,13 +288,35 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
               <div className={!this.state.useJoin ? "d-none" : undefined}>
                 <Form.Group controlId="incomingTitle">
                   <Form.Label>메시지 제목</Form.Label>
-                  <Form.Control ref={this.refIncomingTitleControl as unknown as RefObject<TextareaAutosize>} className="shadow" isInvalid={this.state.validation_incomingTitle === false} as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕하세요!" defaultValue={this.state.data?.join_title_format || undefined} onChange={() => { this.handleFieldChange('incomingTitle') }} />
+                  <Form.Control
+                    className="shadow"
+                    isInvalid={this.state.validation_incomingTitle === false}
+                    as={TextareaAutosize}
+                    type="text"
+                    placeholder="예) {user}님, 안녕하세요!"
+                    defaultValue={this.state.data?.join_title_format || undefined}
+                    onChange={async (e) => {
+                      await this.setState({ incomingTitle: e.currentTarget.value })
+                      this.handleFieldChange('incomingTitle')
+                    }}
+                  />
                   <Form.Control.Feedback type="invalid">빈칸일 수 없으며 최대 256자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group controlId="incomingDesc">
                   <Form.Label>메시지 내용</Form.Label>
-                  <Form.Control ref={this.refIncomingDescControl as unknown as RefObject<TextareaAutosize>} className="shadow" isInvalid={this.state.validation_incomingDesc === false} as={TextareaAutosize} type="text" placeholder="예) {guild}에 오신 것을 환영합니다." defaultValue={this.state.data?.join_desc_format || undefined} onChange={() => { this.handleFieldChange('incomingDesc') }} />
+                  <Form.Control
+                    className="shadow"
+                    isInvalid={this.state.validation_incomingDesc === false}
+                    as={TextareaAutosize}
+                    type="text"
+                    placeholder="예) {guild}에 오신 것을 환영합니다."
+                    defaultValue={this.state.data?.join_desc_format || undefined}
+                    onChange={async (e) => {
+                      await this.setState({ incomingDesc: e.currentTarget.value })
+                      this.handleFieldChange('incomingDesc')
+                    }}
+                  />
                   <Form.Control.Feedback type="invalid">빈칸일 수 없으며 최대 2048자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
               </div>
@@ -254,13 +339,35 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
               <div className={!this.state.useLeave ? "d-none" : undefined}>
                 <Form.Group controlId="outgoingTitle">
                   <Form.Label>메시지 제목</Form.Label>
-                  <Form.Control ref={this.refOutgoingTitleControl as unknown as RefObject<TextareaAutosize>} className="shadow" isInvalid={this.state.validation_outgoingTitle === false} as={TextareaAutosize} type="text" placeholder="예) {user}님, 안녕히가세요" defaultValue={this.state.data?.leave_title_format || undefined} onChange={() => { this.handleFieldChange('outgoingTitle') }} />
+                  <Form.Control
+                    className="shadow"
+                    isInvalid={this.state.validation_outgoingTitle === false}
+                    as={TextareaAutosize}
+                    type="text"
+                    placeholder="예) {user}님, 안녕히가세요"
+                    defaultValue={this.state.data?.leave_title_format || undefined}
+                    onChange={async (e) => {
+                      await this.setState({ outgoingTitle: e.currentTarget.value })
+                      this.handleFieldChange('outgoingTitle')
+                    }}
+                  />
                   <Form.Control.Feedback type="invalid">빈칸일 수 없으며 최대 256자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group controlId="outgoingDesc">
                   <Form.Label>메시지 내용</Form.Label>
-                  <Form.Control ref={this.refOutgoingDescControl as unknown as RefObject<TextareaAutosize>} className="shadow" isInvalid={this.state.validation_outgoingDesc === false} as={TextareaAutosize} type="text" placeholder="예) {user}님이 나갔습니다." defaultValue={this.state.data?.leave_desc_format || undefined} onChange={() => { this.handleFieldChange('outgoingDesc') }} />
+                  <Form.Control
+                    className="shadow"
+                    isInvalid={this.state.validation_outgoingDesc === false}
+                    as={TextareaAutosize}
+                    type="text"
+                    placeholder="예) {user}님이 나갔습니다."
+                    defaultValue={this.state.data?.leave_desc_format || undefined}
+                    onChange={async (e) => {
+                      await this.setState({ outgoingDesc: e.currentTarget.value })
+                      this.handleFieldChange('outgoingDesc')
+                    }}
+                  />
                   <Form.Control.Feedback type="invalid">빈칸일 수 없으며 최대 2048자를 초과할 수 없습니다!</Form.Control.Feedback>
                 </Form.Group>
               </div>
@@ -297,10 +404,7 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
                             <input hidden={true} />
                             <Form.Control type="text" placeholder="채널 검색" onChange={(e) => this.setState({ channelSearch: e.target.value })} />
                             <Form.Text className="py-1">
-                              {this.state.channels
-                                ?.filter(one => one.type === "text")
-                                .filter(one => one.name?.includes(this.state.channelSearch))
-                                .sort((a, b) => Number(a.position) - Number(b.position)).length}개 채널 찾음
+                              {channels?.length}개 채널 찾음
                             </Form.Text>
                           </Row>
                           <Row style={{
@@ -311,39 +415,7 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
                           }}>
                             {
                               this.state.channels
-                                ? this.state.channels
-                                  .filter(one => one.type === "text")
-                                  .filter(one => one.name?.includes(this.state.channelSearch))
-                                  .sort((a, b) => Number(a.position) - Number(b.position))
-                                  .map((one, idx) =>
-                                    <Card bg="dark" className="mr-2" onClick={() => { this.setState({ newChannel: one }) }} style={{
-                                      cursor: 'pointer',
-                                      marginBottom: 5
-                                    }}>
-                                      <Card.Body className="d-flex justify-content-between py-1 my-0 pr-2">
-                                        <div className="d-flex">
-                                          <FontAwesomeIcon icon={faHashtag} className="mr-2 my-auto" size="sm" />
-                                          <div style={{
-                                            fontSize: '13pt'
-                                          }}>
-                                            {one.name}
-                                          </div>
-                                          <div className="ml-2 small" style={{
-                                            color: 'gray'
-                                          }}>
-                                            {this.state.channels?.find(c => c.id === one.parentID)?.name}
-                                          </div>
-                                        </div>
-
-                                        {
-                                          this.state.newChannel === one
-                                            ? checkMark
-                                            : (!this.state.newChannel && one.id === this.state.data?.channel) && checkMark
-                                        }
-                                      </Card.Body>
-                                    </Card>
-                                  )
-
+                                ? channels
                                 : <h4>불러오는 중</h4>
                             }
                           </Row>
@@ -361,11 +433,10 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
               <Row className="mt-4">
                 <Button
                   variant={this.state.saveError ? "danger" : "aztra"}
-                  disabled={this.state.saving || this.state.saveError}
-                  type="button"
+                  disabled={this.state.saving || this.state.saveError || !this.isChanged()}
                   onClick={this.handleSubmit}
                   style={{
-                    minWidth: 120
+                    minWidth: 140
                   }}
                 >
                   {
@@ -374,7 +445,7 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
                         <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
                         <span className="pl-2">저장 중...</span>
                       </>
-                      : <span>{this.state.saveError ? "오류" : "저장하기"}</span>
+                      : <span>{this.state.saveError ? "오류" : this.isChanged() ? "저장하기" : "저장됨"}</span>
                   }
                 </Button>
               </Row>

@@ -1,4 +1,3 @@
-import { Switch } from '@material-ui/core'
 import React from 'react'
 import { Col, Form, Row } from 'react-bootstrap'
 
@@ -34,7 +33,6 @@ export default class Leveling extends React.Component<LevelingProps, LevelingSta
                 <h4>레벨 메시지 설정</h4>
               </Row>
 
-              <Switch color="primary" />
               <Form.Group controlId="incomingUse">
                 <Form.Check
                   type="switch"

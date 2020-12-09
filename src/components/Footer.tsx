@@ -26,7 +26,7 @@ export default class Footer extends Component<{}, FooterState> {
             <Row>
               <Col md={5} className="mt-md-0 mt-3">
                 <h4 className="text-uppercase no-drag" onClick={this.hiddenClick}>
-                  Aztra
+                  Aztra {process.env.NODE_ENV === "development" && 'Beta'}
                 </h4>
                 <p className="mb-2" style={{
                   fontSize: '13pt'

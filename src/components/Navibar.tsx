@@ -52,7 +52,7 @@ export default class Navibar extends Component<{}, NavibarState> {
               <Navbar.Brand href="/" style={{
                 fontWeight: 500
               }}>
-                Aztra
+                Aztra {process.env.NODE_ENV === "development" && 'βeta'}
               </Navbar.Brand>
               <Navbar.Toggle aria-controls="navbar-nav" />
               <Navbar.Collapse id="navbar-nav">
