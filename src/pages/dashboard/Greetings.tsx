@@ -172,7 +172,7 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
   save = async () => {
     this.setState({ saving: true })
     let data: GreetingsType = {
-      guild: this.state.data?.guild!,
+      guild: this.props.guildId!,
       channel: this.state.newChannel?.id! || this.state.data?.channel!,
       join_title_format: this.state.useJoin ? this.state.incomingTitle! : '',
       join_desc_format: this.state.useJoin ? this.state.incomingDesc! : '',
@@ -224,7 +224,6 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
   }
 
   filterChannels = () => {
-
     return this.state.channels
       ?.filter(one => one.type === "text")
       ?.filter(one => one.name?.includes(this.state.channelSearch))
