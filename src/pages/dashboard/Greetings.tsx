@@ -1,15 +1,16 @@
-import React, { Component, createRef, RefObject } from 'react';
+import React, { Component } from 'react';
 import { Button, Row, Col, Form, Spinner, Container, Card, Alert } from 'react-bootstrap'
 import TextareaAutosize from 'react-textarea-autosize'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHashtag, faCheckCircle, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
+import { faHashtag, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 
 import axios from 'axios'
 
 import { Greetings as GreetingsType } from '../../types/dbtypes/greetings'
 import api from '../../datas/api'
 import { ChannelMinimal } from '../../types/DiscordTypes';
+import ChannelSelectCard from '../../components/forms/ChannelSelectCard';
 
 interface GreetingProps {
   readonly guildId?: string
@@ -80,9 +81,13 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
       this.setState({ data: res.data })
       const useJoin = res.data.join_title_format || res.data.join_desc_format
       const useLeave = res.data.leave_title_format || res.data.leave_desc_format
-      this.setState({
+      await this.setState({
         useJoin: !!useJoin,
-        useLeave: !!useLeave
+        useLeave: !!useLeave,
+        incomingTitle: res.data.join_title_format || '',
+        incomingDesc: res.data.join_desc_format || '',
+        outgoingTitle: res.data.leave_title_format || '',
+        outgoingDesc: res.data.leave_desc_format || ''
       })
     }
     catch (e) {
@@ -175,12 +180,14 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
       leave_desc_format: this.state.useLeave ? this.state.outgoingDesc! : ''
     }
 
+
     try {
       await axios.post(`${api}/servers/${this.props.guildId}/greetings`, data, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         },
       })
+      this.setState({ data })
     }
     catch (e) {
       this.setState({ saveError: true })
@@ -207,55 +214,36 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
     let data = this.state.data!
     return (
       (data.channel !== this.state.newChannel?.id && this.state.newChannel !== null)
-      || this.state.incomingTitle !== null && (data.join_title_format !== this.state.incomingTitle)
-      || this.state.incomingDesc !== null && (data.join_desc_format !== this.state.incomingDesc)
-      || this.state.outgoingTitle !== null && (data.leave_title_format !== this.state.outgoingTitle)
-      || this.state.outgoingDesc !== null && (data.leave_desc_format !== this.state.outgoingDesc)
+      || ((data.join_title_format || '') !== this.state.incomingTitle && this.state.useJoin)
+      || ((data.join_desc_format || '') !== this.state.incomingDesc && this.state.useJoin)
+      || ((data.leave_title_format || '') !== this.state.outgoingTitle && this.state.useLeave)
+      || ((data.leave_desc_format || '') !== this.state.outgoingDesc && this.state.useLeave)
       || (!!data.join_title_format || !!data.join_desc_format) !== this.state.useJoin
       || (!!data.leave_title_format || !!data.leave_desc_format) !== this.state.useLeave
     )
   }
 
   filterChannels = () => {
-    const checkMark = <FontAwesomeIcon icon={faCheckCircle} className="mr-2 my-auto text-success" size="lg" />
 
     return this.state.channels
       ?.filter(one => one.type === "text")
       ?.filter(one => one.name?.includes(this.state.channelSearch))
       ?.sort((a, b) => a.rawPosition - b.rawPosition)
-      ?.map((one, idx) =>
-        <Card bg="dark" className="mr-2" onClick={() => { this.setState({ newChannel: one }) }} style={{
-          cursor: 'pointer',
-          marginBottom: 5
-        }}>
-          <Card.Body className="d-flex justify-content-between py-1 my-0 pr-2">
-            <div className="d-flex">
-              <FontAwesomeIcon icon={faHashtag} className="mr-2 my-auto" size="sm" />
-              <div style={{
-                fontSize: '13pt'
-              }}>
-                {one.name}
-              </div>
-              <div className="ml-2 small" style={{
-                color: 'gray'
-              }}>
-                {this.state.channels?.find(c => c.id === one.parentID)?.name}
-              </div>
-            </div>
-
-            {
-              this.state.newChannel === one
-                ? checkMark
-                : (!this.state.newChannel && one.id === this.state.data?.channel) && checkMark
-            }
-          </Card.Body>
-        </Card>
+      ?.map(one =>
+        <ChannelSelectCard
+          key={one.id}
+          selected={this.state.newChannel === one || (!this.state.newChannel && one.id === this.state.data?.channel)}
+          channelData={{
+            channelName: one.name,
+            parentChannelName: this.state.channels?.find(c => c.id === one.parentID)?.name
+          }}
+          onClick={() => { this.setState({ newChannel: one }) }}
+        />
       )
   }
 
   render() {
     const channels = this.filterChannels()
-    console.log(this.state.incomingTitle)
 
     return this.state.fetchDone && this.state.channelFetchDone ? (
       <div>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, ButtonGroup, Card, Col, Dropdown, Row, Container } from 'react-bootstrap'
+import { Button, Card, Col, Row, Container } from 'react-bootstrap'
 import Badge from 'react-bootstrap/esm/Badge'
 
 
@@ -49,16 +49,9 @@ export default class MemberListCard extends React.PureComponent<MemberListCardPr
             </div>
           </Col>
           <Col sm={4} className="d-flex justify-content-sm-end px-0">
-            <Dropdown as={ButtonGroup} className="dropdown-menu-dark d-flex">
-              <Button className="my-auto" variant="dark" size="sm" href={`/dashboard/${this.props.guildId}/members/${this.props.member.user.id}`}>
-                관리
-              </Button>
-              <Dropdown.Toggle split variant="dark" size="sm"/>
-
-              <Dropdown.Menu>
-                <Dropdown.Item className="dropdown-item-dark">ㅎㅇ</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+            <Button className="my-auto" variant="dark" size="sm" href={`/dashboard/${this.props.guildId}/members/${this.props.member.user.id}`}>
+              관리
+            </Button>
           </Col>
         </Card.Body>
       </Card>
