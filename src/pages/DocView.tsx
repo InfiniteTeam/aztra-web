@@ -9,22 +9,23 @@ interface DocViewProps {
 
 const DocView: React.FC<DocViewProps> = ({ src }) => {
   return (
-    <Container fluid="sm" style={{
-      backgroundColor: "ghostwhite",
-      paddingLeft: 30,
-      paddingRight: 30
-    }}
-      className="shadow-sm">
-      <div className="pt-5" />
+    <Container
+      fluid="sm"
+      style={{
+        backgroundColor: "rgb(55, 61, 67)",
+        paddingLeft: 30,
+        paddingRight: 30
+      }}
+      className="shadow-sm"
+    >
       <ReactMarkdown
-        className="markdown"
+        className="markdown px-2 py-5"
         source={src}
         renderers={{
           heading: heading
         }}
         escapeHtml={false}
       />
-      <div className="pt-5" />
     </Container>
   )
 }

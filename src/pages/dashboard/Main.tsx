@@ -121,14 +121,14 @@ export default class Main extends Component<MainProps, MainState> {
           <Col />
         </Row>
 
-        <Row className="justify-content-between">
+        <Row>
           <h3>알림 센터</h3>
-          <div>
+          <div className="ml-4">
             <Button variant="secondary" size="sm">더 보기</Button>
           </div>
         </Row>
         <Row className="dashboard-section">
-          <Col xs={3}>
+          <Col xs={6} md={3}>
             <Card className="Dashboard-card my-3 shadow" bg="dark">
               <Card.Body>
                 <Card.Title>개발 중</Card.Title>

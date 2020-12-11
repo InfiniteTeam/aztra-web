@@ -17,7 +17,6 @@ export default class Statistics extends React.Component<StatisticsProps> {
     let url = ref.current?.chartInstance.toBase64Image()
 
     const link = document.createElement('a')
-    console.log(url)
     link.href = url
     link.download = "chart.png"
     document.body.appendChild(link)

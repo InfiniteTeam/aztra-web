@@ -16,14 +16,14 @@ import DashboardRoute from './components/DashboardRoute'
 import DashboardServers from './pages/dashboard/Servers'
 import DocsMain from './pages/DocsMain'
 
-import betaMD from './docs/cbt1.md'
+import Aztrart from './aztrart.txt'
+
 import DocView from './pages/DocView'
+import betaMD from './docs/cbt1.md'
 
 export default class App extends Component {
   async componentDidMount() {
-    await fetch('/aztrart.txt')
-      .then(r => r.text())
-      .then(art => console.log(`%c${art}`, 'color:MediumPurple'))
+    console.log(`%c${Aztrart}`, 'color:MediumPurple')
 
     if (process.env.NODE_ENV === 'production') {
       let style = 'font-family: NanumSquare; font-size: 16pt;'

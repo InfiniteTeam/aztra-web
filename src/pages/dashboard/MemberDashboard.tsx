@@ -80,7 +80,6 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
           Authorization: `Bearer ${token}`
         }
       })
-      console.log(res.data)
       this.setState({ exps: res.data })
     }
     finally {
@@ -117,7 +116,6 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
         break
     }
 
-    console.log(member?.user.id)
     const exp = this.state.exps?.find(m => m.id === member?.user.id)?.exp || 0
     const level = calcLevel(exp)
     const reqExp = getRequiredEXP(level)

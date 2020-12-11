@@ -1,15 +1,22 @@
+$font-family-default: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
 .markdown {
+	color: white;
+
 	h1, h2, h3, h4, h5, h6 {
 		font-family: 'NanumSquare';
-		font-weight: 800;
+		font-weight: 600;
 	}
+
 	h6 {
 		font-family: 'NanumBarunGothic';
 		font-weight: bold;
 	}
+
 	p, li {
 		font-family: 'NanumBarunGothic';
-		font-size: 12pt;
+		letter-spacing: 0.1px;
+		font-size: 12.4pt;
 		code {
 			color: rgb(255, 255, 255);
 			background-color: rgb(102, 102, 102);
@@ -19,14 +26,21 @@
 			padding-right: 2px;
 		}
 	}
+
 	img.emoji {
-		height: 12pt;
-		width: 12pt;
+		height: 13pt;
+		width: 13pt;
 	}
+
 	img {
 		margin-left: 0.4rem;
 		margin-right: 0.4rem;
 	}
+
+	hr {
+		border-color: rgb(87, 87, 92);
+	}
+
 	@include media-breakpoint-up(xs) {
 		img {
 			max-width: 100%;

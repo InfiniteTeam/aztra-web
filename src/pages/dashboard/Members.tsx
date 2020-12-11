@@ -39,7 +39,6 @@ export default class Members extends PureComponent<MembersProps, MembersState> {
           Authorization: `Bearer ${token}`
         }
       })
-      console.log(res.data)
       this.setState({ members: res.data })
     }
     catch (e) {
@@ -64,9 +63,7 @@ export default class Members extends PureComponent<MembersProps, MembersState> {
   }
 
   handleSearchOnChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    console.time()
     await this.setState({ memberSearch: e.target.value })
-    console.timeEnd()
   }
 
   render() {

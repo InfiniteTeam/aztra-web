@@ -62,7 +62,6 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
           Authorization: `Bearer ${token}`
         }
       })
-      console.log(res.data)
       this.setState({ members: res.data })
     }
     catch (e) {
@@ -78,7 +77,6 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
     if (token) {
       this.getWarns(token)
       this.getMembers(token)
-      console.log(this.state.data)
     }
     else {
       window.location.assign('/login')
@@ -149,7 +147,7 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
                     </Card>
                   })
                   : <div className="d-flex align-items-center justify-content-center h-75">
-                    <div className="my-4" style={{color: 'lightgray'}}>경고가 하나도 없습니다! 평화롭네요.</div>
+                    <div className="my-4" style={{ color: 'lightgray' }}>경고가 하나도 없습니다! 평화롭네요.</div>
                   </div>
                 : (
                   <div className="d-flex align-items-center justify-content-center flex-column">
@@ -168,24 +166,9 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
                 <Button variant="aztra" className="shadow" size="sm">더보기</Button>
               </div>
             </div>
-            <Card bg="dark" className="mb-2 shadow-sm shadow">
-              <Card.Body className="py-2">
-                <FontAwesomeIcon icon={faTrophy} className="mr-2" color="gold" />
-                1위 - Aztra
-              </Card.Body>
-            </Card>
-            <Card bg="dark" className="mb-2 shadow-sm shadow">
-              <Card.Body className="py-2">
-                <FontAwesomeIcon icon={faTrophy} className="mr-2" color="silver" />
-                2위 - ArpaAP
-              </Card.Body>
-            </Card>
-            <Card bg="dark" className="mb-2 shadow-sm shadow">
-              <Card.Body className="py-2">
-                <FontAwesomeIcon icon={faTrophy} className="mr-2" color="chocolate" />
-                3위 - Dacon
-              </Card.Body>
-            </Card>
+            <div>
+              나중에 개발될 기능입니다!
+            </div>
           </Col>
         </Row>
         <Row>
@@ -212,24 +195,9 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
                 </OverlayTrigger>
               </div>
             </div>
-            <Table variant="dark" hover>
-              <thead>
-                <tr>
-                  <th>경고 수</th>
-                  <th>수행할 작업</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>4회</td>
-                  <td>해당 멤버 추방</td>
-                </tr>
-                <tr>
-                  <td>7회</td>
-                  <td>해당 멤버 차단</td>
-                </tr>
-              </tbody>
-            </Table>
+            <div>
+              나중에 개발될 기능입니다!
+            </div>
           </Col>
         </Row>
       </div>

@@ -97,7 +97,7 @@ export default class Servers extends Component<{}, ServersState> {
                   {
                     one.bot_joined
                       ? <>
-                        <FontAwesomeIcon icon={faStar} className="mr-3" />
+                        
                         <Button variant="success" size="sm" href={`/dashboard/${one.id}`}>대시보드</Button>
                       </>
                       : <Button variant="secondary" size="sm">초대하기</Button>

@@ -6,13 +6,12 @@ interface headingProps {
 }
 
 export const heading: React.FC<headingProps> = ({ level, children }) => {
-  const Heading: React.FC = () => React.createElement(`h${level}`);
   return (
-    <>
-      <Heading>
-        {children}
-      </Heading>
+    <div className="pt-3">
+      {
+        React.createElement(`h${level}`, null, children)
+      }
       <hr />
-    </>
+    </div>
   );
 }

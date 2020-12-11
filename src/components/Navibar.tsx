@@ -50,7 +50,8 @@ export default class Navibar extends Component<{}, NavibarState> {
           <Navbar bg="dark" expand="sm" fixed="top" className="nav-item no-drag navbar-dark shadow">
             <Container fluid="sm">
               <Navbar.Brand href="/" style={{
-                fontWeight: 500
+                fontFamily: 'NanumSquare',
+                fontWeight: 600
               }}>
                 Aztra {process.env.NODE_ENV === "development" && 'βeta'}
               </Navbar.Brand>
@@ -66,8 +67,8 @@ export default class Navibar extends Component<{}, NavibarState> {
                   <Nav.Link href="/docs" className="Navlink">
                     봇 가이드
                   </Nav.Link>
-                  <Nav.Link href="/premium" className="Navlink">
-                    Aztra Premium
+                  <Nav.Link href="/cbt-1" className="Navlink">
+                    Aztra CBT
                   </Nav.Link>
                 </Nav>
                 <Nav>

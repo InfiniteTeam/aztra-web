@@ -184,7 +184,7 @@ export interface MemberExtended extends MemberMinimal {
     manageable: boolean
 
     highestRole: string
-    hoistRole: string
+    hoistRole: string | null
 
     user: UserExtended
 }
