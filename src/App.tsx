@@ -14,6 +14,10 @@ import Navibar from './components/Navibar'
 import Footer from './components/Footer'
 import DashboardRoute from './components/DashboardRoute'
 import DashboardServers from './pages/dashboard/Servers'
+import DocsMain from './pages/DocsMain'
+
+import betaMD from './docs/cbt1.md'
+import DocView from './pages/DocView'
 
 export default class App extends Component {
   async componentDidMount() {
@@ -45,6 +49,8 @@ export default class App extends Component {
               <Route exact path="/servers" component={DashboardServers} />
               <Route exact path="/premium" component={Premium} />
               <Route exact path="/praise" component={Praise} />
+              <Route exact path="/docs" component={DocsMain} />
+              <Route exact path="/cbt-1" render={props => <DocView src={betaMD} {...props} />} />
               <Route path="/dashboard/:serverid(\d+)" component={DashboardRoute} />
               <Route component={NotFound} />
             </Switch>

@@ -5,12 +5,12 @@ interface headingProps {
   children: React.ReactNode
 }
 
-export default function heading(props: headingProps) {
-  const Heading: React.FC = () => React.createElement(`h${props.level}`);
+export const heading: React.FC<headingProps> = ({ level, children }) => {
+  const Heading: React.FC = () => React.createElement(`h${level}`);
   return (
     <>
       <Heading>
-        {props.children}
+        {children}
       </Heading>
       <hr />
     </>

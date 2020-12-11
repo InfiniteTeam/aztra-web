@@ -63,6 +63,9 @@ export default class Navibar extends Component<{}, NavibarState> {
                   <Nav.Link href="/servers" className="Navlink">
                     대시보드
                   </Nav.Link>
+                  <Nav.Link href="/docs" className="Navlink">
+                    봇 가이드
+                  </Nav.Link>
                   <Nav.Link href="/premium" className="Navlink">
                     Aztra Premium
                   </Nav.Link>
