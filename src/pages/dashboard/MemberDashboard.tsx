@@ -7,7 +7,7 @@ import { Link, match } from 'react-router-dom';
 import { Row, Col, Card, Container, Spinner, Badge, Button, Alert, OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBug, faExclamationTriangle, faListUl, faStream, faUserEdit, faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import { faBug, faExclamationTriangle, faStream, faUserEdit, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import BackTo from '../../components/BackTo';
 
@@ -309,7 +309,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
                 <Card.Body className="py-2 d-flex justify-content-between">
                   <div>
                     <FontAwesomeIcon icon={faBug} className="mr-2" />
-                    알파를 버그로 오지게 뚜드렸습니다.
+                    버그나 오류를 발견하셨다면 개발팀에 알려주세요
                   </div>
                   <small style={{
                     color: 'lightgrey'
@@ -322,15 +322,12 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
                 <Card.Body className="py-2 d-flex justify-content-between">
                   <div>
                     <FontAwesomeIcon icon={faUserEdit} className="mr-2" />
-                    닉네임을 변경했습니다.
-                    <code> Aztra</code>
-                    {' → '}
-                    <code>아즈트라</code>
+                    이 기능은 개발중입니다.
                   </div>
                   <small style={{
                     color: 'lightgrey'
                   }}>
-                    3시간 전
+                    금방
                   </small>
                 </Card.Body>
               </Card>
@@ -343,7 +340,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
                   <small style={{
                     color: 'lightgrey'
                   }}>
-                    2개월 전
+                    {dayjs.utc(member?.joinedAt!).local().fromNow()}
                   </small>
                 </Card.Body>
               </Card>
