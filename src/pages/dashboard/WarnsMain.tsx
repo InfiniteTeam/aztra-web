@@ -2,7 +2,7 @@ import React from 'react'
 import api from '../../datas/api'
 import axios from 'axios'
 import { Warns as WarnsType } from '../../types/dbtypes/warns'
-import { Button, Card, Col, OverlayTrigger, Popover, Row, Spinner, Table } from 'react-bootstrap'
+import { Button, Card, Col, OverlayTrigger, Popover, Row, Spinner, Table, Tooltip } from 'react-bootstrap'
 import { faTrophy } from '@fortawesome/free-solid-svg-icons'
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -14,6 +14,8 @@ import dayjsRelativeTime from 'dayjs/plugin/relativeTime'
 import dayjsUTC from 'dayjs/plugin/utc'
 import 'dayjs/locale/ko'
 import { MemberMinimal } from '../../types/DiscordTypes'
+import { Link } from 'react-router-dom'
+import { stringify } from 'querystring'
 dayjs.locale('ko')
 dayjs.extend(dayjsRelativeTime)
 dayjs.extend(dayjsUTC)
@@ -84,6 +86,18 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
   }
 
   render() {
+    let warnsRank: { [key: string]: number } = {}
+    for (let one of this.state.data || []) {
+      if (warnsRank[one.member] === undefined) {
+        warnsRank[one.member] = 1
+      }
+      else {
+        warnsRank[one.member] += one.count
+      }
+    }
+
+    let warnsRankArray = Object.entries(warnsRank).sort((a, b) => b[1] - a[1])
+
     return (
       <div>
         <Row className="dashboard-section">
@@ -94,7 +108,7 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
             <div className="d-flex justify-content-between">
               <h4 className="mb-3">최근 경고 목록</h4>
               <div>
-                <Button variant="aztra" className="shadow align-items-center d-flex" size="sm" href={`/dashboard/${this.props.guildId}/warns-list`}>
+                <Button as={Link} variant="aztra" className="shadow align-items-center d-flex" size="sm" to={`/dashboard/${this.props.guildId}/warns-list`}>
                   <MenuIcon className="mr-2" />
                   모두 보기
                 </Button>
@@ -104,34 +118,44 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
               this.state.warnsFetchDone && this.state.membersFetchDone
                 ? this.state.data?.length
                   ?
-                  this.state.data?.sort((a, b) =>
-                    new Date(b.dt).getTime() - new Date(a.dt).getTime()
-                  )?.map(one => {
+                  this.state.data
+                  ?.sort((a, b) => new Date(b.dt).getTime() - new Date(a.dt).getTime())
+                  .slice(0, 5)
+                  .map(one => {
                     const target = this.state.members?.find(m => m.user.id === one.member)?.user
                     return <Card bg="dark" className="mb-2 shadow-sm shadow">
-                      <Card.Body as={Row} className="py-2 d-flex justify-content-between">
-                        <Col xs={9} md={10} className="d-flex">
+                      <Card.Body as={Row} className="py-1 d-flex justify-content-between">
+                        <Col xs={9} className="d-flex px-2">
                           <div className="mr-2 my-auto" style={{
                             height: 35,
                             width: 35
                           }}>
-                            <img
-                              src={target?.avatar ? `https://cdn.discordapp.com/avatars/${target?.id}/${target?.avatar}` : target?.defaultAvatarURL}
-                              alt={target?.tag!}
-                              className="rounded-circle no-drag"
-                              style={{
-                                height: 35,
-                                width: 35
-                              }}
-                            />
+                            <OverlayTrigger
+                              placement="top"
+                              overlay={
+                                <Tooltip id={`warn-member-${one.member}`}>
+                                  {target?.tag}
+                                </Tooltip>
+                              }
+                            >
+                              <Link to={`/dashboard/${this.props.guildId}/members/${target?.id}`}>
+                                <img
+                                  src={target?.avatar ? `https://cdn.discordapp.com/avatars/${target?.id}/${target?.avatar}` : target?.defaultAvatarURL}
+                                  alt={target?.tag!}
+                                  className="rounded-circle no-drag"
+                                  style={{
+                                    height: 35,
+                                    width: 35
+                                  }}
+                                />
+                              </Link>
+                            </OverlayTrigger>
                           </div>
-                          <div className="my-auto d-inline-block text-truncate" style={{
-
-                          }}>
+                          <div className="my-auto d-inline-block text-truncate">
                             {one.reason}
                           </div>
                         </Col>
-                        <Col xs={3} md={2} className="d-flex align-items-center my-0 justify-content-end">
+                        <Col xs={3} className="d-flex px-2 align-items-center my-0 justify-content-end">
                           <div className="my-auto small" style={{
                             color: 'lightgrey'
                           }}>
@@ -167,7 +191,26 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
               </div>
             </div>
             <div>
-              나중에 개발될 기능입니다!
+              {
+                warnsRankArray
+                  .slice(0, 3)
+                  .map(one => {
+                    const rank = warnsRankArray.map(o => o[1]).indexOf(one[1]) + 1
+                    const target = this.state.members?.find(m => m.user.id === one[0])
+                    return (
+                      <Card bg="dark" className="mb-2 shadow-sm shadow">
+                        <Card.Body className="py-2">
+                          <FontAwesomeIcon icon={faTrophy} className="mr-2" color={rank === 1 ? "gold" : rank === 2 ? "silver" : rank === 3 ? "chocolate" : undefined} />
+                          {`${rank}위 - `}
+                          <Link className="font-weight-bold" to={`/dashboard/${this.props.guildId}/members/${target?.user.id}`}>
+                            {target?.displayName}
+                          </Link>
+                          {` (${one[1]}회)`}
+                      </Card.Body>
+                      </Card>
+                    )
+                  })
+              }
             </div>
           </Col>
         </Row>

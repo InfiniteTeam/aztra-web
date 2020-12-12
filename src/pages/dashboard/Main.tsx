@@ -109,10 +109,10 @@ export default class Main extends Component<MainProps, MainState> {
                 </Card.Title>
                 <Card.Text as="div" className="lines">
                   <p>
-                    전체 멤버 수: x
+                    전체 멤버 수: {this.state.members?.length} 명
                   </p>
                   <p>
-                    온라인 멤버 수: y
+                    전체 중 봇 멤버: {this.state.members?.filter(m => m.user.bot).length} 명
                   </p>
                 </Card.Text>
               </Card.Body>

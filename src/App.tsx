@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Route, Switch, BrowserRouter } from 'react-router-dom'
+import ScrollToTop from './components/ScrollToTop'
 
 import oauth from './datas/oauth'
 
@@ -38,25 +39,27 @@ export default class App extends Component {
   render() {
     return (
       <BrowserRouter>
-        <Switch>
-          <Route exact path="/login" render={() => <Redirecting to={oauth.discord_oauth2} />} />
-          <Route exact path="/logout" component={Logout} />
-          <Route exact path="/auth" component={Auth} />
-          <Route>
-            <Navibar />
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <Route exact path="/servers" component={DashboardServers} />
-              <Route exact path="/premium" component={Premium} />
-              <Route exact path="/praise" component={Praise} />
-              <Route exact path="/docs" component={DocsMain} />
-              <Route exact path="/cbt-1" render={props => <DocView src={betaMD} {...props} />} />
-              <Route path="/dashboard/:serverid(\d+)" component={DashboardRoute} />
-              <Route component={NotFound} />
-            </Switch>
-            <Footer />
-          </Route>
-        </Switch>
+        <ScrollToTop>
+          <Switch>
+            <Route exact path="/login" render={() => <Redirecting to={oauth.discord_oauth2} />} />
+            <Route exact path="/logout" component={Logout} />
+            <Route exact path="/auth" component={Auth} />
+            <Route>
+              <Navibar />
+              <Switch>
+                <Route exact path="/" component={Home} />
+                <Route exact path="/servers" component={DashboardServers} />
+                <Route exact path="/premium" component={Premium} />
+                <Route exact path="/praise" component={Praise} />
+                <Route exact path="/docs" component={DocsMain} />
+                <Route exact path="/cbt-1" render={props => <DocView src={betaMD} {...props} />} />
+                <Route path="/dashboard/:serverid(\d+)" component={DashboardRoute} />
+                <Route component={NotFound} />
+              </Switch>
+              <Footer />
+            </Route>
+          </Switch>
+        </ScrollToTop>
       </BrowserRouter>
     )
   }

@@ -1,7 +1,7 @@
 $font-family-default: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
 .markdown {
-	color: white;
+	color: whitesmoke;
 
 	h1, h2, h3, h4, h5, h6 {
 		font-family: 'NanumSquare';
@@ -15,7 +15,7 @@ $font-family-default: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "He
 
 	p, li {
 		font-family: 'NanumBarunGothic';
-		letter-spacing: 0.1px;
+		letter-spacing: 0.3px;
 		font-size: 12.4pt;
 		code {
 			color: rgb(255, 255, 255);

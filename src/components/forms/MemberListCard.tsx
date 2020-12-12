@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button, Card, Col, Row, Container } from 'react-bootstrap'
 import Badge from 'react-bootstrap/esm/Badge'
+import { Link } from 'react-router-dom'
 
 
 interface UserData {
@@ -49,7 +50,7 @@ export default class MemberListCard extends React.PureComponent<MemberListCardPr
             </div>
           </Col>
           <Col sm={4} className="d-flex justify-content-sm-end px-0">
-            <Button className="my-auto" variant="dark" size="sm" href={`/dashboard/${this.props.guildId}/members/${this.props.member.user.id}`}>
+            <Button as={Link} className="my-auto" variant="dark" size="sm" to={`/dashboard/${this.props.guildId}/members/${this.props.member.user.id}`}>
               관리
             </Button>
           </Col>

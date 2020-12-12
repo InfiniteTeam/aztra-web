@@ -150,6 +150,7 @@ const WarnsListCard: React.FC<WarnsListCardProps> = ({ target, warnby, warn, gui
         <ButtonGroup>
           <OverlayTrigger
             placement="top"
+            trigger="hover"
             overlay={
               <Tooltip id="warn-list-row-remove-warn">
                 이 경고 취소하기
@@ -180,12 +181,15 @@ const WarnsListCard: React.FC<WarnsListCardProps> = ({ target, warnby, warn, gui
               }}>
                 확인
               </Button>
-              <Button variant="dark" onClick={() => setShowDel(false)}>취소</Button>
+              <Button variant="dark" onClick={() => setShowDel(false)}>
+                닫기
+              </Button>
             </Modal.Footer>
           </Modal>
 
           <OverlayTrigger
             placement="top"
+            trigger="hover"
             overlay={
               <Tooltip id="warn-list-row-remove-warn">
                 경고 자세히 보기
@@ -248,7 +252,7 @@ const WarnsListCard: React.FC<WarnsListCardProps> = ({ target, warnby, warn, gui
             </Modal.Body>
             <Modal.Footer className="justify-content-between">
               <div>
-                <Button ref={copyButtonRef} variant="aztra" onClick={() => {
+                <Button ref={copyButtonRef} size="sm" variant="aztra" onClick={() => {
                   navigator.clipboard.writeText(warn.reason)
                     .then(async () => {
                       if (!copied) {
@@ -290,8 +294,18 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
     sortType: 'latest'
   }
 
+  parseQs = () => {
+    const params = new URLSearchParams(window.location.search)
+    let searchtype = params.get('type')
+    this.setState({ 
+      warnSearch: params.get('search') || '',
+      searchType: ['reason', 'target', 'warnby'].includes(searchtype || '') ? searchtype as WarnSearchType : 'reason'
+    })
+  }
+
   componentDidMount() {
     const token = localStorage.getItem('token')
+    this.parseQs()
     if (token) {
       this.getMembers(token)
       this.getWarns(token)
@@ -336,36 +350,38 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
   }
 
   filterSortWarns = (search?: string) => (
-    this.state.warns?.filter(one => {
-      if (!search) return true
-      let searchLowercase = search.toLowerCase()
+    this.state.warns
+      ?.filter(one => {
+        if (!search) return true
+        let searchLowercase = search.normalize().toLowerCase()
 
-      switch (this.state.searchType) {
-        case 'reason':
-          return one.reason.toLowerCase().includes(searchLowercase)
-        case 'target':
-          let target = this.state.members?.find(m => m.user.id === one.member)
-          return target?.user.username?.toLowerCase()?.includes(searchLowercase) || target?.nickname?.toLowerCase()?.includes(searchLowercase)
-        case 'warnby':
-          let warnby = this.state.members?.find(m => m.user.id === one.warnby)
-          return warnby?.user.username?.toLowerCase()?.includes(searchLowercase) || warnby?.nickname?.toLowerCase()?.includes(searchLowercase)
-        default:
-          return false
-      }
-    })?.sort((a, b) => {
-      switch (this.state.sortType) {
-        case 'latest':
-          return new Date(b.dt).getTime() - new Date(a.dt).getTime()
-        case 'oldest':
-          return new Date(a.dt).getTime() - new Date(b.dt).getTime()
-        case 'count':
-          return b.count - a.count
-        case 'count_least':
-          return a.count - b.count
-        default:
-          return 0
-      }
-    })!
+        switch (this.state.searchType) {
+          case 'reason':
+            return one.reason.normalize().toLowerCase().includes(searchLowercase)
+          case 'target':
+            let target = this.state.members?.find(m => m.user.id === one.member)
+            return target?.user.tag?.normalize().toLowerCase().includes(searchLowercase) || target?.nickname?.normalize().toLowerCase().includes(searchLowercase)
+          case 'warnby':
+            let warnby = this.state.members?.find(m => m.user.id === one.warnby)
+            return warnby?.user.tag?.normalize().toLowerCase().includes(searchLowercase) || warnby?.nickname?.normalize().toLowerCase().includes(searchLowercase)
+          default:
+            return false
+        }
+      })
+      .sort((a, b) => {
+        switch (this.state.sortType) {
+          case 'latest':
+            return new Date(b.dt).getTime() - new Date(a.dt).getTime()
+          case 'oldest':
+            return new Date(a.dt).getTime() - new Date(b.dt).getTime()
+          case 'count':
+            return b.count - a.count
+          case 'count_least':
+            return a.count - b.count
+          default:
+            return 0
+        }
+      })!
   )
 
   handleSearchOnChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -401,7 +417,7 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
       }}>
         <Row className="dashboard-section">
           <div>
-            <BackTo className="pl-2 mb-4" name="경고 관리" href={`/dashboard/${this.props.guildId}/warns`} />
+            <BackTo className="pl-2 mb-4" name="경고 관리" to={`/dashboard/${this.props.guildId}/warns`} />
             <h3>전체 경고 목록</h3>
           </div>
         </Row>
@@ -461,7 +477,7 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
 
                     <Row className="mb-2">
                       <input hidden={true} />
-                      <Form.Control ref={this.searchRef} type="text" placeholder="경고 검색" onChange={this.handleSearchOnChange} />
+                      <Form.Control ref={this.searchRef} type="text" placeholder="경고 검색" defaultValue={this.state.warnSearch} onChange={this.handleSearchOnChange} />
                     </Row>
 
                     <Row className="flex-column">
