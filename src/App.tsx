@@ -20,10 +20,15 @@ import DocsMain from './pages/DocsMain'
 import Aztrart from './aztrart.txt'
 
 import DocView from './pages/DocView'
+import DocsRoute from './routes/DocsRoute'
 import betaMD from './docs/cbt1.md'
 
 export default class App extends Component {
   async componentDidMount() {
+    if (localStorage.getItem('theme') == null) {
+      localStorage.setItem('theme', 'dark')
+    }
+
     console.log(`%c${Aztrart}`, 'color:MediumPurple')
 
     if (process.env.NODE_ENV === 'production') {
@@ -54,6 +59,7 @@ export default class App extends Component {
                 <Route exact path="/docs" component={DocsMain} />
                 <Route exact path="/cbt-1" render={props => <DocView src={betaMD} {...props} />} />
                 <Route path="/dashboard/:serverid(\d+)" component={DashboardRoute} />
+                <DocsRoute />
                 <Route component={NotFound} />
               </Switch>
               <Footer />

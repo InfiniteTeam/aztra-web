@@ -3,7 +3,8 @@ import { Redirect } from 'react-router-dom'
 
 export default class Logout extends Component {
   componentDidMount() {
-    localStorage.clear()
+    localStorage.removeItem('cached_user')
+    localStorage.removeItem('token')
   }
 
   render() {

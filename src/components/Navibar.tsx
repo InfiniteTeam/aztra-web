@@ -4,6 +4,7 @@ import axios, { AxiosError } from 'axios'
 import oauth2 from '../datas/oauth'
 import urljoin from 'url-join'
 import { User } from '../types/DiscordTypes'
+import { Link } from 'react-router-dom';
 
 interface NavibarState {
   user: User | null
@@ -44,12 +45,13 @@ export default class Navibar extends Component<{}, NavibarState> {
 
   render() {
     const user = this.state.user || JSON.parse(localStorage.getItem('cached_user')!)
+    const theme = localStorage.getItem('theme')
     return (
       <>
         <div style={{ paddingBottom: 57 }}>
-          <Navbar bg="dark" expand="sm" fixed="top" className="nav-item no-drag navbar-dark shadow">
-            <Container fluid="sm">
-              <Navbar.Brand href="/" style={{
+          <Navbar bg="dark" expand="md" fixed="top" className="nav-item no-drag navbar-dark shadow">
+            <Container fluid="md">
+              <Navbar.Brand as={Link} to="/" style={{
                 fontFamily: 'NanumSquare',
                 fontWeight: 600
               }}>
@@ -58,16 +60,16 @@ export default class Navibar extends Component<{}, NavibarState> {
               <Navbar.Toggle aria-controls="navbar-nav" />
               <Navbar.Collapse id="navbar-nav">
                 <Nav className="mr-auto">
-                  <Nav.Link href="/" className="Navlink">
+                  <Nav.Link as={Link} to="/" className="Navlink">
                     홈
                   </Nav.Link>
-                  <Nav.Link href="/servers" className="Navlink">
+                  <Nav.Link as={Link} to="/servers" className="Navlink">
                     대시보드
                   </Nav.Link>
-                  <Nav.Link href="/docs" className="Navlink">
+                  <Nav.Link as={Link} to="/docs" className="Navlink">
                     봇 가이드
                   </Nav.Link>
-                  <Nav.Link href="/cbt-1" className="Navlink">
+                  <Nav.Link as={Link} to="/cbt-1" className="Navlink">
                     Aztra CBT
                   </Nav.Link>
                 </Nav>

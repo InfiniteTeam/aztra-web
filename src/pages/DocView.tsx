@@ -8,25 +8,32 @@ interface DocViewProps {
 }
 
 const DocView: React.FC<DocViewProps> = ({ src }) => {
+  const theme = 'light' as unknown
+
+
   return (
-    <Container
-      fluid="sm"
+    <Container fluid
       style={{
-        backgroundColor: "rgb(55, 61, 67)",
+        backgroundColor: theme === 'dark' ? 'unset' : 'rgb(235, 235, 245)'
+      }}
+    >
+      <Container fluid="sm" style={{
+        backgroundColor: theme === "dark" ? "rgb(55, 61, 67)" : "rgb(252, 252, 255)",
         paddingLeft: 30,
         paddingRight: 30
       }}
-      className="shadow-sm"
-    >
-      <ReactMarkdown
-        className="markdown px-2 py-5"
-        source={src}
-        renderers={{
-          heading: heading
-        }}
-        escapeHtml={false}
-      />
-    </Container>
+        className="shadow"
+      >
+        <ReactMarkdown
+          className={`markdown px-2 py-5 ${theme === "dark" ? "markdown-dark" : "markdown-light"}`}
+          source={src}
+          renderers={{
+            heading: heading
+          }}
+          escapeHtml={false}
+        />
+      </Container>
+    </Container >
   )
 }
 

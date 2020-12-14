@@ -64,6 +64,8 @@ export default class Members extends PureComponent<MembersProps, MembersState> {
             return one.user.tag?.normalize().toLowerCase().includes(searchLowercase) || one.nickname?.normalize().toLowerCase().includes(searchLowercase)
           case 'id':
             return one.user.id.includes(search)
+          default:
+            return true
         }
       })
       .sort((a, b) => {

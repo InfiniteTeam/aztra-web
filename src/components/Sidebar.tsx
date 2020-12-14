@@ -1,13 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
-import { Badge, Collapse, Nav } from 'react-bootstrap'
+import { Nav } from 'react-bootstrap'
 import { PartialGuild } from '../types/DiscordTypes'
 import {
   Home as HomeIcon,
   PersonAdd as PersonAddIcon,
   Group as GroupIcon,
   ReportProblemRounded as ReportProblemRoundedIcon,
-  Assessment as AssessmentIcon,
   DataUsage as DataUsageIcon
 } from '@material-ui/icons'
 

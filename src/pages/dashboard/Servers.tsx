@@ -6,7 +6,6 @@ import api from '../../datas/api'
 import { Permissions } from 'discord.js'
 import { PartialGuildExtend } from '../../types/DiscordTypes'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 
 const swal = require('@sweetalert/with-react')

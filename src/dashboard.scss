@@ -72,7 +72,7 @@
     @extend .scrollbar;
 }
 
-.scrollbar {
+.scrollbar-dark {
     ::-webkit-scrollbar {
         background: transparent;
         width: 6px;
@@ -80,6 +80,19 @@
     }
     ::-webkit-scrollbar-thumb {
         background-color: rgb(88, 88, 100) !important;
+        border-radius: 15px;
+    }
+}
+
+.scrollbar {
+    ::-webkit-scrollbar {
+        background: rgb(214, 214, 224);
+        width: 8px;
+        height: 8px;
+        border-radius: 15px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background-color: rgb(169, 169, 185) !important;
         border-radius: 15px;
     }
 }
