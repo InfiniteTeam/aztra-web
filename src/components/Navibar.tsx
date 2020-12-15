@@ -45,7 +45,6 @@ export default class Navibar extends Component<{}, NavibarState> {
 
   render() {
     const user = this.state.user || JSON.parse(localStorage.getItem('cached_user')!)
-    const theme = localStorage.getItem('theme')
     return (
       <>
         <div style={{ paddingBottom: 57 }}>

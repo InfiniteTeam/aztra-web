@@ -2,7 +2,7 @@ import React from 'react'
 import api from '../../datas/api'
 import axios from 'axios'
 import { Warns as WarnsType } from '../../types/dbtypes/warns'
-import { Button, Card, Col, OverlayTrigger, Popover, Row, Spinner, Table, Tooltip } from 'react-bootstrap'
+import { Button, Card, Col, OverlayTrigger, Popover, Row, Spinner, Tooltip } from 'react-bootstrap'
 import { faTrophy } from '@fortawesome/free-solid-svg-icons'
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -15,7 +15,6 @@ import dayjsUTC from 'dayjs/plugin/utc'
 import 'dayjs/locale/ko'
 import { MemberMinimal } from '../../types/DiscordTypes'
 import { Link } from 'react-router-dom'
-import { stringify } from 'querystring'
 dayjs.locale('ko')
 dayjs.extend(dayjsRelativeTime)
 dayjs.extend(dayjsUTC)
