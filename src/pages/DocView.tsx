@@ -25,7 +25,7 @@ const DocView: React.FC<DocViewProps> = ({ src }) => {
         className="shadow"
       >
         <ReactMarkdown
-          className={`markdown px-2 py-5 ${theme === "dark" ? "markdown-dark" : "markdown-light"}`}
+          className={`markdown px-2 py-4 ${theme === "dark" ? "markdown-dark" : "markdown-light"}`}
           source={src}
           renderers={{
             heading: heading

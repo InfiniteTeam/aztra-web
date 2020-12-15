@@ -85,7 +85,9 @@ export default class Servers extends Component<{}, ServersState> {
               <Row>
                 <Col>
                   <div style={{ minHeight: 40 }} className="d-flex align-items-center">
-                    <img alt="" src={`https://cdn.discordapp.com/icons/${one.id}/${one.icon}.png`} style={{ maxHeight: 40, marginRight: 15, borderRadius: '70%' }} />
+                    {
+                      one.icon && <img alt={one.name} src={`https://cdn.discordapp.com/icons/${one.id}/${one.icon}.png`} style={{ maxHeight: 40, marginRight: 15, borderRadius: '70%' }} />
+                    }
                     <div>
                       {one.name
                     }</div>

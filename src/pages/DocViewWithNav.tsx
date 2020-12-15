@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { Button, Col, Container, Nav, Row } from 'react-bootstrap'
 import ReactMarkdown from 'react-markdown';
+import Twemoji from 'react-twemoji'
 import { heading } from '../components/MarkdownRenderer';
 import { GuideGroupType } from '../types/GuideIndexTypes';
 import { Link } from 'react-router-dom';
+import { ArrowForward as ArrowForwardIcon, ArrowBack as ArrowBackIcon } from '@material-ui/icons'
 
 interface DocViewWithNavProps {
   pageId: string
@@ -52,18 +54,21 @@ const DocViewWithNav: React.FC<DocViewWithNavProps> = ({ pageId, index }) => {
                 {sidebarHide ? '▼' : '▲'}
               </Button>
             </div>
-            <div className="d-none d-md-block" style={{
+            <div className={sidebarHide ? "d-none d-md-block" : undefined} style={{
               overflowY: 'scroll',
-              height: 'calc(100vh - 57px - 72px)',
-              borderRadius: 10,
+              height: 'calc(100vh - 57px - 72px)'
             }}>
               <Nav className="shadow-sm d-block" style={{
                 backgroundColor: 'rgb(254, 254, 255)',
+                borderRadius: 10,
+                padding: '5px 0'
               }}>
                 {
                   index.pages.map((one) => (
                     <Nav.Item>
-                      <Nav.Link as={Link} className="text-dark" to={`/docs/${index.id}/${one.id}`}>
+                      <Nav.Link as={Link} className="text-dark" to={`/docs/${index.id}/${one.id}`} style={{
+                        fontWeight: one.id === pageId ? 800 : 'normal'
+                      }}>
                         {one.title}
                       </Nav.Link>
                     </Nav.Item>
@@ -79,28 +84,46 @@ const DocViewWithNav: React.FC<DocViewWithNavProps> = ({ pageId, index }) => {
             paddingLeft: 30,
             paddingRight: 30
           }}
-          className="shadow py-5"
+          className="shadow py-4"
         >
-          <ReactMarkdown
-            className={`markdown  ${theme === "dark" ? "markdown-dark" : "markdown-light"}`}
-            source={index.pages.find(o => o.id === pageId)?.content || '# 404: 페이지를 찾을 수 없습니다!'}
-            renderers={{
-              heading: heading
-            }}
-            escapeHtml={false}
-          />
+          <Twemoji>
+            <ReactMarkdown
+              className={`markdown  ${theme === "dark" ? "markdown-dark" : "markdown-light"}`}
+              source={index.pages.find(o => o.id === pageId)?.content || '# 404: 페이지를 찾을 수 없습니다!'}
+              renderers={{
+                heading: heading
+              }}
+              escapeHtml={false}
+            />
+          </Twemoji>
           <div className="d-flex mt-5 px-1">
             {
               prevPage && (
-                <Button className="mr-auto" variant="outline-aztra" as={Link} to={`/docs/${index.id}/${prevPage.id}`}>
-                  이전 페이지 - [{prevPage.title}]
+                <Button className="mr-auto d-flex px-3" variant="outline-aztra" as={Link} to={`/docs/${index.id}/${prevPage.id}`}>
+                  <ArrowBackIcon className="my-auto mr-4" style={{ transform: 'scale(1.2)' }} />
+                  <div className="text-right">
+                    <small>
+                      이전 페이지
+                    </small>
+                    <div className="font-weight-bold">
+                      {prevPage.title}
+                    </div>
+                  </div>
                 </Button>
               )
             }
             {
               nextPage && (
-                <Button className="ml-auto" variant="aztra" as={Link} to={`/docs/${index.id}/${nextPage.id}`}>
-                  다음 페이지 - [{nextPage.title}]
+                <Button className="ml-auto d-flex px-3" variant="aztra" as={Link} to={`/docs/${index.id}/${nextPage.id}`}>
+                  <div className="text-left">
+                    <small>
+                      다음 페이지
+                    </small>
+                    <div className="font-weight-bold">
+                      {nextPage.title}
+                    </div>
+                  </div>
+                  <ArrowForwardIcon className="my-auto ml-4" style={{ transform: 'scale(1.2)' }} />
                 </Button>
               )
             }

@@ -3,9 +3,10 @@ import { GuideGroupType } from '../../types/GuideIndexTypes'
 import Icon from './icon.png'
 import GettingStarted from './getting-started.md'
 import BasicCommands from './basic-commands.md'
-
-export { GettingStarted }
-export { BasicCommands }
+import GeneralCommands from './general-commands.md'
+import LevelingCommands from './leveling-commands.md'
+import WarnCommands from './warn-commands.md'
+import ManageCommands from './manage-commands.md'
 
 const index: GuideGroupType = {
   id: "commands-guide",
@@ -22,6 +23,26 @@ const index: GuideGroupType = {
       id: "basic-commands",
       title: "기본 명령어",
       content: BasicCommands
+    },
+    {
+      id: "general-commands",
+      title: "일반 사용자 명령어",
+      content: GeneralCommands
+    },
+    {
+      id: "leveling-commands",
+      title: "레벨 명령어",
+      content: LevelingCommands
+    },
+    {
+      id: "warn-commands",
+      title: "경고 명령어",
+      content: WarnCommands
+    },
+    {
+      id: "manage-commands",
+      title: "관리 명령어",
+      content: ManageCommands
     }
   ]
 }
