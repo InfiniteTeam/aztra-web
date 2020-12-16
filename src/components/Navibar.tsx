@@ -1,4 +1,4 @@
-import React, { Component, createRef, RefObject } from 'react';
+import React, { Component } from 'react';
 import { Nav, Navbar, NavDropdown, Container } from 'react-bootstrap';
 import axios, { AxiosError } from 'axios'
 import oauth2 from '../datas/oauth'

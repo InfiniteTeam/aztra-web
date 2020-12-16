@@ -19,7 +19,6 @@ import api from '../datas/api'
 import { Permissions } from 'discord.js'
 import { PartialGuild } from '../types/DiscordTypes'
 import { match } from 'react-router-dom'
-import { faLaptopHouse } from '@fortawesome/free-solid-svg-icons'
 
 const swal = require('@sweetalert/with-react')
 
