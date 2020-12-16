@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createRef, RefObject } from 'react';
 import { Nav, Navbar, NavDropdown, Container } from 'react-bootstrap';
 import axios, { AxiosError } from 'axios'
 import oauth2 from '../datas/oauth'
@@ -9,12 +9,14 @@ import { Link } from 'react-router-dom';
 interface NavibarState {
   user: User | null
   loginDone: boolean
+  expanded: boolean
 }
 
 export default class Navibar extends Component<{}, NavibarState> {
   state: NavibarState = {
     user: null,
-    loginDone: false
+    loginDone: false,
+    expanded: false
   }
 
   getUserInfo = async (token: string) => {
@@ -43,12 +45,21 @@ export default class Navibar extends Component<{}, NavibarState> {
     !token || this.getUserInfo(token)
   }
 
+  handleOnToggle = (expanded: boolean) => {
+    this.setState({ expanded })
+  }
+
+  closeNavbar = () => {
+    this.setState({ expanded: false })
+    console.log('dsds')
+  }
+
   render() {
     const user = this.state.user || JSON.parse(localStorage.getItem('cached_user')!)
     return (
       <>
         <div style={{ paddingBottom: 57 }}>
-          <Navbar bg="dark" expand="md" fixed="top" className="nav-item no-drag navbar-dark shadow">
+          <Navbar bg="dark" expand="md" onToggle={this.handleOnToggle} expanded={this.state.expanded} fixed="top" className="no-drag navbar-dark shadow">
             <Container fluid="md">
               <Navbar.Brand as={Link} to="/" style={{
                 fontFamily: 'NanumSquare',
@@ -58,18 +69,15 @@ export default class Navibar extends Component<{}, NavibarState> {
               </Navbar.Brand>
               <Navbar.Toggle aria-controls="navbar-nav" />
               <Navbar.Collapse id="navbar-nav">
-                <Nav className="mr-auto">
-                  <Nav.Link as={Link} to="/" className="Navlink">
+                <Nav className="mr-auto" onSelect={this.closeNavbar}>
+                  <Nav.Link as={Link} to="/" href="/" className="Navlink">
                     홈
                   </Nav.Link>
-                  <Nav.Link as={Link} to="/servers" className="Navlink">
+                  <Nav.Link as={Link} to="/servers" href="/servers" className="Navlink">
                     대시보드
                   </Nav.Link>
-                  <Nav.Link as={Link} to="/docs" className="Navlink">
+                  <Nav.Link as={Link} to="/docs" href="/docs" className="Navlink">
                     봇 가이드
-                  </Nav.Link>
-                  <Nav.Link as={Link} to="/cbt-1" className="Navlink">
-                    Aztra CBT
                   </Nav.Link>
                 </Nav>
                 <Nav>

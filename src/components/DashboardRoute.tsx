@@ -19,6 +19,7 @@ import api from '../datas/api'
 import { Permissions } from 'discord.js'
 import { PartialGuild } from '../types/DiscordTypes'
 import { match } from 'react-router-dom'
+import { faLaptopHouse } from '@fortawesome/free-solid-svg-icons'
 
 const swal = require('@sweetalert/with-react')
 
@@ -100,6 +101,8 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
       winHeight: window.innerHeight
     })
   }
+
+  closeSidebar = () => this.setState({ sidebarOpen: false })
 
   render() {
     const guild = this.state.guild
@@ -197,14 +200,14 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
                     isXSsize
                       ? (
                         <div className={`Dashboardroute-sidebar-body ${!this.state.sidebarOpen && 'd-none'}`}>
-                          <Sidebar guild={guild || guildCache!} />
+                          <Sidebar guild={guild || guildCache!} onSelect={this.closeSidebar} />
                         </div>
                       )
                       : (
                         <div className="Dashboardroute-sidebar-body" style={{
                           height: `calc(100vh - ${this.sidebarHeaderRef.current?.clientHeight}px - 90px)`
                         }}>
-                          <Sidebar guild={guild || guildCache!} />
+                          <Sidebar guild={guild || guildCache!} onSelect={this.closeSidebar} />
                         </div>
                       )
                   }
