@@ -57,7 +57,7 @@ export default class App extends Component {
                 <Route exact path="/premium" component={Premium} />
                 <Route exact path="/praise" component={Praise} />
                 <Route exact path="/docs" component={DocsMain} />
-                {/*<Route exact path="/cbt-1" render={props => <DocView src={betaMD} {...props} />} />*/}
+                <Route exact path="/cbt-1" render={props => <DocView src={betaMD} {...props} />} />
                 <Route path="/dashboard/:serverid(\d+)" component={DashboardRoute} />
                 <DocsRoute />
                 <Route component={NotFound} />
