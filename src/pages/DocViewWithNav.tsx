@@ -58,7 +58,7 @@ const DocViewWithNav: React.FC<DocViewWithNavProps> = ({ pageId, index }) => {
               overflowY: 'scroll',
               height: 'calc(100vh - 57px - 72px)'
             }}>
-              <Nav className="shadow-sm d-block" style={{
+              <Nav className="shadow-sm d-block" onSelect={() => setSidebarHide(true)} style={{
                 backgroundColor: 'rgb(254, 254, 255)',
                 borderRadius: 10,
                 padding: '5px 0'
@@ -66,7 +66,7 @@ const DocViewWithNav: React.FC<DocViewWithNavProps> = ({ pageId, index }) => {
                 {
                   index.pages.map((one) => (
                     <Nav.Item>
-                      <Nav.Link as={Link} className="text-dark" to={`/docs/${index.id}/${one.id}`} style={{
+                      <Nav.Link as={Link} className="text-dark" to={`/docs/${index.id}/${one.id}`} href={`/docs/${index.id}/${one.id}`} style={{
                         fontWeight: one.id === pageId ? 800 : 'normal'
                       }}>
                         {one.title}
@@ -100,7 +100,7 @@ const DocViewWithNav: React.FC<DocViewWithNavProps> = ({ pageId, index }) => {
             {
               prevPage && (
                 <Button className="mr-auto d-flex px-3" variant="outline-aztra" as={Link} to={`/docs/${index.id}/${prevPage.id}`}>
-                  <ArrowBackIcon className="my-auto mr-4" style={{ transform: 'scale(1.2)' }} />
+                  <ArrowBackIcon className="my-auto mr-3 d-none d-sm-block" style={{ transform: 'scale(1.2)' }} />
                   <div className="text-right">
                     <small>
                       이전 페이지
@@ -123,7 +123,7 @@ const DocViewWithNav: React.FC<DocViewWithNavProps> = ({ pageId, index }) => {
                       {nextPage.title}
                     </div>
                   </div>
-                  <ArrowForwardIcon className="my-auto ml-4" style={{ transform: 'scale(1.2)' }} />
+                  <ArrowForwardIcon className="my-auto ml-3 d-none d-sm-block" style={{ transform: 'scale(1.2)' }} />
                 </Button>
               )
             }

@@ -101,6 +101,8 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
     })
   }
 
+  closeSidebar = () => this.setState({ sidebarOpen: false })
+
   render() {
     const guild = this.state.guild
     // const wsSupport = 'WebSocket' in window || 'MozWebSocket' in window
@@ -197,14 +199,14 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
                     isXSsize
                       ? (
                         <div className={`Dashboardroute-sidebar-body ${!this.state.sidebarOpen && 'd-none'}`}>
-                          <Sidebar guild={guild || guildCache!} />
+                          <Sidebar guild={guild || guildCache!} onSelect={this.closeSidebar} />
                         </div>
                       )
                       : (
                         <div className="Dashboardroute-sidebar-body" style={{
                           height: `calc(100vh - ${this.sidebarHeaderRef.current?.clientHeight}px - 90px)`
                         }}>
-                          <Sidebar guild={guild || guildCache!} />
+                          <Sidebar guild={guild || guildCache!} onSelect={this.closeSidebar} />
                         </div>
                       )
                   }

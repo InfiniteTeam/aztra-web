@@ -12,6 +12,7 @@ import {
 
 interface SidebarProps {
   guild: PartialGuild
+  onSelect?: (eventKey: string | null, e: React.SyntheticEvent<unknown>) => void
 }
 
 export default function Sidebar(props: SidebarProps) {
@@ -29,9 +30,16 @@ export default function Sidebar(props: SidebarProps) {
         style={{
           paddingRight: 0
         }}
+        onSelect={props.onSelect}
       >
         <Nav.Item>
-          <Nav.Link className="d-flex mb-1" as={Link} to={`/dashboard/${guild?.id}`} active={window.location.pathname === `/dashboard/${guild?.id}`}>
+          <Nav.Link
+            className="d-flex mb-1"
+            as={Link}
+            to={`/dashboard/${guild?.id}`}
+            href={`/dashboard/${guild?.id}`}
+            active={window.location.pathname === `/dashboard/${guild?.id}`}
+          >
             <div style={iconStyle} className="mr-3">
               <HomeIcon />
             </div>
@@ -39,7 +47,13 @@ export default function Sidebar(props: SidebarProps) {
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link className="d-flex mb-1" as={Link} to={`/dashboard/${guild?.id}/greetings`} active={window.location.pathname.startsWith(`/dashboard/${guild?.id}/greetings`)}>
+          <Nav.Link
+            className="d-flex mb-1"
+            as={Link}
+            to={`/dashboard/${guild?.id}/greetings`}
+            href={`/dashboard/${guild?.id}/greetings`}
+            active={window.location.pathname.startsWith(`/dashboard/${guild?.id}/greetings`)}
+          >
             <div style={iconStyle} className="mr-3">
               <PersonAddIcon />
             </div>
@@ -47,7 +61,13 @@ export default function Sidebar(props: SidebarProps) {
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link className="d-flex mb-1" as={Link} to={`/dashboard/${guild?.id}/members`} active={window.location.pathname.startsWith(`/dashboard/${guild?.id}/members`)}>
+          <Nav.Link
+            className="d-flex mb-1"
+            as={Link}
+            to={`/dashboard/${guild?.id}/members`}
+            href={`/dashboard/${guild?.id}/members`}
+            active={window.location.pathname.startsWith(`/dashboard/${guild?.id}/members`)}
+          >
             <div style={iconStyle} className="mr-3">
               <GroupIcon />
             </div>
@@ -55,7 +75,13 @@ export default function Sidebar(props: SidebarProps) {
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link className="d-flex mb-1" as={Link} to={`/dashboard/${guild?.id}/warns`} active={window.location.pathname.startsWith(`/dashboard/${guild?.id}/warns`)}>
+          <Nav.Link
+            className="d-flex mb-1"
+            as={Link}
+            to={`/dashboard/${guild?.id}/warns`}
+            href={`/dashboard/${guild?.id}/warns`}
+            active={window.location.pathname.startsWith(`/dashboard/${guild?.id}/warns`)}
+          >
             <div style={iconStyle} className="mr-3">
               <ReportProblemRoundedIcon />
             </div>
@@ -63,7 +89,13 @@ export default function Sidebar(props: SidebarProps) {
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link className="d-flex mb-1" as={Link} to={`/dashboard/${guild?.id}/leveling`} active={window.location.pathname.startsWith(`/dashboard/${guild?.id}/leveling`)}>
+          <Nav.Link
+            className="d-flex mb-1"
+            as={Link}
+            to={`/dashboard/${guild?.id}/leveling`}
+            href={`/dashboard/${guild?.id}/leveling`}
+            active={window.location.pathname.startsWith(`/dashboard/${guild?.id}/leveling`)}
+          >
             <div style={iconStyle} className="mr-3">
               <DataUsageIcon />
             </div>

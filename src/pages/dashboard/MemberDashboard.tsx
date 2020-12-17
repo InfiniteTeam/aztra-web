@@ -352,39 +352,43 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
               <div className="d-flex justify-content-between">
                 <h4 className="mb-3">받은 경고</h4>
                 <div>
-                  <Button as={Link} to={`/dashboard/${this.props.guildId}/warns-list?search=${encodeURIComponent(member?.user.tag || '')}&type=target`} variant="aztra" size="sm">
+                  <Button hidden={!this.state.warns?.length} as={Link} to={`/dashboard/${this.props.guildId}/warns-list?search=${encodeURIComponent(member?.user.tag || '')}&type=target`} variant="aztra" size="sm">
                     더보기
                   </Button>
                 </div>
               </div>
               {
-                this.state.warns
-                  ?.filter(one => one.member === member?.user.id)
-                  .sort((a, b) => new Date(b.dt).getTime() - new Date(a.dt).getTime())
-                  .map(one => (
-                    <Card bg="dark" className="mb-2 shadow-sm shadow">
-                      <Card.Body as={Row} className="py-1 d-flex justify-content-between">
-                        <Col xs={9} className="d-flex">
-                          <FontAwesomeIcon icon={faExclamationTriangle} className="mr-3 my-auto" />
-                          <div className="my-auto d-inline-block text-truncate">
-                            {one.reason}
-                          </div>
-                        </Col>
-                        <Col xs={3} className="d-flex align-items-center my-0 justify-content-end">
-                          <div className="my-auto small" style={{
-                            color: 'lightgrey'
-                          }}>
-                            <div className="text-right">
-                              {one.count}회
-                          </div>
-                            <div className="text-right">
-                              {dayjs.utc(one.dt).local().fromNow()}
+                this.state.warns?.length
+                  ? this.state.warns
+                    ?.filter(one => one.member === member?.user.id)
+                    .sort((a, b) => new Date(b.dt).getTime() - new Date(a.dt).getTime())
+                    .map(one => (
+                      <Card bg="dark" className="mb-2 shadow-sm shadow">
+                        <Card.Body as={Row} className="py-1 d-flex justify-content-between">
+                          <Col xs={9} className="d-flex">
+                            <FontAwesomeIcon icon={faExclamationTriangle} className="mr-3 my-auto" />
+                            <div className="my-auto d-inline-block text-truncate">
+                              {one.reason}
                             </div>
+                          </Col>
+                          <Col xs={3} className="d-flex align-items-center my-0 justify-content-end">
+                            <div className="my-auto small" style={{
+                              color: 'lightgrey'
+                            }}>
+                              <div className="text-right">
+                                {one.count}회
                           </div>
-                        </Col>
-                      </Card.Body>
-                    </Card>
-                  ))
+                              <div className="text-right">
+                                {dayjs.utc(one.dt).local().fromNow()}
+                              </div>
+                            </div>
+                          </Col>
+                        </Card.Body>
+                      </Card>
+                    ))
+                  : <div className="d-flex align-items-center justify-content-center h-75">
+                    <div className="my-4" style={{ color: 'lightgray' }}>경고가 하나도 없습니다! 평화롭네요.</div>
+                  </div>
               }
             </Col>
             <Col className="pb-5" xs={12} xl={6}>
