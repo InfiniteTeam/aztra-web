@@ -130,7 +130,7 @@ export default class Leveling extends React.Component<LevelingProps, LevelingSta
                   type="switch"
                   label={
                     <div className="pl-2">
-                      멤버의 레벨이 올랐을 떄 메시지 보내기
+                      멤버의 레벨이 올랐을 때 메시지 보내기
                     </div>
                   }
                   checked={this.state.useLevelupMessage}
