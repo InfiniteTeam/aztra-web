@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import axios from 'axios'
 import api from '../../datas/api'
 import { MemberExtended } from '../../types/DiscordTypes';
-import { Link, match } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { Row, Col, Card, Container, Spinner, Badge, Button, Alert, OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -18,16 +18,11 @@ import { Warns } from '../../types/dbtypes/warns';
 import dayjs from 'dayjs';
 
 interface MatchParams {
-  readonly userid: string
+  userid: string
 }
 
-interface Match extends match {
-  readonly params: MatchParams
-}
-
-interface MemberDashboardProps {
-  readonly match: Match
-  readonly guildId?: string
+interface MemberDashboardProps extends RouteComponentProps<MatchParams> {
+  guildId?: string
 }
 
 interface MemberDashboardState {
@@ -60,9 +55,6 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
         .then(() =>
           setTimeout(() => this.setState({ showPercent: true }), 200)
         )
-    }
-    else {
-      window.location.assign('/login')
     }
   }
 

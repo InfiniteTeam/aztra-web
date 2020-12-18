@@ -1,6 +1,6 @@
 import React, { Component, createRef } from 'react'
 import { Container, Row, Col, Button } from 'react-bootstrap'
-import { Route, Switch } from 'react-router-dom'
+import { Route, RouteComponentProps, Switch } from 'react-router-dom'
 
 import DashboardMain from '../pages/dashboard/Main'
 import DashboardGreeting from '../pages/dashboard/Greetings'
@@ -18,21 +18,14 @@ import urljoin from 'url-join'
 import api from '../datas/api'
 import { Permissions } from 'discord.js'
 import { PartialGuild } from '../types/DiscordTypes'
-import { match } from 'react-router-dom'
 
 const swal = require('@sweetalert/with-react')
 
 interface MatchParams {
-  readonly serverid: string
+  serverid: string
 }
 
-interface Match extends match {
-  readonly params: MatchParams
-}
-
-interface DashboardRouteProps {
-  readonly match: Match
-}
+type DashboardRouteProps = RouteComponentProps<MatchParams>
 
 interface DashboardRouteState {
   guild: PartialGuild | null
@@ -86,6 +79,8 @@ export default class DashboardRoute extends Component<DashboardRouteProps, Dashb
       this.getGuild(token)
     }
     else {
+      const lct = this.props.location
+      localStorage.setItem('loginFrom', lct.pathname + lct.search)
       window.location.assign('/login')
     }
   }

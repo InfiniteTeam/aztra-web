@@ -79,9 +79,6 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
       this.getWarns(token)
       this.getMembers(token)
     }
-    else {
-      window.location.assign('/login')
-    }
   }
 
   render() {

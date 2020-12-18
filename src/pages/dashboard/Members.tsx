@@ -8,7 +8,7 @@ import MemberListCard from '../../components/forms/MemberListCard';
 type MemberSearchType = 'nick-and-tag' | 'id'
 
 interface MembersProps {
-  readonly guildId?: string
+  guildId?: string
 }
 
 interface MembersState {
@@ -30,9 +30,6 @@ export default class Members extends PureComponent<MembersProps, MembersState> {
     const token = localStorage.getItem('token')
     if (token) {
       this.getMembers(token)
-    }
-    else {
-      window.location.assign('/login')
     }
   }
 

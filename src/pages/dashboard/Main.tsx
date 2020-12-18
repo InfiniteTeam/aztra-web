@@ -30,9 +30,6 @@ export default class Main extends Component<MainProps, MainState> {
       this.getGuild(token)
       this.getMembers(token)
     }
-    else {
-      window.location.assign('/login')
-    }
   }
 
   getGuild = async (token: string) => {

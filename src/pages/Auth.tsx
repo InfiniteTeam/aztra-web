@@ -2,6 +2,7 @@ import React from 'react'
 import api from '../datas/api'
 import axios from 'axios'
 import { Location } from 'history'
+import { Redirect } from 'react-router-dom'
 
 export interface AuthProps {
   readonly location: Location
@@ -34,12 +35,11 @@ export default class Auth extends React.Component<AuthProps, AuthState> {
       })
   }
 
-  async componentDidMount() {
-    await this.ProcessAuth()
-    !this.state.done || window.location.assign('/')
+  componentDidMount() {
+    this.ProcessAuth()
   }
 
   render() {
-    return null
+    return this.state.done && <Redirect to={localStorage.getItem('loginFrom') || "/"} />
   }
 }

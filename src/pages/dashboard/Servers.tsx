@@ -7,6 +7,7 @@ import { Permissions } from 'discord.js'
 import { PartialGuildExtend } from '../../types/DiscordTypes'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+import { RouteComponentProps } from 'react-router-dom';
 
 const swal = require('@sweetalert/with-react')
 
@@ -16,7 +17,7 @@ interface ServersState {
   fetchError: AxiosError | null
 }
 
-export default class Servers extends Component<{}, ServersState> {
+export default class Servers extends Component<RouteComponentProps, ServersState> {
   state: ServersState = {
     guilds: [],
     fetchDone: null,
@@ -44,6 +45,8 @@ export default class Servers extends Component<{}, ServersState> {
       this.getGuilds(token)
     }
     else {
+      const lct = this.props.location
+      localStorage.setItem('loginFrom', lct.pathname + lct.search)
       window.location.assign('/login')
     }
   }

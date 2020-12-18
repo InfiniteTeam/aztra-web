@@ -90,9 +90,6 @@ export default class Leveling extends React.Component<LevelingProps, LevelingSta
     if (token) {
       this.getData(token)
     }
-    else {
-      window.location.assign('/login')
-    }
   }
 
   isChanged = () => {

@@ -10,7 +10,7 @@ import { RemoveCircleOutline, FileCopy as FileCopyIcon, OpenInNew as OpenInNewIc
 import BackTo from '../../components/BackTo';
 
 export interface WarnsListProps {
-  readonly guildId?: string
+  guildId?: string
 }
 
 type WarnSearchType = 'reason' | 'target' | 'warnby'
@@ -309,9 +309,6 @@ export default class Members extends PureComponent<WarnsListProps, WarnsListStat
     if (token) {
       this.getMembers(token)
       this.getWarns(token)
-    }
-    else {
-      window.location.assign('/login')
     }
   }
 

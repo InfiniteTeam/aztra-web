@@ -11,8 +11,9 @@ import { Greetings as GreetingsType } from '../../types/dbtypes/greetings'
 import api from '../../datas/api'
 import { ChannelMinimal } from '../../types/DiscordTypes';
 import ChannelSelectCard from '../../components/forms/ChannelSelectCard';
+import { RouteComponentProps } from 'react-router-dom';
 
-interface GreetingProps {
+interface GreetingProps extends RouteComponentProps {
   readonly guildId?: string
 }
 
@@ -120,9 +121,6 @@ export default class Greetings extends Component<GreetingProps, GreetingState> {
     if (token) {
       this.getData(token)
       this.getChannels(token)
-    }
-    else {
-      window.location.assign('/login')
     }
   }
 
