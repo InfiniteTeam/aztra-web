@@ -7,7 +7,8 @@ import {
   PersonAdd as PersonAddIcon,
   Group as GroupIcon,
   ReportProblemRounded as ReportProblemRoundedIcon,
-  DataUsage as DataUsageIcon
+  DataUsage as DataUsageIcon,
+  History as HistoryIcon
 } from '@material-ui/icons'
 
 interface SidebarProps {
@@ -100,6 +101,20 @@ export default function Sidebar(props: SidebarProps) {
               <DataUsageIcon />
             </div>
             레벨링 설정
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link
+            className="d-flex mb-1"
+            as={Link}
+            to={`/dashboard/${guild?.id}/logging`}
+            href={`/dashboard/${guild?.id}/logging`}
+            active={window.location.pathname.startsWith(`/dashboard/${guild?.id}/logging`)}
+          >
+            <div style={iconStyle} className="mr-3">
+              <HistoryIcon style={{ transform: 'scale(1.1)' }} />
+            </div>
+            로깅 설정
           </Nav.Link>
         </Nav.Item>
       </Nav>

@@ -122,7 +122,7 @@ export default class Leveling extends React.Component<LevelingProps, LevelingSta
                 <h4>레벨 메시지 설정</h4>
               </Row>
 
-              <Form.Group controlId="incomingUse">
+              <Form.Group controlId="levelingSetting">
                 <Form.Check
                   type="switch"
                   label={

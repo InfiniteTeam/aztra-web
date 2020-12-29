@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Nav, Navbar, NavDropdown, Container } from 'react-bootstrap';
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import oauth2 from '../datas/oauth'
 import urljoin from 'url-join'
 import { User } from '../types/DiscordTypes'
@@ -30,7 +30,6 @@ export default class Navibar extends Component<{}, NavibarState> {
       localStorage.setItem('cached_user', JSON.stringify(res.data))
     }
     catch (_e) {
-      const e: AxiosError = _e
       this.setState({ user: null })
       localStorage.removeItem('cached_user')
     }
