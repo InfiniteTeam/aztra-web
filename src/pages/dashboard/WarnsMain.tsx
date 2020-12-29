@@ -2,7 +2,7 @@ import React from 'react'
 import api from '../../datas/api'
 import axios from 'axios'
 import { Warns as WarnsType } from '../../types/dbtypes/warns'
-import { Button, Card, Col, OverlayTrigger, Popover, Row, Spinner, Tooltip } from 'react-bootstrap'
+import { Button, Card, Col, Container, OverlayTrigger, Popover, Row, Spinner, Tooltip } from 'react-bootstrap'
 import { faTrophy } from '@fortawesome/free-solid-svg-icons'
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -94,7 +94,7 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
 
     let warnsRankArray = Object.entries(warnsRank).sort((a, b) => b[1] - a[1])
 
-    return (
+    return this.state.warnsFetchDone && this.state.membersFetchDone ? (
       <div>
         <Row className="dashboard-section">
           <h3>경고 관리</h3>
@@ -111,10 +111,9 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
               </div>
             </div>
             {
-              this.state.warnsFetchDone && this.state.membersFetchDone
-                ? this.state.data?.length
-                  ?
-                  this.state.data
+              this.state.data?.length
+                ?
+                this.state.data
                   ?.sort((a, b) => new Date(b.dt).getTime() - new Date(a.dt).getTime())
                   .slice(0, 5)
                   .map(one => {
@@ -166,16 +165,9 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
                       </Card.Body>
                     </Card>
                   })
-                  : <div className="d-flex align-items-center justify-content-center h-75">
-                    <div className="my-4" style={{ color: 'lightgray' }}>경고가 하나도 없습니다! 평화롭네요.</div>
-                  </div>
-                : (
-                  <div className="d-flex align-items-center justify-content-center flex-column">
-                    <h3 className="pb-4">불러오는 중</h3>
-                    <Spinner animation="border" variant="aztra" />
-                  </div>
-                )
-
+                : <div className="d-flex align-items-center justify-content-center h-75">
+                  <div className="my-4" style={{ color: 'lightgray' }}>경고가 하나도 없습니다! 평화롭네요.</div>
+                </div>
             }
           </Col>
 
@@ -202,7 +194,7 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
                             {target?.displayName}
                           </Link>
                           {` (${one[1]}회)`}
-                      </Card.Body>
+                        </Card.Body>
                       </Card>
                     )
                   })
@@ -240,6 +232,11 @@ export default class WarnsMain extends React.Component<WarnsMainProps, WarnsMain
           </Col>
         </Row>
       </div>
-    )
+    ) : <Container className="d-flex align-items-center justify-content-center flex-column" style={{
+      height: '500px'
+    }}>
+        <h3 className="pb-4">불러오는 중</h3>
+        <Spinner animation="border" variant="aztra" />
+      </Container>
   }
 }

@@ -33,7 +33,6 @@ export default class Navibar extends Component<{}, NavibarState> {
       const e: AxiosError = _e
       this.setState({ user: null })
       localStorage.removeItem('cached_user')
-      e.response?.status === 401 && window.location.assign('/login')
     }
     finally {
       this.setState({ loginDone: true })
