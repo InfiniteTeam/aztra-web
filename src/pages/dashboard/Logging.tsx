@@ -42,29 +42,22 @@ export default class Logging extends Component<LoggingProps, LoggingState> {
                   aria-expanded={!!this.state.useLogging}
                 />
               </Form.Group>
-
-              <div className={!this.state.useLogging ? "d-none" : undefined}>
-                <h4 className="pb-2">메시지 로깅 설정</h4>
-                <Container fluid>
-                  <Form.Group controlId="useLoggingMessage">
-                    {
-                      ['메시지가 삭제되었을 때', '메시지가 수정되었을 때'].map((one, idx) =>
-                        <Form.Check
-                          className="pb-2"
-                          custom
-                          type="checkbox"
-                          label={
-                            <div className="pl-2">
-                              {one}
-                            </div>
-                          }
-                          aria-controls={`useLoggingMessageContent-${idx}`}
-                        />
-                      )
-                    }
-                  </Form.Group>
-                </Container>
-              </div>
+              {
+                this.state.useLogging &&
+                <>
+                  <h4 className="pb-2">메시지 로깅 설정</h4>
+                  <Container fluid>
+                    <Form.Group>
+                      <Form.Check id="logging-message-deleted" className="pb-2" custom type="checkbox" label="메시지가 삭제되었을 때" />
+                      <Form.Check id="logging-message-edited" className="pb-2" custom type="checkbox" label="메시지가 수정되었을 때" />
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Check id="logging-reaction-removed" className="pb-2" custom type="checkbox" label="반응이 제거되었을 때" />
+                      <Form.Check id="logging-reaction-cleared" className="pb-2" custom type="checkbox" label="모든 반응이 제거되었을 때" />
+                    </Form.Group>
+                  </Container>
+                </>
+              }
             </Form>
           </Col>
         </Row>
