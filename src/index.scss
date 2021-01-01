@@ -51,7 +51,7 @@ code {
 }
 
 body {
-    background-color: #252a2e;
+    background-color: #25282e;
     overflow-x: visible;
 }
 
@@ -160,15 +160,7 @@ button:focus {
 /* Home */
 
 .Main-intro {
-    h1 {
-        font-size: 30pt;
-    }
-    h2 {
-        font-size: 15pt;
-        font-weight: lighter;
-    }
-    padding-top: 250px;
-    padding-bottom: 250px;
+    height: 100vh;
     text-align: center;
     .logo {
         max-width: 250px;
@@ -222,8 +214,9 @@ button:focus {
     font-weight: 800;
     margin-left: 20px;
     margin-right: 20px;
-    min-width: 240px;
+    min-width: 220px;
     margin-bottom: 30px;
+    font-size: 13pt;
 }
 
 .Main-features {
