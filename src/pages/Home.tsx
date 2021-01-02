@@ -13,7 +13,7 @@ export default class Home extends Component {
     return (
       <>
         <Container fluid="sm">
-          <div className="Main-intro d-flex align-items-center justify-content-center">
+          <div className="Main-intro d-flex align-items-center">
             <div>
               <h1 className="no-drag text-white" style={{
                 fontSize: '25pt',
@@ -26,16 +26,16 @@ export default class Home extends Component {
               }}>
                 다채롭고 깔끔한 디스코드 서버를 만들 수 있도록 도와드리겠습니다.
               </h2>
-              <Button variant="aztra" size="lg" className="Main-button shadow-lg" disabled={process.env.NODE_ENV === "production"}>
+              <Button variant="aztra" size="lg" className="Main-button shadow-lg mr-3" disabled={process.env.NODE_ENV === "production"}>
                 {
                   process.env.NODE_ENV === "production"
                     ? "곧 공개됩니다"
                     : "초대하기"
                 }
               </Button>
-              <Button as={ScrollLink} to="main-features" spy={true} smooth={true} offset={50} duration={500} variant="light" size="lg" className="Main-button shadow-lg">
+              <Button as={ScrollLink} to="main-features" spy={true} smooth={true} offset={50} duration={500} variant="dark" size="lg" className="Main-button shadow-lg">
                 자세히 알아보기
-              </Button>
+                </Button>
             </div>
           </div>
         </Container>
