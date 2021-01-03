@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
-import { Nav, Navbar, NavDropdown, Container } from 'react-bootstrap';
+import React, { Component } from 'react'
+import { Nav, Navbar, NavDropdown, Container } from 'react-bootstrap'
 import axios from 'axios'
 import oauth2 from '../datas/oauth'
 import urljoin from 'url-join'
 import { User } from '../types/DiscordTypes'
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
+
+import styles from './styles/Navibar.module.scss'
 
 interface NavibarState {
   user: User | null
@@ -68,13 +70,13 @@ export default class Navibar extends Component<{}, NavibarState> {
               <Navbar.Toggle aria-controls="navbar-nav" />
               <Navbar.Collapse id="navbar-nav">
                 <Nav className="mr-auto" onSelect={this.closeNavbar}>
-                  <Nav.Link as={Link} to="/" href="/" className="Navlink">
+                  <Nav.Link as={Link} to="/" href="/" className={styles.Navlink}>
                     홈
                   </Nav.Link>
-                  <Nav.Link as={Link} to="/servers" href="/servers" className="Navlink">
+                  <Nav.Link as={Link} to="/servers" href="/servers" className={styles.Navlink}>
                     대시보드
                   </Nav.Link>
-                  <Nav.Link as={Link} to="/docs" href="/docs" className="Navlink">
+                  <Nav.Link as={Link} to="/docs" href="/docs" className={styles.Navlink}>
                     봇 가이드
                   </Nav.Link>
                 </Nav>

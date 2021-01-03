@@ -1,0 +1,32 @@
+.Footer {
+    background-color: rgb(67, 71, 80);
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+    h4 {
+        font-family: "NanumSquare";
+        font-weight: 1000;
+        color: whitesmoke;
+    }
+    h5 {
+        font-family: "NanumBarunGothic";
+        font-weight: 600;
+        font-size: 13pt;
+        color: whitesmoke;
+    }
+    p {
+        font-family: "NanumSquare";
+        font-weight: 800;
+        color: whitesmoke;
+    }
+    a {
+        color: whitesmoke;
+        font-family: "NanumBarunGothic";
+        text-decoration: underline;
+    }
+}
+
+.FooterCopyright {
+    font-family: "NanumBarunGothic";
+    font-size: 10pt;
+    color: whitesmoke;
+}

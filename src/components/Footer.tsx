@@ -3,6 +3,11 @@ import { Container, Row, Col } from 'react-bootstrap'
 import preval from 'preval.macro';
 import links from '../datas/links.json'
 
+import styles from './styles/Footer.module.scss'
+import classNames from 'classnames/bind';
+
+const cx = classNames.bind(styles)
+
 const HIDDEN_COUNT = 5
 
 export interface FooterState {
@@ -21,7 +26,7 @@ export default class Footer extends Component<{}, FooterState> {
   render() {
     return (
       <>
-        <footer className="Footer">
+        <footer className={styles.Footer}>
           <Container fluid="sm" className="text-center text-md-left">
             <Row>
               <Col md={5} className="mt-md-0 mt-3">
@@ -70,7 +75,7 @@ export default class Footer extends Component<{}, FooterState> {
                 </ul>
               </Col>
             </Row>
-            <div className="Footer-copyright text-center">
+            <div className={cx("FooterCopyright", "text-center")}>
               Copyright © 2020 InfiniteTeam All rights reserved.
             </div>
           </Container>
