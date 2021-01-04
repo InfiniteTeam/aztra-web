@@ -17,20 +17,20 @@ export default class Home extends Component {
     return (
       <>
         <Container fluid="sm">
-          <div className={cx('d-flex', 'flex-wrap-reverse', 'align-items-center', 'MainIntro')}>
-            <div className="text-center mx-auto ml-lg-auto order-12">
-              <img alt="Aztra" src={logoinv} style={{ width: 300 }} className="pb-3 pb-lg-0" />
-            </div>
-            <div className="text-center text-lg-left mx-auto">
-              <div className="px-2">
-                <h1 className={cx("MainTitle", "no-drag", "text-white")}>
-                  미래를 바꿀 디스코드 관리봇, Aztra
-                </h1>
-                <h2 className={cx("MainSubtitle", "no-drag", "text-white", "pt-2", "pb-5", "font-weight-lighter")} >
-                  다채롭고 깔끔한 디스코드 서버를 만들 수 있도록 도와드리겠습니다.
-                </h2>
-              </div>
-              <Button variant="aztra" size="lg" className={cx("MainButton", "shadow-lg", "mx-2")} disabled={process.env.NODE_ENV === "production"}>
+          <div className={cx("MainIntro", "d-flex", "align-items-center")}>
+            <div>
+              <h1 className={cx("no-drag", "text-white")} style={{
+                fontSize: '25pt',
+                wordBreak: 'keep-all'
+              }}>
+                미래를 바꿀 디스코드 관리봇, Aztra
+              </h1>
+              <h2 className={cx("no-drag", "text-white", "pt-2", "pb-5", "font-weight-lighter")} style={{
+                fontSize: '14pt'
+              }}>
+                다채롭고 깔끔한 디스코드 서버를 만들 수 있도록 도와드리겠습니다.
+              </h2>
+              <Button variant="aztra" size="lg" className={cx("MainButton", "shadow-lg", "mr-3")} disabled={process.env.NODE_ENV === "production"}>
                 {
                   process.env.NODE_ENV === "production"
                     ? "곧 공개됩니다"

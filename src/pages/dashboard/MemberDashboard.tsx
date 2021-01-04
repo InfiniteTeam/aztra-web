@@ -13,7 +13,6 @@ import BackTo from '../../components/BackTo';
 
 import { calcLevel, getAccumulateExp, getRequiredEXP } from '@aztra/level-utils'
 import { Exp } from '../../types/dbtypes/exps';
-import { numberCommaFormat } from '../../utils/numberComma';
 import { Warns } from '../../types/dbtypes/warns';
 import dayjs from 'dayjs';
 
@@ -262,7 +261,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
                       <div style={{
                         fontSize: "1.5rem"
                       }}>
-                        {reqExp ? numberCommaFormat(reqCompleted) : '--'}/{reqExp ? numberCommaFormat(reqExp) : '--'} P
+                        {reqExp ? reqCompleted.toLocaleString() : '--'}/{reqExp ? reqExp.toLocaleString() : '--'} P
                     </div>
                     </div>
                   </CircularProgressbarWithChildren>
@@ -283,7 +282,7 @@ export default class MemberDashboard extends Component<MemberDashboardProps, Mem
                       <span style={{
                         fontSize: '17pt'
                       }}>
-                        {numberCommaFormat(exp)}
+                        {exp.toLocaleString()}
                       </span>
                     </div>
                   </div>
